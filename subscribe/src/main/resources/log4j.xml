@@ -6,7 +6,7 @@
 	<!--控制台输出sql执行过程 -->
 	<appender name="minePrint"
 		class="org.apache.log4j.RollingFileAppender">
-		<param name="File" value="./log/mine-print.log" />
+		<param name="File" value="./logs/mine-print.log" />
 		<param name="Append" value="true" />
 		<param name="encoding" value="UTF8" />
 		<!-- 设置文件大小 -->

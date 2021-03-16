@@ -1,9 +1,14 @@
 #!/bin/sh
 
 # git config user.name "AllStarGH";
-# git config user.email "duernna@163.com";
 
+# 初次提交
+# git init
+# git add .
+# git commit -m "first commit"
+# git branch -M main
 # git remote add origin https://github.com/AllStarGH/ComputerSubscribe.git
+# git push -u origin main
 
 git status
 
