@@ -25,4 +25,4 @@ git add .
 
 git commit -m 'second committing to here'
 
-git push -u origin main
+git push
