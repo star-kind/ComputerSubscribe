@@ -19,38 +19,29 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-
-	<!--使用annotation-driven注解驱动,就可以代替注解映射器和注解适配器的配置 -->
+	<!-- 配置注解驱动,使用annotation-driven注解驱动,就可以代替注解映射器和注解适配器的配置 -->
 	<mvc:annotation-driven />
-
 	<!-- 告诉spring要处理的静态资源 -->
 	<mvc:resources mapping="/**" location="/" />
-
 	<!-- 解除servlet对静态资源文件访问的限制 -->
 	<mvc:default-servlet-handler />
-
-	<!-- 配置组件扫描 -->
-	<!--validator:向处理器适配器,注入校验器 -->
-	<!-- controller:控制器层根包名 -->
+	<!-- 配置组件扫描,spring注解扫描器 -->
 	<context:component-scan
 		base-package="com.computer.subscribe.controller" />
 
-	<!-- 配置视图解析器 -->
+	<!-- 配置视图解析器,对模型视图添加前后缀 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<!--配置响应前后缀 -->
 		<property name="prefix" value="/WEB-INF/pages/" />
 		<property name="suffix" value=".jsp" />
-
 		<!-- 优先级 -->
 		<property name="order" value="1" />
 	</bean>
-
 	<bean
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
 		<!-- HTML文件位置 -->
 		<property name="templateLoaderPath" value="/WEB-INF/pages/" />
-
 		<property name="defaultEncoding" value="utf-8" />
 		<property name="freemarkerSettings">
 			<props>
@@ -66,54 +57,44 @@
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
 		<property name="suffix" value=".html" />
-
 		<!-- 优先找HTML -->
 		<property name="order" value="0" />
-
 		<!-- 解决网页中文乱码的问题 -->
 		<property name="contentType" value="text/html;charset=UTF-8" />
 	</bean>
+	<!-- 配置视图解析器__END -->
 
-	<!-- 配置注解驱动 -->
-	<mvc:annotation-driven>
-		<mvc:message-converters
-			register-defaults="true">
-			<bean
-				class="org.springframework.http.converter.StringHttpMessageConverter">
-				<property name="supportedMediaTypes"
-					value="text/plain;charset=UTF-8" />
-			</bean>
-		</mvc:message-converters>
-	</mvc:annotation-driven>
-
-	<!-- 拦截器链:针对请求 -->
+	<!-- -->
+	<!-- 拦截器链:针对请求,可配置多个拦截器 -->
 	<mvc:interceptors>
 		<!-- 第1个拦截器 -->
 		<mvc:interceptor>
-			<!-- 1. 拦截路径（黑名单） -->
-			<mvc:mapping path="/users/**" />
-
-			<!-- 2. 例外（白名单） -->
-			<mvc:exclude-mapping path="/users/login" />
-			<mvc:exclude-mapping path="/users/reg" />
-
-			<!-- 3. 拦截器,各请求前往该类接受处理 -->
+			<!-- 拦截路径（黑名单） -->
+			<mvc:mapping path="/UsersController/**" />
+			<!-- 例外（白名单） -->
+			<mvc:exclude-mapping
+				path="/UsersController/registerAction" />
+			<!-- 拦截器,各请求前往该类接受处理 -->
 			<bean class="com.computer.subscribe.intercept.LoginInterceptor" />
 		</mvc:interceptor>
-
-		<!-- 第二个拦截器 -->
-		<!-- <mvc:interceptor>
-			1. 拦截路径（黑名单）
-			<mvc:mapping path="/PurchaseController/**" />
-			2. 例外（白名单）
-			<mvc:exclude-mapping
-				path="/PurchaseController/exhibitsListByClassifyAndIsAgreeHandler" />
-			<mvc:exclude-mapping
-				path="/PurchaseController/submitToBackstageHandler" />
-			3. 拦截器,各请求前往该类接受处理
-			<bean class="com.computer.subscribe.intercept.LoginInterceptor" />
-		</mvc:interceptor> -->
-
 	</mvc:interceptors>
+
+	<!-- JSON -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	<bean id="jsonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
 
 </beans>

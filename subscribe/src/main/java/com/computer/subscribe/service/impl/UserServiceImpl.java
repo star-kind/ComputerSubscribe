@@ -19,14 +19,19 @@ import com.computer.subscribe.util.account.PasswordBusiness;
 @Service
 public class UserServiceImpl implements IUserService {
 	/**
-	 * 默认初始密码-普通用户
+	 * 默认初始密码-普通用户-学生
 	 */
-	private static final String INIT_KEY = "666666";
+	private static final String INIT_KEY_STUDENT = "666";
 
 	/**
-	 * 默认初始密码-非普通用户
+	 * 默认初始密码-普通用户-教师
 	 */
-	private static final String INIT_KEY_ADMIN = "100300fun";
+	private static final String INIT_KEY_TEACHER = "314";
+
+	/**
+	 * 默认初始密码-非普通用户-管理员
+	 */
+	private static final String INIT_KEY_ADMIN = "040";
 
 	@Autowired
 	private TUserMapper userMapper;
@@ -119,13 +124,19 @@ public class UserServiceImpl implements IUserService {
 		System.err.println("salt===" + salt);
 		user.setSalt(salt);
 
-		// 密码
-		if (user.getRole() == 0) {
+		/* 根据不同的角色权限设置不同的默认密码 */
+		switch (user.getRole()) {
+		case 0:
 			String keyTxt = pbBusiness.generate(INIT_KEY_ADMIN, salt);
 			user.setPassword(keyTxt);
-		} else {
-			String keyTxt = pbBusiness.generate(INIT_KEY, salt);
-			user.setPassword(keyTxt);
+			
+		case 1:
+			String keyTxt1 = pbBusiness.generate(INIT_KEY_TEACHER, salt);
+			user.setPassword(keyTxt1);
+
+		case 2:
+			String keyTxt2 = pbBusiness.generate(INIT_KEY_STUDENT, salt);
+			user.setPassword(keyTxt2);
 		}
 
 		int effect = userMapper.insert(user);

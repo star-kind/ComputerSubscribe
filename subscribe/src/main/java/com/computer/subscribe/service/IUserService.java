@@ -1,5 +1,7 @@
 package com.computer.subscribe.service;
 
+import javax.validation.constraints.NotNull;
+
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.pojo.TUser;
 
@@ -11,5 +13,5 @@ import com.computer.subscribe.pojo.TUser;
  */
 public interface IUserService {
 	// 注册
-	Integer regist(TUser user) throws OperationException;
+	Integer regist(@NotNull TUser user) throws OperationException;
 }

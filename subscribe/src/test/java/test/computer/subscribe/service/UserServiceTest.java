@@ -36,7 +36,6 @@ public class UserServiceTest {
 			Integer row = userService.regist(user);
 			System.out.println("execute===" + row);
 		} catch (OperationException e) {
-			// e.printStackTrace();
 			System.err.println(e.getMessage());
 		}
 	}
