@@ -3,7 +3,7 @@ package com.computer.subscribe.listener;
 import javax.servlet.ServletContextAttributeListener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
+//import javax.servlet.annotation.WebListener;
 
 import org.apache.log4j.Logger;
 
@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
  * @author user
  *
  */
-@WebListener
+//@WebListener
 public class MineListener
 		implements ServletContextListener, ServletContextAttributeListener {
 
