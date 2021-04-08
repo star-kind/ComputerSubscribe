@@ -19,50 +19,20 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
 	<!-- 配置注解驱动,使用annotation-driven注解驱动,就可以代替注解映射器和注解适配器的配置 -->
 	<mvc:annotation-driven />
+
 	<!-- 告诉spring要处理的静态资源 -->
+	<mvc:resources mapping="*.*" location="/" />
 	<mvc:resources mapping="/**" location="/" />
+
 	<!-- 解除servlet对静态资源文件访问的限制 -->
 	<mvc:default-servlet-handler />
+
 	<!-- 配置组件扫描,spring注解扫描器 -->
 	<context:component-scan
 		base-package="com.computer.subscribe.controller" />
-
-	<!-- 配置视图解析器,对模型视图添加前后缀 -->
-	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<!--配置响应前后缀 -->
-		<property name="prefix" value="/WEB-INF/pages/" />
-		<property name="suffix" value=".jsp" />
-		<!-- 优先级 -->
-		<property name="order" value="1" />
-	</bean>
-	<bean
-		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-		<!-- HTML文件位置 -->
-		<property name="templateLoaderPath" value="/WEB-INF/pages/" />
-		<property name="defaultEncoding" value="utf-8" />
-		<property name="freemarkerSettings">
-			<props>
-				<prop key="locale">zh_CN</prop>
-				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
-				<prop key="date_format">yyyy-MM-dd</prop>
-				<prop key="default_encoding">UTF-8</prop>
-			</props>
-		</property>
-	</bean>
-	<bean
-		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
-		<property name="viewClass"
-			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
-		<property name="suffix" value=".html" />
-		<!-- 优先找HTML -->
-		<property name="order" value="0" />
-		<!-- 解决网页中文乱码的问题 -->
-		<property name="contentType" value="text/html;charset=UTF-8" />
-	</bean>
-	<!-- 配置视图解析器__END -->
 
 	<!-- -->
 	<!-- 拦截器链:针对请求,可配置多个拦截器 -->
@@ -96,5 +66,42 @@
 			</list>
 		</property>
 	</bean>
+
+	<!-- 配置视图解析器,对模型视图添加前后缀 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!--配置响应前后缀 -->
+		<property name="prefix" value="/WEB-INF/pages/" />
+		<property name="suffix" value=".jsp" />
+		<!-- 优先级 -->
+		<property name="order" value="1" />
+	</bean>
+	<!-- -->
+	<bean
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<!-- HTML文件位置 -->
+		<property name="templateLoaderPath" value="/WEB-INF/pages/" />
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="locale">zh_CN</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="default_encoding">UTF-8</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- -->
+	<bean
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="suffix" value=".html" />
+		<!-- 优先找html -->
+		<property name="order" value="0" />
+		<!-- 解决网页中文乱码的问题 -->
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+	<!-- 配置视图解析器__END -->
 
 </beans>

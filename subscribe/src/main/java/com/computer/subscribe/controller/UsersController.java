@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiParam;
  * @author user
  *
  */
-@Api
+@Api(value = "/UsersController")
 @Controller
 @RequestMapping("/UsersController")
 public class UsersController extends BasicController {
@@ -51,13 +51,13 @@ public class UsersController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/registerAction", method = RequestMethod.GET)
-	@ApiOperation(value = "新用户注册", notes = "参数为1个用户:{邮箱,电话,工号或学号,用户名,角色}", httpMethod = "get")
+	@ApiOperation(value = "新用户注册", notes = "参数为1个用户:(邮箱,电话,工号/学号,用户名,角色)", httpMethod = "GET")
 	public WebResponse<Integer> registerAction(@ApiParam("用户注册材料") @Valid TUser user)
 			throws OperationException {
 
 		logger.info(user.toString());
 		Integer row = ius.regist(user);
 
-		return new WebResponse<Integer>(SUCCESS, "", row);
+		return new WebResponse<Integer>(SUCCESS, "OK", row);
 	}
 }

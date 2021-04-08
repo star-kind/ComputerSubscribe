@@ -3,6 +3,7 @@ package com.computer.subscribe.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -19,16 +20,18 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @author user
  *
  */
-//启动swagger
-@EnableSwagger2
+
+@EnableSwagger2 // 启动swagger
+@EnableWebMvc
 @ComponentScan(basePackages = { "com.computer.subscribe.config" })
-//让spring加载该类
-@Configuration
+@Configuration // 让spring加载该类
 public class SwaggerConfigur extends WebMvcConfigurationSupport {
 	@Bean
 	public Docket createRestApi() {
 		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
-				.apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build();
+				.apis(RequestHandlerSelectors
+						.basePackage("com.computer.subscribe.controller"))
+				.paths(PathSelectors.any()).build();
 	}
 
 	private ApiInfo apiInfo() {

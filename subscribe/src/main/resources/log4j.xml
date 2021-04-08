@@ -8,21 +8,19 @@
 		class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%p]:[%c][%M] \
-  [%l] [%m] %n" />
+				value="[%p]: [%c] [%M] [%l] [%m] %n" />
 		</layout>
 	</appender>
 
-	<!-- -->
-	<!-- -->
 	<!-- DEBUG 级别日志 -->
 	<appender name="OwnDebugAppender"
 		class="org.apache.log4j.DailyRollingFileAppender">
 		<!-- 日志输出路径 -->
-		<param name="File" value="${log4jDir}/output-debug.txt" />
+		<param name="File"
+			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/output-debug.txt" />
 
 		<!-- 每小时生成一个新日志 -->
-		<param name="DatePattern" value="'.'yyyy-MM-dd-HH'.txt'" />
+		<param name="DatePattern" value="'-'yyyy-MM-dd-HH'.txt'" />
 
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 			<!-- 最低级别 -->
@@ -32,20 +30,19 @@
 		<!-- 日志输出格式 -->
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%p]: [%c][%M][%l] [%m] %n" />
+				value="[%d{yyyy-MM-dd HH:mm:ss.SSS}][%p]:[%c][%M][%l][%m]%n" />
 		</layout>
 	</appender>
 
-	<!-- -->
-	<!-- -->
 	<!-- INFO 级别日志 -->
 	<appender name="MineInformationAppender"
 		class="org.apache.log4j.DailyRollingFileAppender">
 		<!-- 日志输出路径 -->
-		<param name="File" value="${log4jDir}/mineINFOR.txt" />
+		<param name="File"
+			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/mineINFOR.txt" />
 
 		<!-- 每小时生成一个新日志 -->
-		<param name="DatePattern" value="'.'yyyy-MM-dd-HH'.txt'" />
+		<param name="DatePattern" value="'-'yyyy-MM-dd-HH'.txt'" />
 
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 			<!-- 最低级别 -->
@@ -55,17 +52,16 @@
 		<!-- 日志输出格式 -->
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%p]: [%c][%M][%l] [%m] %n" />
+				value="[%d{yyyy-MM-dd HH:mm:ss.SSS}][%p]:[%c][%M][%l][%m]%n" />
 		</layout>
 	</appender>
 
-	<!-- -->
-	<!-- -->
 	<!--控制台输出sql执行过程 -->
 	<appender name="minePrint"
 		class="org.apache.log4j.RollingFileAppender">
 
-		<param name="File" value="${log4jDir}/mine-print.txt" />
+		<param name="File"
+			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/mine-print.txt" />
 		<param name="Append" value="true" />
 		<param name="encoding" value="UTF8" />
 
@@ -80,30 +76,28 @@
 		</layout>
 	</appender>
 
-	<!-- -->
-	<!-- -->
 	<!-- 将日志信息输出到控制台 -->
 	<appender name="mineConsole"
 		class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="[%d{yyyy-MM-dd HH:mm:ss:SSS}] [%p] - %m - %l%n" />
+				value="[%d{yyyy-MM-dd HH:mm:ss:SSS}][%p]-%m -%l%n" />
 		</layout>
 		<!--过滤器设置输出的级别 -->
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 			<param name="levelMin" value="debug" />
-			<param name="levelMax" value="warn" />
+			<param name="levelMax" value="info" />
 			<param name="AcceptOnMatch" value="true" />
 		</filter>
 	</appender>
 
 	<!-- -->
-	<!-- -->
 	<appender name="mineFile"
 		class="org.apache.log4j.RollingFileAppender">
 
 		<!-- 设置日志输出文件名 -->
-		<param name="File" value="${log4jDir}/mineFile.txt" />
+		<param name="File"
+			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/mineFile.txt" />
 
 		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />
@@ -115,12 +109,11 @@
 	</appender>
 
 	<!-- -->
-	<!-- -->
-	<!-- -->
 	<appender name="ERROR_APPENDER"
 		class="org.apache.log4j.DailyRollingFileAppender">
 
-		<param name="file" value="${log4jDir}/CommonError.txt" />
+		<param name="file"
+			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/CommonError.txt" />
 		<param name="append" value="true" />
 		<param name="encoding" value="GBK" />
 
@@ -129,18 +122,17 @@
 
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="[%d{yyyy-MM-dd HH:mm:ss:SSS}] [%p] - %m - %l%n" />
+				value="[%d{yyyy-MM-dd HH:mm:ss:SSS}][%p]-%m-%l%n" />
 		</layout>
 	</appender>
 
-	<!-- -->
-	<!-- -->
 	<!-- -->
 	<appender name="mineOut"
 		class="org.apache.log4j.RollingFileAppender">
 
 		<!-- 设置File参数：日志输出文件名 -->
-		<param name="File" value="${log4jDir}/testLog4jXML_all.html" />
+		<param name="File"
+			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/mineOut.html" />
 
 		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />
@@ -158,11 +150,38 @@
 	</appender>
 
 	<!-- -->
+	<!-- new html -->
+	<appender name="ourOutPut"
+		class="org.apache.log4j.RollingFileAppender">
+
+		<!-- 设置File参数：日志输出文件名 -->
+		<param name="File"
+			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/ourOutPut.html" />
+
+		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
+		<param name="Append" value="true" />
+
+		<!-- 设置文件大小 -->
+		<param name="MaxFileSize" value="4MB" />
+
+		<!-- each day 生成一个新日志 -->
+		<param name="DatePattern" value="'-'yyyy-MM-dd'.html'" />
+
+		<!-- 设置文件备份 -->
+		<param name="MaxBackupIndex" value="10000" />
+
+		<layout class="org.apache.log4j.HTMLLayout">
+			<param name="ConversionPattern"
+				value="%d{yyyy-MM-dd HH:mm:ss,SSS}[%t][%c][%p]-%m%n" />
+		</layout>
+	</appender>
+
 	<!-- -->
 	<!-- 根logger的设置,定义全局的日志输出级别,但是在输出目的地的配置中配置的具体输出级别优先级高于全局定义的优先级。 如果在railyFile中定义<param 
 		name="Threshold" value="info" />，那么将会把info以上级别的信息输出 -->
 	<root>
 		<priority value="debug" />
+		<appender-ref ref="ourOutPut" />
 		<appender-ref ref="OwnDebugAppender" />
 		<appender-ref ref="MineInformationAppender" />
 		<appender-ref ref="consoleAppender" />
