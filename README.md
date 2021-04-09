@@ -1,4 +1,19 @@
-# 机房预约系统
+# 机房预约系统(进行中ing...)
+
+## 0.架构
+
+### 0.1 整体 
+- 开发模式: 前后端分离
+- 系统结构: B/S
+
+### 0.2 后台
+- FrameWork:  Spring/SpringMVC
+- ORM: Mybatis
+- DataBase: MySQL
+
+### 0.3 前台
+- React
+- Axios
 
 ## 1.机房预约系统需求
 
