@@ -85,9 +85,11 @@ public class PasswordBusiness {
 	 * @return
 	 */
 	public String generate(String pwd, String salt) {
+		System.out.println("generate.pwd== " + pwd);
+
 		// 撒盐,并在MD5hex方法内均匀搅拌
 		String hex = md5Hex(salt + pwd);
-		System.out.println("hex:" + hex);
+		System.err.println("hex== " + hex);
 
 		char[] cs = new char[48];
 		// 再加密
@@ -97,29 +99,36 @@ public class PasswordBusiness {
 			cs[i + 2] = hex.charAt(i / 3 * 2 + 1);
 		}
 		String txt = new String(cs);
+		System.out.println("generate().TXT == " + txt);
 		return txt;
 	}
 
 	/**
 	 * 校验加盐后是否和原文一致,逆向解密
 	 *
-	 * @param password 提交之密码
+	 * @param password 前台密码
 	 * @param text     原文
 	 * @return
 	 */
 	public boolean verify(String password, String text) {
-		char[] digestStr = new char[32];
-		char[] saltStr = new char[16];
+		char[] digest = new char[32];
+		char[] saltStuff = new char[16];
 
 		for (int i = 0; i < 48; i += 3) {
-			digestStr[i / 3 * 2] = text.charAt(i);
-			digestStr[i / 3 * 2 + 1] = text.charAt(i + 2);
-
-			saltStr[i / 3] = text.charAt(i + 1);
+			digest[i / 3 * 2] = text.charAt(i);
+			digest[i / 3 * 2 + 1] = text.charAt(i + 2);
+			saltStuff[i / 3] = text.charAt(i + 1);
 		}
 
-		String salt = new String(saltStr);
+		String salt = new String(saltStuff);
+		System.err.println("verify().salt== " + salt);
 
-		return md5Hex(salt + password).equals(new String(digestStr));
+		String forePwdTxt = md5Hex(salt + password);
+		System.out.println("forePwdTxt== " + forePwdTxt);
+
+		String digestString = new String(digest);
+		System.err.println("digestString== " + digestString);
+
+		return forePwdTxt.equals(digestString);
 	}
 }

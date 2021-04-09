@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.computer.subscribe.controller.BasicController;
 import com.computer.subscribe.exception.OperationException;
+import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.response.WebResponse;
 import com.computer.subscribe.service.IUserService;
@@ -36,9 +37,35 @@ public class UsersController extends BasicController {
 	private IUserService ius;
 
 	/**
+	 * http://localhost:8080/subscribe/UsersController/loginAction?role=
+	 * @param passwd
+	 * @param userNum
+	 * @param role
+	 * @return
+	 * @throws OperationException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/loginAction", method = RequestMethod.GET)
+	@ApiOperation(value = "帐户登录", notes = "参数为:工号/学号,密码,角色(即帐号类型)", httpMethod = "GET")
+	public WebResponse<LoginData> loginAction(
+			@ApiParam("Forehand sends password") @Valid String passwd,
+			@ApiParam("User(administrator/teacher/students) Numer") @Valid Long userNum,
+			@ApiParam("the user's role(administrator/teacher/students)") @Valid Integer role)
+			throws OperationException {
+		logger.info(
+				"role== " + role + ",userNum== " + userNum + ",passwd== " + passwd);
+		System.err.println(
+				"role== " + role + ",userNum== " + userNum + ",passwd== " + passwd);
+
+		LoginData data = ius.login(userNum, passwd, role);
+
+		return new WebResponse<LoginData>(SUCCESS, data);
+	}
+
+	/**
 	 * 注册新用户<br>
 	 * 
-	 * http://localhost:8080/subscribe/UsersController/registerAction?userName=巴斯克德里诺&userNum=10548941&phone=18520273627&mailbox=16517471@qq.com&role=1
+	 * http://localhost:8080/subscribe/UsersController/registerAction?userName=skypt&userNum=1050048&phone=18370273627&mailbox=165174714570@qq.com&role=2
 	 * 
 	 * <br>
 	 * 

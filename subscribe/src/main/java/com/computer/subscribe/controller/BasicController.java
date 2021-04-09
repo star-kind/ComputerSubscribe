@@ -89,8 +89,10 @@ public class BasicController {
 			res.setCode(ExceptionsEnum.ACCOUNT_DUPLICATE_CONFLICT.getCode());
 			break;
 
+		case "帐户类型错误!您不是这个类型的帐户":
+			res.setCode(ExceptionsEnum.ERR_TYPE_PRIVILEGE.getCode());
+			break;
 		}
-
 		return res;
 	}
 

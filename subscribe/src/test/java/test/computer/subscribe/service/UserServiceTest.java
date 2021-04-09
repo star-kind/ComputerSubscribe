@@ -6,9 +6,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.computer.subscribe.exception.OperationException;
+import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.service.IUserService;
 
+/**
+ * 用户业务测试模块
+ * 
+ * @author user
+ *
+ */
 public class UserServiceTest {
 	private ApplicationContext applicationContext;
 	private IUserService userService;
@@ -20,17 +27,29 @@ public class UserServiceTest {
 	}
 
 	@Test
+	public void loginingTest() {
+		userService = (IUserService) applicationContext.getBean("userServiceImpl");
+
+		try {
+			LoginData user = userService.login(393690147, "314", 1);
+			System.err.println(user.toString());
+		} catch (OperationException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
 	public void registerTest() {
 		userService = (IUserService) applicationContext.getBean("userServiceImpl");
 
 		TUser user = new TUser();
 
-		user.setMailbox("342701684800@qq.cn");
-		user.setPhone("17708030697");
-		user.setUserNum(19908114);
+		user.setMailbox("3134822135401@ffox.cn");
+		user.setPhone("17088340694");
+		user.setUserNum(393690147000L);
 
-		user.setRole(0);
-		user.setUserName("keqingqq");
+		user.setRole(1);
+		user.setUserName("teacher.dinolain");
 
 		try {
 			Integer row = userService.regist(user);

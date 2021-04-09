@@ -36,8 +36,12 @@ public class WebResponse<T> {
 		this.data = data;
 	}
 
+	public WebResponse(Integer code, T data) {
+		this.code = code;
+		this.data = data;
+	}
+
 	public WebResponse(Integer code, String message, T data) {
-		super();
 		this.code = code;
 		this.message = message;
 		this.data = data;

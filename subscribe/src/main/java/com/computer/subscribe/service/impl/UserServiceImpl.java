@@ -1,5 +1,6 @@
 package com.computer.subscribe.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,10 +11,12 @@ import org.springframework.stereotype.Service;
 import com.computer.subscribe.exception.ExceptionsEnum;
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.mapper.TUserMapper;
+import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.TUserExample;
 import com.computer.subscribe.pojo.TUserExample.Criteria;
 import com.computer.subscribe.service.IUserService;
+import com.computer.subscribe.util.JwtUtils;
 import com.computer.subscribe.util.account.PasswordBusiness;
 
 @Service
@@ -49,12 +52,12 @@ public class UserServiceImpl implements IUserService {
 		System.err.println(optionalUser);
 
 		if (!optionalUser.isPresent()) {
-			String description = ExceptionsEnum.REGIST_DATA_INCOMPLETE.getDescription();
+			String description = ExceptionsEnum.REGIST_DATA_INCOMPLETE
+					.getDescription();
 
 			System.err.println(description);
 			logger.error(description);
 
-			// throw new OperationException(description);
 		}
 		TUser tUser = optionalUser.get();
 		System.err.println(tUser.toString());
@@ -67,7 +70,8 @@ public class UserServiceImpl implements IUserService {
 		List<TUser> list = userMapper.selectByExample(example);
 
 		if (list.size() > 0) {
-			String description = ExceptionsEnum.ACCOUNT_DUPLICATE_CONFLICT.getDescription();
+			String description = ExceptionsEnum.ACCOUNT_DUPLICATE_CONFLICT
+					.getDescription();
 			System.err.println(description);
 			logger.error(description);
 
@@ -81,7 +85,8 @@ public class UserServiceImpl implements IUserService {
 		List<TUser> list2 = userMapper.selectByExample(example2);
 
 		if (list2.size() > 0) {
-			String description = ExceptionsEnum.PHONE_DUPLICATE_CONFLICT.getDescription();
+			String description = ExceptionsEnum.PHONE_DUPLICATE_CONFLICT
+					.getDescription();
 			System.err.println(description);
 			logger.error(description);
 
@@ -95,7 +100,8 @@ public class UserServiceImpl implements IUserService {
 		List<TUser> list3 = userMapper.selectByExample(example3);
 
 		if (list3.size() > 0) {
-			String description = ExceptionsEnum.EMAIL_DUPLICATE_CONFLICT.getDescription();
+			String description = ExceptionsEnum.EMAIL_DUPLICATE_CONFLICT
+					.getDescription();
 			System.err.println(description);
 			logger.error(description);
 
@@ -111,7 +117,8 @@ public class UserServiceImpl implements IUserService {
 			List<TUser> list4 = userMapper.selectByExample(example4);
 
 			if (list4.size() > 4) {
-				String description = ExceptionsEnum.OUT_ADMIN_QUANTITY.getDescription();
+				String description = ExceptionsEnum.OUT_ADMIN_QUANTITY
+						.getDescription();
 				System.err.println(description);
 				logger.error(description);
 
@@ -121,7 +128,7 @@ public class UserServiceImpl implements IUserService {
 
 		// 盐值
 		String salt = pbBusiness.extractSalt();
-		System.err.println("salt===" + salt);
+		System.err.println("salt ===" + salt);
 		user.setSalt(salt);
 
 		/* 根据不同的角色权限设置不同的默认密码 */
@@ -129,18 +136,89 @@ public class UserServiceImpl implements IUserService {
 		case 0:
 			String keyTxt = pbBusiness.generate(INIT_KEY_ADMIN, salt);
 			user.setPassword(keyTxt);
-			
+			break;
+
 		case 1:
 			String keyTxt1 = pbBusiness.generate(INIT_KEY_TEACHER, salt);
 			user.setPassword(keyTxt1);
+			break;
 
 		case 2:
 			String keyTxt2 = pbBusiness.generate(INIT_KEY_STUDENT, salt);
 			user.setPassword(keyTxt2);
+			break;
 		}
 
 		int effect = userMapper.insert(user);
 		return effect;
+	}
+
+	@Override
+	public LoginData login(long userNum, String passwd, Integer role)
+			throws OperationException {
+		LoginData data = new LoginData();
+		JwtUtils utils = new JwtUtils();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Integer minute = 600 * 10000;
+
+		TUserExample example = new TUserExample();
+		Criteria criteria = example.createCriteria();
+
+		/* 根据工号或者学号查看是否存在账户 */
+		// 先构造条件
+		criteria.andUserNumEqualTo(userNum);
+		List<TUser> list = userMapper.selectByExample(example);
+
+		if (list.isEmpty()) {
+			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
+			logger.error(
+					this.getClass().getSimpleName() + "--err=== " + description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		for (TUser tUser : list) {
+			System.err.println(tUser.toString());
+			System.out.println("User.Password== " + tUser.getPassword());
+		}
+
+		TUser tUser = list.get(0);
+		/* 检验密码 */
+		boolean verify = pbBusiness.verify(passwd, tUser.getPassword());
+		// 比较密码
+		if (!verify) {
+			String description = ExceptionsEnum.LOGIN_PASSWORD_ERR.getDescription();
+			logger.error(
+					this.getClass().getSimpleName() + "--err=== " + description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		/* 检验登录所选之角色是否符合 */
+		if (tUser.getRole() != role) {
+			String description = ExceptionsEnum.ERR_TYPE_PRIVILEGE.getDescription();
+			logger.error(
+					this.getClass().getSimpleName() + "--err=== " + description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		map.put("userid", tUser.getId());
+		map.put("usernum", tUser.getUserNum());
+		map.put("mailbox", tUser.getMailbox());
+		map.put("phone", tUser.getPhone());
+		// 生成token,有效时间2小时
+		String token = utils.encode(map, minute * 60 * 2);
+
+		data.setId(tUser.getId());
+		data.setUserNum(tUser.getUserNum());
+		data.setUserName(tUser.getUserName());
+		data.setPhone(tUser.getPhone());
+		data.setMailbox(tUser.getMailbox());
+		data.setRole(role);
+		data.setToken(token);
+		System.err.println(data.toString());
+		return data;
 	}
 
 }

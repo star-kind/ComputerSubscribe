@@ -37,13 +37,14 @@
 	<!-- -->
 	<!-- 拦截器链:针对请求,可配置多个拦截器 -->
 	<mvc:interceptors>
-		<!-- 第1个拦截器 -->
+		<!-- 第 1 个拦截器 -->
 		<mvc:interceptor>
 			<!-- 拦截路径（黑名单） -->
-			<mvc:mapping path="/UsersController/**" />
+			<mvc:mapping path="/**" />
+			<mvc:mapping path="/**/**" />
 			<!-- 例外（白名单） -->
-			<mvc:exclude-mapping
-				path="/UsersController/registerAction" />
+			<mvc:exclude-mapping path="/resource/**"/>
+			<mvc:exclude-mapping path="/UsersController/loginAction" />
 			<!-- 拦截器,各请求前往该类接受处理 -->
 			<bean class="com.computer.subscribe.intercept.LoginInterceptor" />
 		</mvc:interceptor>

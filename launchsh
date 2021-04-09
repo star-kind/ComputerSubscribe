@@ -2,7 +2,8 @@
 
 git add .
 
-git commit -m 'background interface test built Successfully'
+# It=submits to the remote
+git commit -m 'It will be submitted manually later'
 
 git branch -av
 

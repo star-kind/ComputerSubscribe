@@ -31,10 +31,6 @@ public class Log4jListener
 
 		System.setProperty(key, value_path);
 		System.out.println("setMineProperty() doing...");
-
-		String property = System.getProperty(key);
-		logger.info("=== getMineProperty() ====" + property);
-		System.err.println("leave setMineProperty() get=== " + property);
 	}
 
 	@Override
@@ -49,6 +45,10 @@ public class Log4jListener
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
+		String property = System.getProperty(key);
+		logger.info("=== getMineProperty() ====" + property);
+		System.err.println("contextDestroye__setMineProperty() get=== " + property);
+
 		System.err.println(this.getClass().getName());
 		logger.info("监听销毁,ServletContext对象已销毁此方法触发");
 		System.err.println("ServletContext对象销毁了...");
