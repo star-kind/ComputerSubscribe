@@ -1,5 +1,9 @@
 package com.computer.subscribe.pojo.response;
 
+import java.util.List;
+
+import com.computer.subscribe.pojo.TUser;
+
 /**
  * 响应实体类
  * 
@@ -51,6 +55,11 @@ public class WebResponse<T> {
 	}
 
 	public WebResponse() {
+	}
+
+	public WebResponse(Integer code, Pagination<List<TUser>> pagination) {
+		this.code = code;
+		this.data = (T) pagination;
 	}
 
 	@Override

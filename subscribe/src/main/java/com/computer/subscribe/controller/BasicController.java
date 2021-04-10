@@ -65,7 +65,7 @@ public class BasicController {
 			res.setCode(ExceptionsEnum.NOT_TEACHER_PRIVILEGE.getCode());
 			break;
 
-		case "管理员至多允许同时存在5位":
+		case "管理员数量超出规定":
 			res.setCode(ExceptionsEnum.OUT_ADMIN_QUANTITY.getCode());
 			break;
 

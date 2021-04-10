@@ -24,7 +24,7 @@ public enum ExceptionsEnum {
 	/** 您不是教师，无此权限 */
 	NOT_TEACHER_PRIVILEGE(1013, "您不是教师，无此权限"),
 	/** 管理员至多允许同时存在5位 */
-	OUT_ADMIN_QUANTITY(1014, "管理员至多允许同时存在5位"),
+	OUT_ADMIN_QUANTITY(1014, "管理员数量超出规定"),
 	/** 注册时提交的材料不完整 */
 	REGIST_DATA_INCOMPLETE(1015, "注册时提交的材料不完整"),
 	/** 请输入账号(学号或工号) */

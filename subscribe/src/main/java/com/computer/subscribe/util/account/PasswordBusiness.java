@@ -20,7 +20,11 @@ public class PasswordBusiness {
 	private PasswordBusiness() {
 	}
 
-	// 懒汉式之单例模式
+	/**
+	 * 懒汉式之单例模式
+	 * 
+	 * @return
+	 */
 	public static PasswordBusiness getInstance() {
 		if (pwdBusiness == null) {
 			synchronized (LOCK) {// 决定是否锁住
@@ -29,7 +33,6 @@ public class PasswordBusiness {
 				}
 			}
 		}
-
 		return pwdBusiness;
 	}
 
@@ -107,7 +110,7 @@ public class PasswordBusiness {
 	 * 校验加盐后是否和原文一致,逆向解密
 	 *
 	 * @param password 前台密码
-	 * @param text     原文
+	 * @param text     表中原文
 	 * @return
 	 */
 	public boolean verify(String password, String text) {

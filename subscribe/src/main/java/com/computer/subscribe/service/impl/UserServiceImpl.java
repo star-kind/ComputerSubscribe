@@ -15,26 +15,14 @@ import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.TUserExample;
 import com.computer.subscribe.pojo.TUserExample.Criteria;
+import com.computer.subscribe.pojo.response.Pagination;
 import com.computer.subscribe.service.IUserService;
 import com.computer.subscribe.util.JwtUtils;
+import com.computer.subscribe.util.PaginationUtils;
 import com.computer.subscribe.util.account.PasswordBusiness;
 
 @Service
 public class UserServiceImpl implements IUserService {
-	/**
-	 * 默认初始密码-普通用户-学生
-	 */
-	private static final String INIT_KEY_STUDENT = "666";
-
-	/**
-	 * 默认初始密码-普通用户-教师
-	 */
-	private static final String INIT_KEY_TEACHER = "314";
-
-	/**
-	 * 默认初始密码-非普通用户-管理员
-	 */
-	private static final String INIT_KEY_ADMIN = "040";
 
 	@Autowired
 	private TUserMapper userMapper;
@@ -42,6 +30,7 @@ public class UserServiceImpl implements IUserService {
 	public static Logger logger = Logger.getLogger(UserServiceImpl.class);
 
 	PasswordBusiness pbBusiness = PasswordBusiness.getInstance();
+	PaginationUtils paginationUtil = PaginationUtils.getInstance();
 
 	@Override
 	public Integer regist(TUser user) throws OperationException {
@@ -57,7 +46,6 @@ public class UserServiceImpl implements IUserService {
 
 			System.err.println(description);
 			logger.error(description);
-
 		}
 		TUser tUser = optionalUser.get();
 		System.err.println(tUser.toString());
@@ -108,7 +96,7 @@ public class UserServiceImpl implements IUserService {
 			throw new OperationException(description);
 		}
 
-		// 如果是注册新的管理员，检查管理员总数是否达到五人
+		// 如果是注册新的管理员，检查管理员总数是否达到50人
 		if (user.getRole() == 0) {
 			TUserExample example4 = new TUserExample();
 			Criteria criteria4 = example4.createCriteria();
@@ -116,7 +104,7 @@ public class UserServiceImpl implements IUserService {
 			criteria4.andRoleEqualTo(0);
 			List<TUser> list4 = userMapper.selectByExample(example4);
 
-			if (list4.size() > 4) {
+			if (list4.size() > 50) {
 				String description = ExceptionsEnum.OUT_ADMIN_QUANTITY
 						.getDescription();
 				System.err.println(description);
@@ -128,26 +116,12 @@ public class UserServiceImpl implements IUserService {
 
 		// 盐值
 		String salt = pbBusiness.extractSalt();
-		System.err.println("salt ===" + salt);
+		System.err.println("盐值__salt===" + salt);
 		user.setSalt(salt);
 
-		/* 根据不同的角色权限设置不同的默认密码 */
-		switch (user.getRole()) {
-		case 0:
-			String keyTxt = pbBusiness.generate(INIT_KEY_ADMIN, salt);
-			user.setPassword(keyTxt);
-			break;
-
-		case 1:
-			String keyTxt1 = pbBusiness.generate(INIT_KEY_TEACHER, salt);
-			user.setPassword(keyTxt1);
-			break;
-
-		case 2:
-			String keyTxt2 = pbBusiness.generate(INIT_KEY_STUDENT, salt);
-			user.setPassword(keyTxt2);
-			break;
-		}
+		String keyTxt = pbBusiness.generate(user.getPassword(), salt);
+		System.err.println("密码__keyTxt===" + keyTxt);
+		user.setPassword(keyTxt);
 
 		int effect = userMapper.insert(user);
 		return effect;
@@ -219,6 +193,145 @@ public class UserServiceImpl implements IUserService {
 		data.setToken(token);
 		System.err.println(data.toString());
 		return data;
+	}
+
+	@Override
+	public Integer revisePassword(String newPwd, String oldPwd, Long userNum)
+			throws OperationException {
+		logger.info("new password== " + newPwd + ", old password== " + oldPwd
+				+ ", user number==" + userNum);
+
+		TUserExample userExample = new TUserExample();
+		Criteria criteria = userExample.createCriteria();
+		criteria.andUserNumEqualTo(userNum);
+		List<TUser> list = userMapper.selectByExample(userExample);
+
+		if (list.isEmpty()) {
+			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
+			logger.error(this.getClass().getName() + "__err== " + description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		for (TUser tUser : list) {
+			System.err.println(tUser.toString());
+		}
+		TUser user = list.get(0);
+		System.err.println("list[0].user== " + user);
+
+		// 检验旧密码是否与表中密文一致
+		boolean verify = pbBusiness.verify(oldPwd, user.getPassword());
+		if (!verify) {
+			String description = ExceptionsEnum.OLD_PASSWORD_ERR.getDescription();
+			logger.error(this.getClass().getName() + "_OLD_PASSWORD_ERR_== "
+					+ description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		// 通过检验,执行修改
+		String newKeyText = pbBusiness.generate(newPwd, user.getSalt());
+		System.err.println("newKeyText== " + newKeyText);
+
+		TUser user2 = new TUser();
+		user2.setPassword(newKeyText);
+
+		int row = userMapper.updateByExampleSelective(user2, userExample);
+		return row;
+	}
+
+	@Override
+	public Pagination<List<TUser>> getMembersListByOrder(Integer pageOrder,
+			Integer pageRows, Integer id) throws OperationException {
+		System.err.println(
+				"pageNO== " + pageOrder + ",pageSize== " + pageRows + ",ID== " + id);
+
+		TUserExample example = new TUserExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andIdEqualTo(id);
+
+		List<TUser> list = userMapper.selectByExample(example);
+
+		// 用户存在与否
+		if (list.isEmpty()) {
+			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
+			logger.error(this.getClass().getName() + "__ACCOUNT_NO_EXIST__== "
+					+ description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		TUser user = list.get(0);
+		System.err.println(user.toString());
+
+		// 帐户权限是否为 0:administrator
+		if (user.getRole() != 0) {
+			String description = ExceptionsEnum.NOT_ADMIN_PRIVILEGE.getDescription();
+			logger.error(this.getClass().getName() + "__NOT_ADMIN_PRIVILEGE__== "
+					+ description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		/* 分页 */
+		// page data
+		List<TUser> pageData = this.getUserListByLimits(pageOrder, pageRows);
+
+		Integer idCount = this.getIdCount();
+
+		Pagination<List<TUser>> pagination = paginationUtil.assembly(pageData,
+				idCount, pageRows, pageOrder);
+
+		System.err.println(pagination.toString());
+		for (TUser tUser : pagination.getData()) {
+			System.err.println(tUser.toString());
+		}
+
+		return pagination;
+	}
+
+	@Override
+	public List<TUser> getUserListByLimits(Integer pageNum, Integer limit) {
+		System.err.println("pageNum== " + pageNum + ", limit== " + limit);
+
+		if (pageNum < 1) {
+			pageNum = 1;
+		}
+		pageNum -= 1;
+
+		TUserExample userExample = new TUserExample();
+		userExample.setOffset(pageNum * limit);
+		userExample.setLimit(limit);
+
+		List<TUser> list = userMapper.selectByExample(userExample);
+		for (TUser tUser : list) {
+			tUser.setPassword(null);
+			tUser.setSalt(null);
+			System.err.println(tUser.toString());
+		}
+
+		return list;
+	}
+
+	@Override
+	public List<TUser> getAllUsers() throws OperationException {
+		TUserExample userExample = new TUserExample();
+		userExample.setOrderByClause("id asc");
+
+		List<TUser> list = userMapper.selectByExample(userExample);
+		for (TUser tUser : list) {
+			System.err.println(tUser.toString());
+		}
+
+		System.out.println(this.getClass() + "_列表行数=== " + list.size());
+		return list;
+	}
+
+	@Override
+	public Integer getIdCount() throws OperationException {
+		int countId = userMapper.selectCountId();
+		System.err.println("ID的数量== " + countId);
+		return countId;
 	}
 
 }

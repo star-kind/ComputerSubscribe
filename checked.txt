@@ -1,3 +1,5 @@
+administrator=18
+--------------
 http://localhost:8080/subscribe/UsersController/registerAction?userName=巴斯克德里诺&userNum=10548941&phone=18520273627&mailbox=16517471@qq.com&role=1
 ------------------------
 http://localhost:8080/subscribe/UsersController/registerAction?userName=senior&userNum=1050918&phone=18370278627&mailbox=35174714570@qq.com&role=1
@@ -932,3 +934,64 @@ hex:d81b1061f2a15d5d3776192b8ebfa193
 Field error in object 'TUser' on field 'userNum': rejected value [null]; codes [NotNull.TUser.userNum,NotNull.userNum,NotNull.java.lang.Long,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.userNum,userNum]; arguments []; default message [userNum]]; default message [学号或工号不能为空]] 
 [2021-04-09 03:26:47:774][DEBUG]-Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<java.lang.Integer> com.computer.subscribe.controller.UsersController.registerAction(com.computer.subscribe.pojo.TUser) throws com.computer.subscribe.exception.OperationException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
 Field error in object 'TUser' on field 'userNum': rejected value [null]; codes [NotNull.TUser.userNum,NotNull.userNum,NotNull.java.lang.Long,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.userNum,userNum]; arguments []; default message [userNum]]; default message [学号或工号不能为空] -org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)
+---------------
+
+		/* 根据不同的角色权限设置不同的默认密码 */
+//		switch (user.getRole()) {
+//		case 0:
+//			String keyTxt = pbBusiness.generate(INIT_KEY_ADMIN, salt);
+//			user.setPassword(keyTxt);
+//			break;
+//		case 1:
+//			String keyTxt1 = pbBusiness.generate(INIT_KEY_TEACHER, salt);
+//			user.setPassword(keyTxt1);
+//			break;
+//		case 2:
+//			String keyTxt2 = pbBusiness.generate(INIT_KEY_STUDENT, salt);
+//			user.setPassword(keyTxt2);
+//			break;
+//		}
+/**
+	 * 默认初始密码-普通用户-学生
+	 */
+	private static final String INIT_KEY_STUDENT = "666";
+
+	/**
+	 * 默认初始密码-普通用户-教师
+	 */
+	private static final String INIT_KEY_TEACHER = "314";
+
+	/**
+	 * 默认初始密码-非普通用户-管理员
+	 */
+	private static final String INIT_KEY_ADMIN = "040";
+----------
+http://localhost:8080/subscribe/UsersController/registerAction?userName=generate.static&password=3210&userNum=105170048&phone=18339273627&mailbox=169874714570@qq.com&role=2	
+
+http://localhost:8080/subscribe/UsersController/registerAction?userName=everaies.msi&password=321000&userNum=385170048&phone=13139273627&mailbox=51074714570@qq.com&role=2	
+-------------------------
+http://localhost:8080/subscribe/UsersController/loginAction?role=1&userNum=385170048&passwd=664
+----------------------
+http://localhost:8080/subscribe/UsersController/revisePasswordAction?userNum=6515615&newPasswd=3245&oldPasswd=0014
+-----------------------------
+组装 package ; assembling ; packaging
+----
+// 分页
+//		Pagination<List<TUser>> pagin = new Pagination<List<TUser>>();
+
+		// page data
+		List<TUser> pageData = this.getUserListByLimits(pageOrder, pageRows);
+
+		// 如果 page order <= 1 ,无上一页
+
+		// 如果 pagedata.size < pageRows, 无下一页
+
+		// total pages
+		List<TUser> allUsers = this.getAllUsers();
+//		int totalPages = allUsers.size() / pageRows;
+----------------
+http://localhost:8080/subscribe/UsersController/getMemberByOrderAction?pageOrder=0&rows=2&id=18
+--------------
+http://localhost:8080/subscribe/UsersController/registerAction?userName=smart.keyes&password=8888&userNum=345177048&phone=17839273627&mailbox=599874714570@qq.com&role=1
+
+http://localhost:8080/subscribe/UsersController/loginAction?role=1&userNum=345177048&passwd=664

@@ -19,6 +19,14 @@ public class UserMapperTest {
 	}
 
 	@Test
+	public void countsIdTest() {
+		userMapper = (TUserMapper) applicationContext.getBean("TUserMapper");
+
+		int counts = userMapper.selectCountId();
+		System.out.println("counts==" + counts);
+	}
+
+	@Test
 	public void saveUserTest() {
 		userMapper = (TUserMapper) applicationContext.getBean("TUserMapper");
 
@@ -29,7 +37,7 @@ public class UserMapperTest {
 		user.setRole(2);
 		user.setSalt("yakamaximaxka115318118513");
 		user.setUserName("LeAnder");
-		user.setUserNum(188997000);
+		user.setUserNum(188997000L);
 
 		int insert = userMapper.insert(user);
 		System.out.println("insert==" + insert);
