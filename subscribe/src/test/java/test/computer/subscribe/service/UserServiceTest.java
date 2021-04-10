@@ -30,6 +30,20 @@ public class UserServiceTest {
 	}
 
 	@Test
+	public void updateUserInfoListTest() {
+		userService = (IUserService) applicationContext.getBean("userServiceImpl");
+
+		try {
+			// 0-393606924700L
+			// 1-3999706924700L
+			userService.modifyUserInfoByAdminNum("lion.pnay", "h8848@fox.com.cn",
+					"17123241037", 105170048l, 393606924700L);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
 	public void allUserListTest() {
 		userService = (IUserService) applicationContext.getBean("userServiceImpl");
 
@@ -91,12 +105,12 @@ public class UserServiceTest {
 
 		TUser user = new TUser();
 
-		user.setMailbox("880223409@fox.com");
-		user.setPhone("17088380631");
-		user.setUserNum(393606924700L);
-		user.setPassword("1423");
-		user.setRole(0);
-		user.setUserName("super.remin");
+		user.setMailbox("8802234092654@fox.com");
+		user.setPhone("17088380622");
+		user.setUserNum(3999706924700L);
+		user.setPassword("111000");
+		user.setRole(1);
+		user.setUserName("teacher.jerk");
 
 		try {
 			Integer row = userService.regist(user);

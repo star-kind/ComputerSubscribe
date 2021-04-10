@@ -16,6 +16,50 @@ import com.computer.subscribe.pojo.response.Pagination;
  */
 public interface IUserService {
 	/**
+	 * 检查某个用户是否存在,若是存在则返回对象
+	 * 
+	 * @param userNum
+	 * @return
+	 */
+	TUser checkUserExist(Long userNum) throws OperationException;
+
+	/**
+	 * 校验管理员的存在与权限
+	 * 
+	 * @param adminNum
+	 * @throws OperationException
+	 */
+	void checkAdminPrivilege(Long adminNum) throws OperationException;
+
+	/**
+	 * 
+	 * @param userNum
+	 * @param adminNum 管理员工号
+	 * @return
+	 * @throws OperationException
+	 */
+	TUser getUserByUserNum(@NotNull Long userNum, @NotNull Long adminNum)
+			throws OperationException;
+
+	/**
+	 * 修改用户资料,只能由管理员进行修改<br>
+	 * 基于user number(工号)-管理员; 可修改字段: 电话,邮箱,用户名<br>
+	 * 
+	 * <b>管理员之间不能互相修改</b>
+	 * 
+	 * @param userName
+	 * @param mailbox
+	 * @param phone
+	 * @param userNum  被修改对象的user numer
+	 * @param adminNum
+	 * @return
+	 * @throws OperationException
+	 */
+	Integer modifyUserInfoByAdminNum(@NotNull String userName,
+			@NotNull String mailbox, @NotNull String phone, @NotNull Long userNum,
+			@NotNull Long adminNum) throws OperationException;
+
+	/**
 	 * 统计获取ID的数量
 	 * 
 	 * @return

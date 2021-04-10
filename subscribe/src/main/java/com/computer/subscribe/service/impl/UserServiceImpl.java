@@ -32,6 +32,11 @@ public class UserServiceImpl implements IUserService {
 	PasswordBusiness pbBusiness = PasswordBusiness.getInstance();
 	PaginationUtils paginationUtil = PaginationUtils.getInstance();
 
+	/**
+	 * 管理员人数限制
+	 */
+	private static int admin_mounts = 90;
+
 	@Override
 	public Integer regist(TUser user) throws OperationException {
 		logger.info(user.toString());
@@ -96,7 +101,7 @@ public class UserServiceImpl implements IUserService {
 			throw new OperationException(description);
 		}
 
-		// 如果是注册新的管理员，检查管理员总数是否达到50人
+		// 如果是注册新的管理员，检查管理员总数是否超过限制
 		if (user.getRole() == 0) {
 			TUserExample example4 = new TUserExample();
 			Criteria criteria4 = example4.createCriteria();
@@ -104,7 +109,7 @@ public class UserServiceImpl implements IUserService {
 			criteria4.andRoleEqualTo(0);
 			List<TUser> list4 = userMapper.selectByExample(example4);
 
-			if (list4.size() > 50) {
+			if (list4.size() > admin_mounts) {
 				String description = ExceptionsEnum.OUT_ADMIN_QUANTITY
 						.getDescription();
 				System.err.println(description);
@@ -135,28 +140,8 @@ public class UserServiceImpl implements IUserService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Integer minute = 600 * 10000;
 
-		TUserExample example = new TUserExample();
-		Criteria criteria = example.createCriteria();
+		TUser tUser = this.checkUserExist(userNum);
 
-		/* 根据工号或者学号查看是否存在账户 */
-		// 先构造条件
-		criteria.andUserNumEqualTo(userNum);
-		List<TUser> list = userMapper.selectByExample(example);
-
-		if (list.isEmpty()) {
-			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
-			logger.error(
-					this.getClass().getSimpleName() + "--err=== " + description);
-			System.err.println(description);
-			throw new OperationException(description);
-		}
-
-		for (TUser tUser : list) {
-			System.err.println(tUser.toString());
-			System.out.println("User.Password== " + tUser.getPassword());
-		}
-
-		TUser tUser = list.get(0);
 		/* 检验密码 */
 		boolean verify = pbBusiness.verify(passwd, tUser.getPassword());
 		// 比较密码
@@ -201,23 +186,7 @@ public class UserServiceImpl implements IUserService {
 		logger.info("new password== " + newPwd + ", old password== " + oldPwd
 				+ ", user number==" + userNum);
 
-		TUserExample userExample = new TUserExample();
-		Criteria criteria = userExample.createCriteria();
-		criteria.andUserNumEqualTo(userNum);
-		List<TUser> list = userMapper.selectByExample(userExample);
-
-		if (list.isEmpty()) {
-			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
-			logger.error(this.getClass().getName() + "__err== " + description);
-			System.err.println(description);
-			throw new OperationException(description);
-		}
-
-		for (TUser tUser : list) {
-			System.err.println(tUser.toString());
-		}
-		TUser user = list.get(0);
-		System.err.println("list[0].user== " + user);
+		TUser user = this.checkUserExist(userNum);
 
 		// 检验旧密码是否与表中密文一致
 		boolean verify = pbBusiness.verify(oldPwd, user.getPassword());
@@ -232,6 +201,10 @@ public class UserServiceImpl implements IUserService {
 		// 通过检验,执行修改
 		String newKeyText = pbBusiness.generate(newPwd, user.getSalt());
 		System.err.println("newKeyText== " + newKeyText);
+
+		TUserExample userExample = new TUserExample();
+		Criteria criteria = userExample.createCriteria();
+		criteria.andUserNumEqualTo(userNum);
 
 		TUser user2 = new TUser();
 		user2.setPassword(newKeyText);
@@ -267,7 +240,7 @@ public class UserServiceImpl implements IUserService {
 		// 帐户权限是否为 0:administrator
 		if (user.getRole() != 0) {
 			String description = ExceptionsEnum.NOT_ADMIN_PRIVILEGE.getDescription();
-			logger.error(this.getClass().getName() + "__NOT_ADMIN_PRIVILEGE__== "
+			logger.error(this.getClass().getName() + "__getMembersListByOrder__== "
 					+ description);
 			System.err.println(description);
 			throw new OperationException(description);
@@ -332,6 +305,129 @@ public class UserServiceImpl implements IUserService {
 		int countId = userMapper.selectCountId();
 		System.err.println("ID的数量== " + countId);
 		return countId;
+	}
+
+	@Override
+	public Integer modifyUserInfoByAdminNum(String userName, String mailbox,
+			String phone, Long userNum, Long adminNum) throws OperationException {
+		logger.info("_userName=== " + userName + ",_mailbox=== " + mailbox
+				+ ",_phone=== " + phone + ",_userNum=== " + userNum
+				+ ",_adminNum=== " + adminNum);
+		System.out.println(this.getClass() + ",_userName=== " + userName
+				+ ",_mailbox=== " + mailbox + ",_phone=== " + phone + ",_userNum=== "
+				+ userNum + ",_adminNum=== " + adminNum);
+
+		this.checkAdminPrivilege(adminNum);
+
+		/* 普通用户 */
+		TUser targetUser = this.checkUserExist(userNum);
+
+		/* 若被修改对象是管理员,管理员之间不可互相修改 */
+		if (targetUser.getRole() == 0) {
+			String description = ExceptionsEnum.ADMIN_CANNOT_MODIFIED
+					.getDescription();
+			logger.error(this.getClass().getName()
+					+ "_管理员之间不可互相修改_modifyUserInfoByAdminNum__== " + description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		TUserExample example = new TUserExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUserNumEqualTo(userNum);
+
+		TUser user = new TUser();
+		user.setMailbox(mailbox);
+		user.setPhone(phone);
+		user.setUserName(userName);
+
+		int effect = userMapper.updateByExampleSelective(user, example);
+		System.err.println(
+				this.getClass() + "_modifyUserInfoByAdminNum_effect== " + effect);
+
+		return effect;
+	}
+
+	@Override
+	public TUser getUserByUserNum(Long userNum, Long adminNum)
+			throws OperationException {
+		logger.error(this.getClass() + ".getUserByUserNum,adminNum==" + userNum
+				+ ",adminNum==" + adminNum);
+		System.err.println(this.getClass() + ".getUserByUserNum,adminNum==" + userNum
+				+ ",adminNum==" + adminNum);
+
+		this.checkAdminPrivilege(adminNum);
+		TUser user = this.checkUserExist(userNum);
+
+		return user;
+	}
+
+	/**
+	 * 检查某个用户是否存在,若是存在则返回对象
+	 * 
+	 * @param userNum
+	 * @return
+	 */
+	public TUser checkUserExist(Long userNum) throws OperationException {
+		TUserExample example = new TUserExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUserNumEqualTo(userNum);
+
+		List<TUser> list = userMapper.selectByExample(example);
+		// 查看普通用户是否存在
+		if (list.isEmpty()) {
+			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
+			logger.error(this.getClass().getName()
+					+ "_查看普通用户是否存在__checkUserExist__== " + description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		for (TUser tUser : list) {
+			System.err.println(tUser.toString());
+		}
+
+		TUser user = list.get(0);
+		System.err
+				.println(this.getClass() + "__checkUserExist==> " + user.toString());
+
+		return user;
+	}
+
+	/**
+	 * 校验管理员的存在与权限
+	 * 
+	 * @param adminNum
+	 */
+	public void checkAdminPrivilege(Long adminNum) throws OperationException {
+		TUserExample example1 = new TUserExample();
+		Criteria criteria1 = example1.createCriteria();
+		criteria1.andUserNumEqualTo(adminNum);
+
+		List<TUser> list1 = userMapper.selectByExample(example1);
+		// 查看管理员是否存在
+		if (list1.isEmpty()) {
+			String description = ExceptionsEnum.ADMINISTRATOR_NO_EXIST
+					.getDescription();
+			logger.error(this.getClass().getName()
+					+ "_查看管理员是否存在__checkAdminPrivilege__== " + description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
+
+		for (TUser tUser : list1) {
+			System.err.println(tUser.toString());
+		}
+		TUser adminUser = list1.get(0);
+
+		// 校验权限
+		if (adminUser.getRole() != 0) {
+			String description = ExceptionsEnum.NOT_ADMIN_PRIVILEGE.getDescription();
+			logger.error(this.getClass().getName() + "__checkAdminPrivilege__== "
+					+ description);
+			System.err.println(description);
+			throw new OperationException(description);
+		}
 	}
 
 }

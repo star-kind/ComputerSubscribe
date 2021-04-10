@@ -92,6 +92,14 @@ public class BasicController {
 		case "帐户类型错误!您不是这个类型的帐户":
 			res.setCode(ExceptionsEnum.ERR_TYPE_PRIVILEGE.getCode());
 			break;
+
+		case "管理员帐户不可被直接修改":
+			res.setCode(ExceptionsEnum.ADMIN_CANNOT_MODIFIED.getCode());
+			break;
+
+		case "管理员帐户不存在":
+			res.setCode(ExceptionsEnum.ADMINISTRATOR_NO_EXIST.getCode());
+			break;
 		}
 		return res;
 	}

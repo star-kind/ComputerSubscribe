@@ -36,7 +36,11 @@ public enum ExceptionsEnum {
 	/** 账号[学号或工号]已存在 */
 	ACCOUNT_DUPLICATE_CONFLICT(1019, "账号[学号或工号]已存在"),
 	/** 帐户类型错误!您不是这个类型的帐户 */
-	ERR_TYPE_PRIVILEGE(1020, "帐户类型错误!您不是这个类型的帐户");
+	ERR_TYPE_PRIVILEGE(1020, "帐户类型错误!您不是这个类型的帐户"),
+	/** 管理员帐户不可被直接修改 */
+	ADMIN_CANNOT_MODIFIED(1021, "管理员帐户不可被直接修改"),
+	/** 管理员帐户不存在 */
+	ADMINISTRATOR_NO_EXIST(1030, "管理员帐户不存在"),;
 
 	/**
 	 * 异常码

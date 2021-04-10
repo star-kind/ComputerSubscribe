@@ -40,6 +40,42 @@ public class UsersController extends BasicController {
 	private IUserService ius;
 
 	/**
+	 * http://localhost:8080/subscribe/UsersController/modifyUserAction?userName=curtly.hash&phone=19703640870&mailbox=168451685@qq.cn.com&userNum=1564851611&adminNum=123185161
+	 * 
+	 * @param userName
+	 * @param mailbox
+	 * @param phone
+	 * @param userNum
+	 * @param adminNum
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/modifyUserAction", method = RequestMethod.GET)
+	@ApiOperation(value = "修改用户数据", notes = "参数为:管理员工号(管理员权限等级),被修改对象:[学号或教职工号,电话,邮箱,用户名]", httpMethod = "GET")
+	public WebResponse<TUser> modifyUserAction(
+			@ApiParam("被修改用户的姓名") @Valid String userName,
+			@ApiParam("被修改用户的邮箱") @Valid String mailbox,
+			@ApiParam("被修改用户的电话") @Valid String phone,
+			@ApiParam("被修改用户的学号或者教职工号") @Valid Long userNum,
+			@ApiParam("管理员工号") @Valid Long adminNum) {
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.out.println("header.token== " + header);
+		System.err.println(this.getClass() + "--modifyUserAction--userName== "
+				+ userName + ",mailbox== " + mailbox + ",phone== " + phone
+				+ ",userNum== " + userNum + ",adminNum== " + adminNum);
+
+		Integer affect = ius.modifyUserInfoByAdminNum(userName, mailbox, phone,
+				userNum, adminNum);
+
+		TUser user = ius.getUserByUserNum(userNum, adminNum);
+		user.setPassword(null);
+		user.setSalt(null);
+
+		return new WebResponse<TUser>(SUCCESS, "成功修改" + affect + "名用户", user);
+	}
+
+	/**
 	 * http://localhost:8080/subscribe/UsersController/getMemberByOrderAction?pageOrder=0&rows=2&id=18
 	 * 
 	 * @param id
