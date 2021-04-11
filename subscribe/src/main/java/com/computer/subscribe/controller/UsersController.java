@@ -34,7 +34,6 @@ import io.swagger.annotations.ApiParam;
 @Controller
 @RequestMapping("/UsersController")
 public class UsersController extends BasicController {
-	public static Logger logger = Logger.getLogger(UsersController.class);
 
 	@Autowired
 	private IUserService ius;

@@ -1,7 +1,8 @@
 ##ignore this file##
-/target/ 
+/target/
+/logs4j/
 
-subscribe/logs/
+subscribe/logs4j/
 subscribe/target/ 
 
 .classpath

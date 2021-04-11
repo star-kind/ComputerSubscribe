@@ -1,5 +1,12 @@
+http://localhost:8080/subscribe/SubscribeController/addNewApplyAction?applicant=156168541&useInterval=3&roomNum=11&applyUseDate=2019-12-11
+-----------------------------
+http://localhost:8080/subscribe/UsersController/registerAction?userName=stud.orm&userNum=10548711&phone=18320173627&mailbox=165214717471@qq.com&role=2
+&password=000000
+-------------------------------
 administrator=18
---------------
+
+-------------------------------
+
 http://localhost:8080/subscribe/UsersController/registerAction?userName=巴斯克德里诺&userNum=10548941&phone=18520273627&mailbox=16517471@qq.com&role=1
 ------------------------
 http://localhost:8080/subscribe/UsersController/registerAction?userName=senior&userNum=1050918&phone=18370278627&mailbox=35174714570@qq.com&role=1
@@ -970,6 +977,10 @@ http://localhost:8080/subscribe/UsersController/registerAction?userName=generate
 
 http://localhost:8080/subscribe/UsersController/registerAction?userName=everaies.msi&password=321000&userNum=385170048&phone=13139273627&mailbox=51074714570@qq.com&role=2	
 -------------------------
+
+alter table t_subscribe add application_date timestamp not null comment 'Application Date';
+
+---------------------------
 http://localhost:8080/subscribe/UsersController/loginAction?role=1&userNum=385170048&passwd=664
 ----------------------
 http://localhost:8080/subscribe/UsersController/revisePasswordAction?userNum=6515615&newPasswd=3245&oldPasswd=0014
@@ -995,3 +1006,183 @@ http://localhost:8080/subscribe/UsersController/getMemberByOrderAction?pageOrder
 http://localhost:8080/subscribe/UsersController/registerAction?userName=smart.keyes&password=8888&userNum=345177048&phone=17839273627&mailbox=599874714570@qq.com&role=1
 
 http://localhost:8080/subscribe/UsersController/loginAction?role=1&userNum=345177048&passwd=664
+------------------
+org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named 'subscribeServiceImpl' is defined
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanDefinition(DefaultListableBeanFactory.java:698)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getMergedLocalBeanDefinition(AbstractBeanFactory.java:1175)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:284)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1117)
+	at test.computer.subscribe.service.SubscribeServiceTest.addNewTest(SubscribeServiceTest.java:24)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:89)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:41)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:542)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:770)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:464)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:210)
+
+---------
+@ApiParam("具体使用日期") @Valid String useDate,
+			@ApiParam("使用时间段") @Valid Integer useInterval,
+			@ApiParam("机房编号") @Valid Integer roomNum,
+			@ApiParam("学号") @Valid Long studentNum,
+
+System.err.println(this.getClass() + "+++useDate==" + useDate
+				+ ",useInterval==" + useInterval + ",roomNum==" + roomNum
+				+ ",studentNum==" + studentNum);
+
+		logger.info("useDate==" + useDate + ",useInterval==" + useInterval
+				+ ",roomNum==" + roomNum + ",studentNum==" + studentNum);
+
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date useTimeDate = format.parse(useDate);
+
+		TSubscribe sub = new TSubscribe();
+		sub.setApplicant(studentNum);
+		sub.setApplyUseDate(useTimeDate);
+		sub.setUseInterval(useInterval);
+		sub.setRoomNum(roomNum);
+---------------------------
+ default message [applyUseDate]]; default message [Failed to convert property value of type 'java.lang.String' to required type 'java.util.Date' for property 'applyUseDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull @javax.validation.constraints.Future java.util.Date] for value '2019-12-11'; nested exception is java.lang.IllegalArgumentException]
+
+Field error in object 'TSubscribe' on field 'roomNum': rejected value [11]; codes [Range.TSubscribe.roomNum,Range.roomNum,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.roomNum,roomNum]; arguments []; default message [roomNum],2,0]; default message [需要在0和2之间]		
+---------------
+-------
+---------
+
+[DEBUG]: [org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver] [resolveException] [org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)] [Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<com.computer.subscribe.pojo.TSubscribe> com.computer.subscribe.controller.SubscribeController.addNewApplyAction(com.computer.subscribe.pojo.TSubscribe,javax.servlet.http.HttpServletRequest) throws java.text.ParseException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 5 errors
+Field error in object 'TSubscribe' on field 'applyUseDate': rejected value [2019-12-11]; codes [typeMismatch.TSubscribe.applyUseDate,typeMismatch.applyUseDate,typeMismatch.java.util.Date,typeMismatch]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applyUseDate,applyUseDate]; arguments []; default message [applyUseDate]]; default message [Failed to convert property value of type 'java.lang.String' to required type 'java.util.Date' for property 'applyUseDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull @javax.validation.constraints.Future java.util.Date] for value '2019-12-11'; nested exception is java.lang.IllegalArgumentException]
+Field error in object 'TSubscribe' on field 'roomNum': rejected value [11]; codes [Range.TSubscribe.roomNum,Range.roomNum,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.roomNum,roomNum]; arguments []; default message [roomNum],2,0]; default message [需要在0和2之间]
+Field error in object 'TSubscribe' on field 'applicationStartTime': rejected value [null]; codes [NotNull.TSubscribe.applicationStartTime,NotNull.applicationStartTime,NotNull.java.util.Date,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applicationStartTime,applicationStartTime]; arguments []; default message [applicationStartTime]]; default message [申请发起之时间不能为空]
+Field error in object 'TSubscribe' on field 'subscribeStatus': rejected value [null]; codes [NotNull.TSubscribe.subscribeStatus,NotNull.subscribeStatus,NotNull.java.lang.Integer,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.subscribeStatus,subscribeStatus]; arguments []; default message [subscribeStatus]]; default message [预约申请单状态不能为空]
+Field error in object 'TSubscribe' on field 'useInterval': rejected value [3]; codes [Range.TSubscribe.useInterval,Range.useInterval,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.useInterval,useInterval]; arguments []; default message [useInterval],2,0]; default message [需要在0和2之间]] 
+[2021-04-11 14:55:00:078][DEBUG]-Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<com.computer.subscribe.pojo.TSubscribe> com.computer.subscribe.controller.SubscribeController.addNewApplyAction(com.computer.subscribe.pojo.TSubscribe,javax.servlet.http.HttpServletRequest) throws java.text.ParseException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 5 errors
+Field error in object 'TSubscribe' on field 'applyUseDate': rejected value [2019-12-11]; codes [typeMismatch.TSubscribe.applyUseDate,typeMismatch.applyUseDate,typeMismatch.java.util.Date,typeMismatch]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applyUseDate,applyUseDate]; arguments []; default message [applyUseDate]]; default message [Failed to convert property value of type 'java.lang.String' to required type 'java.util.Date' for property 'applyUseDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull @javax.validation.constraints.Future java.util.Date] for value '2019-12-11'; nested exception is java.lang.IllegalArgumentException]
+Field error in object 'TSubscribe' on field 'roomNum': rejected value [11]; codes [Range.TSubscribe.roomNum,Range.roomNum,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.roomNum,roomNum]; arguments []; default message [roomNum],2,0]; default message [需要在0和2之间]
+Field error in object 'TSubscribe' on field 'applicationStartTime': rejected value [null]; codes [NotNull.TSubscribe.applicationStartTime,NotNull.applicationStartTime,NotNull.java.util.Date,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applicationStartTime,applicationStartTime]; arguments []; default message [applicationStartTime]]; default message [申请发起之时间不能为空]
+Field error in object 'TSubscribe' on field 'subscribeStatus': rejected value [null]; codes [NotNull.TSubscribe.subscribeStatus,NotNull.subscribeStatus,NotNull.java.lang.Integer,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.subscribeStatus,subscribeStatus]; arguments []; default message [subscribeStatus]]; default message [预约申请单状态不能为空]
+Field error in object 'TSubscribe' on field 'useInterval': rejected value [3]; codes [Range.TSubscribe.useInterval,Range.useInterval,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.useInterval,useInterval]; arguments []; default message [useInterval],2,0]; default message [需要在0和2之间] -org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)
+
+[DEBUG]: [org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver] [resolveException] [org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)] [Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<com.computer.subscribe.pojo.TSubscribe> com.computer.subscribe.controller.SubscribeController.addNewApplyAction(com.computer.subscribe.pojo.TSubscribe,javax.servlet.http.HttpServletRequest) throws java.text.ParseException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 5 errors
+Field error in object 'TSubscribe' on field 'applyUseDate': rejected value [2019-12-11]; codes [typeMismatch.TSubscribe.applyUseDate,typeMismatch.applyUseDate,typeMismatch.java.util.Date,typeMismatch]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applyUseDate,applyUseDate]; arguments []; default message [applyUseDate]]; default message [Failed to convert property value of type 'java.lang.String' to required type 'java.util.Date' for property 'applyUseDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull @javax.validation.constraints.Future java.util.Date] for value '2019-12-11'; nested exception is java.lang.IllegalArgumentException]
+Field error in object 'TSubscribe' on field 'roomNum': rejected value [11]; codes [Range.TSubscribe.roomNum,Range.roomNum,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.roomNum,roomNum]; arguments []; default message [roomNum],2,0]; default message [需要在0和2之间]
+Field error in object 'TSubscribe' on field 'applicationStartTime': rejected value [null]; codes [NotNull.TSubscribe.applicationStartTime,NotNull.applicationStartTime,NotNull.java.util.Date,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applicationStartTime,applicationStartTime]; arguments []; default message [applicationStartTime]]; default message [申请发起之时间不能为空]
+Field error in object 'TSubscribe' on field 'subscribeStatus': rejected value [null]; codes [NotNull.TSubscribe.subscribeStatus,NotNull.subscribeStatus,NotNull.java.lang.Integer,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.subscribeStatus,subscribeStatus]; arguments []; default message [subscribeStatus]]; default message [预约申请单状态不能为空]
+Field error in object 'TSubscribe' on field 'useInterval': rejected value [3]; codes [Range.TSubscribe.useInterval,Range.useInterval,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.useInterval,useInterval]; arguments []; default message [useInterval],2,0]; default message [需要在0和2之间]] 
+[2021-04-11 14:55:00:079][DEBUG]-Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<com.computer.subscribe.pojo.TSubscribe> com.computer.subscribe.controller.SubscribeController.addNewApplyAction(com.computer.subscribe.pojo.TSubscribe,javax.servlet.http.HttpServletRequest) throws java.text.ParseException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 5 errors
+Field error in object 'TSubscribe' on field 'applyUseDate': rejected value [2019-12-11]; codes [typeMismatch.TSubscribe.applyUseDate,typeMismatch.applyUseDate,typeMismatch.java.util.Date,typeMismatch]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applyUseDate,applyUseDate]; arguments []; default message [applyUseDate]]; default message [Failed to convert property value of type 'java.lang.String' to required type 'java.util.Date' for property 'applyUseDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull @javax.validation.constraints.Future java.util.Date] for value '2019-12-11'; nested exception is java.lang.IllegalArgumentException]
+Field error in object 'TSubscribe' on field 'roomNum': rejected value [11]; codes [Range.TSubscribe.roomNum,Range.roomNum,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.roomNum,roomNum]; arguments []; default message [roomNum],2,0]; default message [需要在0和2之间]
+Field error in object 'TSubscribe' on field 'applicationStartTime': rejected value [null]; codes [NotNull.TSubscribe.applicationStartTime,NotNull.applicationStartTime,NotNull.java.util.Date,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applicationStartTime,applicationStartTime]; arguments []; default message [applicationStartTime]]; default message [申请发起之时间不能为空]
+Field error in object 'TSubscribe' on field 'subscribeStatus': rejected value [null]; codes [NotNull.TSubscribe.subscribeStatus,NotNull.subscribeStatus,NotNull.java.lang.Integer,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.subscribeStatus,subscribeStatus]; arguments []; default message [subscribeStatus]]; default message [预约申请单状态不能为空]
+Field error in object 'TSubscribe' on field 'useInterval': rejected value [3]; codes [Range.TSubscribe.useInterval,Range.useInterval,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.useInterval,useInterval]; arguments []; default message [useInterval],2,0]; default message [需要在0和2之间] -org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)
+
+[DEBUG]: [org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver] [resolveException] [org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)] [Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<com.computer.subscribe.pojo.TSubscribe> com.computer.subscribe.controller.SubscribeController.addNewApplyAction(com.computer.subscribe.pojo.TSubscribe,javax.servlet.http.HttpServletRequest) throws java.text.ParseException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 5 errors
+Field error in object 'TSubscribe' on field 'applyUseDate': rejected value [2019-12-11]; codes [typeMismatch.TSubscribe.applyUseDate,typeMismatch.applyUseDate,typeMismatch.java.util.Date,typeMismatch]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applyUseDate,applyUseDate]; arguments []; default message [applyUseDate]]; default message [Failed to convert property value of type 'java.lang.String' to required type 'java.util.Date' for property 'applyUseDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull @javax.validation.constraints.Future java.util.Date] for value '2019-12-11'; nested exception is java.lang.IllegalArgumentException]
+Field error in object 'TSubscribe' on field 'roomNum': rejected value [11]; codes [Range.TSubscribe.roomNum,Range.roomNum,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.roomNum,roomNum]; arguments []; default message [roomNum],2,0]; default message [需要在0和2之间]
+Field error in object 'TSubscribe' on field 'applicationStartTime': rejected value [null]; codes [NotNull.TSubscribe.applicationStartTime,NotNull.applicationStartTime,NotNull.java.util.Date,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applicationStartTime,applicationStartTime]; arguments []; default message [applicationStartTime]]; default message [申请发起之时间不能为空]
+Field error in object 'TSubscribe' on field 'subscribeStatus': rejected value [null]; codes [NotNull.TSubscribe.subscribeStatus,NotNull.subscribeStatus,NotNull.java.lang.Integer,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.subscribeStatus,subscribeStatus]; arguments []; default message [subscribeStatus]]; default message [预约申请单状态不能为空]
+Field error in object 'TSubscribe' on field 'useInterval': rejected value [3]; codes [Range.TSubscribe.useInterval,Range.useInterval,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.useInterval,useInterval]; arguments []; default message [useInterval],2,0]; default message [需要在0和2之间]] 
+[2021-04-11 14:55:00:079][DEBUG]-Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<com.computer.subscribe.pojo.TSubscribe> com.computer.subscribe.controller.SubscribeController.addNewApplyAction(com.computer.subscribe.pojo.TSubscribe,javax.servlet.http.HttpServletRequest) throws java.text.ParseException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 5 errors
+Field error in object 'TSubscribe' on field 'applyUseDate': rejected value [2019-12-11]; codes [typeMismatch.TSubscribe.applyUseDate,typeMismatch.applyUseDate,typeMismatch.java.util.Date,typeMismatch]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applyUseDate,applyUseDate]; arguments []; default message [applyUseDate]]; default message [Failed to convert property value of type 'java.lang.String' to required type 'java.util.Date' for property 'applyUseDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull @javax.validation.constraints.Future java.util.Date] for value '2019-12-11'; nested exception is java.lang.IllegalArgumentException]
+Field error in object 'TSubscribe' on field 'roomNum': rejected value [11]; codes [Range.TSubscribe.roomNum,Range.roomNum,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.roomNum,roomNum]; arguments []; default message [roomNum],2,0]; default message [需要在0和2之间]
+Field error in object 'TSubscribe' on field 'applicationStartTime': rejected value [null]; codes [NotNull.TSubscribe.applicationStartTime,NotNull.applicationStartTime,NotNull.java.util.Date,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.applicationStartTime,applicationStartTime]; arguments []; default message [applicationStartTime]]; default message [申请发起之时间不能为空]
+Field error in object 'TSubscribe' on field 'subscribeStatus': rejected value [null]; codes [NotNull.TSubscribe.subscribeStatus,NotNull.subscribeStatus,NotNull.java.lang.Integer,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.subscribeStatus,subscribeStatus]; arguments []; default message [subscribeStatus]]; default message [预约申请单状态不能为空]
+Field error in object 'TSubscribe' on field 'useInterval': rejected value [3]; codes [Range.TSubscribe.useInterval,Range.useInterval,Range.java.lang.Integer,Range]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TSubscribe.useInterval,useInterval]; arguments []; default message [useInterval],2,0]; default message [需要在0和2之间] -org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)
+----------
+-----
+throws java.text.ParseException]: org.springframework.web.bind.
+
+MissingServletRequestParameterException: Required String parameter 'useDate' is not present 
+------------------
+
+[DEBUG]: [org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver] [resolveException] [org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)] [Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<java.lang.Integer> com.computer.subscribe.controller.UsersController.registerAction(com.computer.subscribe.pojo.TUser) throws com.computer.subscribe.exception.OperationException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
+Field error in object 'TUser' on field 'password': rejected value [null]; codes [NotBlank.TUser.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.password,password]; arguments []; default message [password]]; default message [密码不能为空]] 
+[2021-04-11 15:33:46:956][DEBUG]-Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<java.lang.Integer> com.computer.subscribe.controller.UsersController.registerAction(com.computer.subscribe.pojo.TUser) throws com.computer.subscribe.exception.OperationException]: 
+
+org.springframework.validation.BindException: 
+
+org.springframework.validation.BeanPropertyBindingResult: 1 errors
+Field error in object 'TUser' on field 'password': rejected value [null]; codes [NotBlank.TUser.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.password,password]; arguments []; default message [password]]; default message [密码不能为空] -org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)
+
+----------
+[DEBUG]: [org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver] [resolveException] [org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)] [Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<java.lang.Integer> com.computer.subscribe.controller.UsersController.registerAction(com.computer.subscribe.pojo.TUser) throws com.computer.subscribe.exception.OperationException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
+Field error in object 'TUser' on field 'password': rejected value [null]; codes [NotBlank.TUser.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.password,password]; arguments []; default message [password]]; default message [密码不能为空]] 
+[2021-04-11 15:40:06:593][DEBUG]-Resolving exception from handler [public com.computer.subscribe.pojo.response.WebResponse<java.lang.Integer> com.computer.subscribe.controller.UsersController.registerAction(com.computer.subscribe.pojo.TUser) throws com.computer.subscribe.exception.OperationException]: org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
+Field error in object 'TUser' on field 'password': rejected value [null]; codes [NotBlank.TUser.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.password,password]; arguments []; default message [password]]; default message [密码不能为空] -org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:132)
+
+[DEBUG]: [org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver] [doResolveHandlerMethodException] [org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:319)] [Invoking @ExceptionHandler method: public com.computer.subscribe.pojo.response.WebResponse<java.lang.Void> com.computer.subscribe.controller.BasicController.handleBindException(org.springframework.validation.BindException)] 
+[2021-04-11 15:40:06:595][DEBUG]-Invoking @ExceptionHandler method: public com.computer.subscribe.pojo.response.WebResponse<java.lang.Void> com.computer.subscribe.controller.BasicController.handleBindException(org.springframework.validation.BindException) -org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:319)
+
+
+class com.computer.subscribe.controller.UsersController+++handleBindException+++org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
+Field error in object 'TUser' on field 'password': rejected value [null]; codes [NotBlank.TUser.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.password,password]; arguments []; default message [password]]; default message [密码不能为空]
+
+[ERROR]: [com.computer.subscribe.controller.BasicController] [handleBindException] [com.computer.subscribe.controller.BasicController.handleBindException(BasicController.java:45)] [org.springframework.validation.BeanPropertyBindingResult: 1 errors
+Field error in object 'TUser' on field 'password': rejected value [null]; codes [NotBlank.TUser.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.password,password]; arguments []; default message [password]]; default message [密码不能为空]] 
+org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
+Field error in object 'TUser' on field 'password': rejected value [null]; codes [NotBlank.TUser.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.password,password]; arguments []; default message [password]]; default message [密码不能为空]
+	at org.springframework.web.method.annotation.ModelAttributeMethodProcessor.resolveArgument(ModelAttributeMethodProcessor.java:110)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:77)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:162)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:123)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:104)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandleMethod(RequestMappingHandlerAdapter.java:745)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:686)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:80)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:925)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:856)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:936)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:827)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:634)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:812)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:741)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at com.computer.subscribe.filter.MineFilter.doFilter(MineFilter.java:65)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:88)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:202)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:526)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:678)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:367)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:860)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1591)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+---------------------
+class com.computer.subscribe.controller.UsersController+++handleBindException+++org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
+Field error in object 'TUser' on field 'password': rejected value [null]; codes [NotBlank.TUser.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.password,password]; arguments []; default message [password]]; default message [密码不能为空]

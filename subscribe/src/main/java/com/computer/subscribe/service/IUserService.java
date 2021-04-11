@@ -15,13 +15,25 @@ import com.computer.subscribe.pojo.response.Pagination;
  *
  */
 public interface IUserService {
+
+	/**
+	 * 判断某个用户是否存在,是否为指定类型的帐户<br>
+	 * <ul>
+	 * 参数:
+	 * <li>学号/工号;</li>
+	 * <li>指定的角色权限码</li>
+	 * </ul>
+	 */
+	TUser checkAccountIsRight(@NotNull Long userNum, @NotNull Integer roleCode)
+			throws OperationException;
+
 	/**
 	 * 检查某个用户是否存在,若是存在则返回对象
 	 * 
 	 * @param userNum
 	 * @return
 	 */
-	TUser checkUserExist(Long userNum) throws OperationException;
+	TUser checkUserExist(@NotNull Long userNum) throws OperationException;
 
 	/**
 	 * 校验管理员的存在与权限
@@ -29,7 +41,7 @@ public interface IUserService {
 	 * @param adminNum
 	 * @throws OperationException
 	 */
-	void checkAdminPrivilege(Long adminNum) throws OperationException;
+	void checkAdminPrivilege(@NotNull Long adminNum) throws OperationException;
 
 	/**
 	 * 

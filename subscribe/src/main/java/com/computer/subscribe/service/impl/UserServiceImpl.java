@@ -121,11 +121,11 @@ public class UserServiceImpl implements IUserService {
 
 		// 盐值
 		String salt = pbBusiness.extractSalt();
-		System.err.println("盐值__salt===" + salt);
+		System.err.println(this.getClass() + "+盐值__salt===" + salt);
 		user.setSalt(salt);
 
 		String keyTxt = pbBusiness.generate(user.getPassword(), salt);
-		System.err.println("密码__keyTxt===" + keyTxt);
+		System.err.println(this.getClass() + "+密码__keyTxt===" + keyTxt);
 		user.setPassword(keyTxt);
 
 		int effect = userMapper.insert(user);
@@ -200,7 +200,7 @@ public class UserServiceImpl implements IUserService {
 
 		// 通过检验,执行修改
 		String newKeyText = pbBusiness.generate(newPwd, user.getSalt());
-		System.err.println("newKeyText== " + newKeyText);
+		System.err.println(this.getClass() + "++newKeyText== " + newKeyText);
 
 		TUserExample userExample = new TUserExample();
 		Criteria criteria = userExample.createCriteria();
@@ -265,7 +265,8 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public List<TUser> getUserListByLimits(Integer pageNum, Integer limit) {
-		System.err.println("pageNum== " + pageNum + ", limit== " + limit);
+		System.err.println(this.getClass() + "+getUserListByLimits++pageNum== "
+				+ pageNum + ", limit== " + limit);
 
 		if (pageNum < 1) {
 			pageNum = 1;
@@ -377,13 +378,18 @@ public class UserServiceImpl implements IUserService {
 		// 查看普通用户是否存在
 		if (list.isEmpty()) {
 			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
+
 			logger.error(this.getClass().getName()
-					+ "_查看普通用户是否存在__checkUserExist__== " + description);
-			System.err.println(description);
+					+ "__查看普通用户是否存在__checkUserExist__== " + description);
+			System.err.println(this.getClass().getName()
+					+ "__查看普通用户是否存在__checkUserExist__==" + description);
+
 			throw new OperationException(description);
 		}
 
 		for (TUser tUser : list) {
+			tUser.setPassword(null);
+			tUser.setSalt(null);
 			System.err.println(tUser.toString());
 		}
 
@@ -391,6 +397,8 @@ public class UserServiceImpl implements IUserService {
 		System.err
 				.println(this.getClass() + "__checkUserExist==> " + user.toString());
 
+		user.setPassword(null);
+		user.setSalt(null);
 		return user;
 	}
 
@@ -409,13 +417,18 @@ public class UserServiceImpl implements IUserService {
 		if (list1.isEmpty()) {
 			String description = ExceptionsEnum.ADMINISTRATOR_NO_EXIST
 					.getDescription();
+
 			logger.error(this.getClass().getName()
-					+ "_查看管理员是否存在__checkAdminPrivilege__== " + description);
-			System.err.println(description);
+					+ "__查看管理员是否存在__checkAdminPrivilege__== " + description);
+			System.err.println(this.getClass()
+					+ "__查看管理员是否存在__checkAdminPrivilege__== " + description);
+
 			throw new OperationException(description);
 		}
 
 		for (TUser tUser : list1) {
+			tUser.setPassword(null);
+			tUser.setSalt(null);
 			System.err.println(tUser.toString());
 		}
 		TUser adminUser = list1.get(0);
@@ -423,11 +436,78 @@ public class UserServiceImpl implements IUserService {
 		// 校验权限
 		if (adminUser.getRole() != 0) {
 			String description = ExceptionsEnum.NOT_ADMIN_PRIVILEGE.getDescription();
-			logger.error(this.getClass().getName() + "__checkAdminPrivilege__== "
-					+ description);
-			System.err.println(description);
+
+			logger.error(
+					this.getClass() + "__checkAdminPrivilege__== " + description);
+			System.err.println(
+					this.getClass() + "__checkAdminPrivilege__== " + description);
+
 			throw new OperationException(description);
 		}
+	}
+
+	@Override
+	public TUser checkAccountIsRight(Long userNum, Integer roleCode)
+			throws OperationException {
+		logger.info(this.getClass() + "__checkAdminPrivilege__userNum & roleCode== "
+				+ userNum + "&&&" + roleCode);
+		System.err.println(
+				this.getClass() + "__checkAdminPrivilege__userNum & roleCode== "
+						+ userNum + "&&&" + roleCode);
+
+		TUserExample example = new TUserExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUserNumEqualTo(userNum);
+
+		List<TUser> list = userMapper.selectByExample(example);
+
+		// 查看帐号是否存在
+		if (list.isEmpty()) {
+			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
+
+			logger.error(this.getClass().getName()
+					+ "__查看帐号是否存在__checkAccountIsRight__== " + description);
+			System.err.println(this.getClass().getName()
+					+ "__查看帐号是否存在__checkAccountIsRight__==" + description);
+
+			throw new OperationException(description);
+		}
+
+		for (TUser tUser : list) {
+			tUser.setPassword(null);
+			tUser.setSalt(null);
+			System.err.println(tUser.toString());
+		}
+
+		TUser user = list.get(0);
+		System.err.println(
+				this.getClass() + "__checkAccountIsRight==> " + user.toString());
+
+		String desc = null;
+		if (roleCode != user.getRole()) {
+			switch (roleCode) {
+			case 0:
+				desc = ExceptionsEnum.NOT_ADMIN_PRIVILEGE.getDescription();
+				break;
+
+			case 1:
+				desc = ExceptionsEnum.NOT_TEACHER_PRIVILEGE.getDescription();
+				break;
+
+			case 2:
+				desc = ExceptionsEnum.NOT_STUDENT_PRIVILEGE.getDescription();
+				break;
+			}
+
+			logger.error(this.getClass() + "__检验帐号是否符合指定权限__checkAccountIsRight__== "
+					+ desc);
+			System.err.println(this.getClass()
+					+ "__检验帐号是否符合指定权限__checkAccountIsRight__==" + desc);
+
+			throw new OperationException(desc);
+		}
+
+		return user;
 	}
 
 }

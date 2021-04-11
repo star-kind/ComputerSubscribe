@@ -105,12 +105,12 @@ public class UserServiceTest {
 
 		TUser user = new TUser();
 
-		user.setMailbox("8802234092654@fox.com");
-		user.setPhone("17088380622");
-		user.setUserNum(3999706924700L);
-		user.setPassword("111000");
-		user.setRole(1);
-		user.setUserName("teacher.jerk");
+		user.setMailbox("30117754@fox.com");
+		user.setPhone("17090380937");
+		user.setUserNum(890170700L);
+		user.setPassword("222");
+		user.setRole(2);
+		user.setUserName("student.apcount");
 
 		try {
 			Integer row = userService.regist(user);

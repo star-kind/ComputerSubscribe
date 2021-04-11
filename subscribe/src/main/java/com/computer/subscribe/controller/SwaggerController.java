@@ -16,8 +16,7 @@ import io.swagger.annotations.ApiOperation;
 @Controller
 @Api(value = "/SwaggerController")
 @RequestMapping("/SwaggerController")
-public class SwaggerController {
-	public static Logger logger = Logger.getLogger(SwaggerController.class);
+public class SwaggerController extends BasicController {
 
 	/**
 	 * @Description 进入swagger-ui.jsp页面

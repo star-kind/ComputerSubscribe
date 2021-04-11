@@ -17,7 +17,7 @@
 		class="org.apache.log4j.DailyRollingFileAppender">
 		<!-- 日志输出路径 -->
 		<param name="File"
-			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/output-debug.txt" />
+			value="./logs4j/output-debug.txt" />
 
 		<!-- 每小时生成一个新日志 -->
 		<param name="DatePattern" value="'-'yyyy-MM-dd-HH'.txt'" />
@@ -39,7 +39,7 @@
 		class="org.apache.log4j.DailyRollingFileAppender">
 		<!-- 日志输出路径 -->
 		<param name="File"
-			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/mineINFOR.txt" />
+			value="./logs4j/mineINFOR.txt" />
 
 		<!-- 每小时生成一个新日志 -->
 		<param name="DatePattern" value="'-'yyyy-MM-dd-HH'.txt'" />
@@ -61,7 +61,7 @@
 		class="org.apache.log4j.RollingFileAppender">
 
 		<param name="File"
-			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/mine-print.txt" />
+			value="./logs4j/mine-print.txt" />
 		<param name="Append" value="true" />
 		<param name="encoding" value="UTF8" />
 
@@ -99,7 +99,7 @@
 
 		<!-- 设置日志输出文件名 -->
 		<param name="File"
-			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/mineFile.txt" />
+			value="./logs4j/mineFile.txt" />
 
 		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />
@@ -119,7 +119,7 @@
 		class="org.apache.log4j.DailyRollingFileAppender">
 
 		<param name="file"
-			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/CommonError.txt" />
+			value="./logs4j/CommonError.txt" />
 		<param name="append" value="true" />
 		<param name="encoding" value="GBK" />
 
@@ -138,7 +138,7 @@
 
 		<!-- 设置File参数：日志输出文件名 -->
 		<param name="File"
-			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/mineOut.html" />
+			value="./logs4j/mineOut.html" />
 
 		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />
@@ -162,7 +162,7 @@
 
 		<!-- 设置File参数：日志输出文件名 -->
 		<param name="File"
-			value="/home/user/admin/workspaces/java-engineering/ComputerSubscribe/subscribe/logs/ourOutPut.html" />
+			value="./logs4j/ourOutPut.html" />
 
 		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />

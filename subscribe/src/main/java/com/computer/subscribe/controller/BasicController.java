@@ -1,5 +1,11 @@
 package com.computer.subscribe.controller;
 
+import javax.validation.ValidationException;
+
+import org.apache.log4j.Logger;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -8,19 +14,98 @@ import com.computer.subscribe.exception.ExceptionsEnum;
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.pojo.response.WebResponse;
 
+import javax.validation.ConstraintViolationException;
+
 /**
  * 超类控制器
  * 
  * @author user
  *
  */
-// @ControllerAdvice：包含@Component, 可以被扫描到, 统一处理异常
+//可以被扫描到, 统一处理异常
 @ControllerAdvice
 public class BasicController {
+	public static Logger logger = Logger.getLogger(BasicController.class);
+
+	private static int PARAM_FAIL_CODE = 1001;
+	private static int VALIDATION_CODE = 1002;
+
 	/**
 	 * "成功"
 	 */
 	public static final Integer SUCCESS = 200;
+
+	/**
+	 * 方法参数校验:BindException<br>
+	 * <b>如果参数校验注解检测到异常,则返还到前台</b>
+	 */
+	@ResponseBody
+	@ExceptionHandler(BindException.class)
+	public WebResponse<Void> handleBindException(BindException e) {
+		System.err.println(this.getClass() + "+++ handleBindException +++" + e);
+		logger.error(e.getMessage(), e);
+
+		WebResponse<Void> response = new WebResponse<Void>();
+
+		response.setCode(PARAM_FAIL_CODE);
+		response.setMessage(
+				e.getBindingResult().getFieldError().getDefaultMessage());
+		return response;
+	}
+
+	/**
+	 * 方法参数校验:MethodArgumentNotValidException<br>
+	 * <b>如果参数校验注解检测到异常,则返还到前台</b>
+	 * 
+	 */
+	@ResponseBody
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public WebResponse<Void> handleMethodArgumentNotValidException(
+			MethodArgumentNotValidException e) {
+		System.err.println(this.getClass() + "+++ handleMethodArgumentNotValidException +++" + e);
+		logger.error(e.getMessage(), e);
+
+		WebResponse<Void> response = new WebResponse<Void>();
+
+		response.setCode(PARAM_FAIL_CODE);
+		response.setMessage(
+				e.getBindingResult().getFieldError().getDefaultMessage());
+		return response;
+	}
+
+	/**
+	 * 方法参数校验:ValidationException<br>
+	 * <b>如果参数校验注解检测到异常,则返还到前台</b>
+	 */
+	@ResponseBody
+	@ExceptionHandler(ValidationException.class)
+	public WebResponse<Void> handleValidationException(ValidationException e) {
+		System.err.println(this.getClass() + "+++ handleValidationException +++" + e);
+		logger.error(e.getMessage(), e);
+		
+		WebResponse<Void> response = new WebResponse<Void>();
+
+		response.setCode(VALIDATION_CODE);
+		response.setMessage(e.getCause().getMessage());
+		return response;
+	}
+
+	/**
+	 * 方法参数校验:ConstraintViolationException<br>
+	 * <b>如果参数校验注解检测到异常,则返还到前台</b>
+	 */
+	@ExceptionHandler(ConstraintViolationException.class)
+	public WebResponse<Void> handleConstraintViolationException(
+			ConstraintViolationException e) {
+		System.err.println(this.getClass() + "+++ handleConstraintViolationException +++" + e);
+		logger.error(e.getMessage(), e);
+		
+		WebResponse<Void> response = new WebResponse<Void>();
+
+		response.setCode(VALIDATION_CODE);
+		response.setMessage(e.getCause().getMessage());
+		return response;
+	}
 
 	/**
 	 * 当产生业务异常时,触发此方法,返回异常給前台
