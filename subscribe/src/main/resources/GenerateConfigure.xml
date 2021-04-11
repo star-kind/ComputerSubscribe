@@ -22,7 +22,8 @@
 
 		<!-- targetProject:生成PO类的位置 -->
 		<javaModelGenerator
-			targetPackage="com.computer.subscribe.pojo" targetProject="src/main/java">
+			targetPackage="com.computer.subscribe.pojo"
+			targetProject="src/main/java">
 			<!-- enableSubPackages:是否让schema作为包的后缀 -->
 			<property name="enableSubPackages" value="false" />
 			<!-- 从数据库返回的值被清理前后的空格 -->
@@ -45,11 +46,11 @@
 		</javaClientGenerator>
 
 		<!-- 指定数据库表 -->
-		<!-- <table tableName="purchase" /> -->
+		<table tableName="t_subscribe" />
 		<!-- <table tableName="t_stock" /> -->
 		<!-- <table tableName="t_approval" /> -->
 		<!-- <table tableName="t_sale" /> -->
-		<table tableName="t_user" />
+		<!-- <table tableName="t_user" /> -->
 
 	</context>
 
