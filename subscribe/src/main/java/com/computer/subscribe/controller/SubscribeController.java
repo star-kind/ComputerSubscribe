@@ -3,6 +3,7 @@ package com.computer.subscribe.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -29,6 +30,30 @@ public class SubscribeController extends BasicController {
 
 	@Autowired
 	private ISubscribeService iss;
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/queryByStatusAction?userNum=156168541&status=0
+	 * 
+	 * @param userNum
+	 * @param status
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryByStatusAction", method = RequestMethod.GET)
+	@ApiOperation(value = "查询本周指定状态的预约申请单列表", notes = "参数为:工号[仅限教师和管理员],审核状态", httpMethod = "GET")
+	public WebResponse<List<TSubscribe>> queryByStatusAction(
+			@RequestParam("userNum") @ApiParam("工号,限教师和管理员") @Valid Long userNum,
+			@RequestParam("status") @ApiParam("预约的审核状态") @Valid Integer status,
+			HttpServletRequest req) {
+		System.err.println(this.getClass() + "__queryByStatusAction_userNum="
+				+ userNum + ",status=" + status);
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.out.println("header.token== " + header);
+		List<TSubscribe> list = iss.getSubscribeListByStatus(status, userNum);
+		return new WebResponse<List<TSubscribe>>(SUCCESS, list);
+	}
 
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/addNewApplyAction?applicant=156168541&useInterval=3&roomNum=11&applyUseDate=2019-12-11
