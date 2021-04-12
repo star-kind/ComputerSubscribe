@@ -3,6 +3,27 @@
 <log4j:configuration
 	xmlns:log4j='http://jakarta.apache.org/log4j/'>
 
+	<!-- 下面是打印mybatis语句的配置 -->
+	<logger name="com.computer.subscribe.mapper.TSubscribeMapper"
+		additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.ibatis" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="java.sql.Connection" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="java.sql.Statement" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="java.sql.PreparedStatement" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="java.sql.ResultSet" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+
 	<!-- 控制台日志 -->
 	<appender name="consoleAppender"
 		class="org.apache.log4j.ConsoleAppender">
@@ -16,8 +37,7 @@
 	<appender name="OwnDebugAppender"
 		class="org.apache.log4j.DailyRollingFileAppender">
 		<!-- 日志输出路径 -->
-		<param name="File"
-			value="./logs4j/output-debug.txt" />
+		<param name="File" value="./logs4j/output-debug.txt" />
 
 		<!-- 每小时生成一个新日志 -->
 		<param name="DatePattern" value="'-'yyyy-MM-dd-HH'.txt'" />
@@ -38,8 +58,7 @@
 	<appender name="MineInformationAppender"
 		class="org.apache.log4j.DailyRollingFileAppender">
 		<!-- 日志输出路径 -->
-		<param name="File"
-			value="./logs4j/mineINFOR.txt" />
+		<param name="File" value="./logs4j/mineINFOR.txt" />
 
 		<!-- 每小时生成一个新日志 -->
 		<param name="DatePattern" value="'-'yyyy-MM-dd-HH'.txt'" />
@@ -60,8 +79,7 @@
 	<appender name="minePrint"
 		class="org.apache.log4j.RollingFileAppender">
 
-		<param name="File"
-			value="./logs4j/mine-print.txt" />
+		<param name="File" value="./logs4j/mine-print.txt" />
 		<param name="Append" value="true" />
 		<param name="encoding" value="UTF8" />
 
@@ -98,8 +116,7 @@
 		class="org.apache.log4j.RollingFileAppender">
 
 		<!-- 设置日志输出文件名 -->
-		<param name="File"
-			value="./logs4j/mineFile.txt" />
+		<param name="File" value="./logs4j/mineFile.txt" />
 
 		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />
@@ -118,8 +135,7 @@
 	<appender name="ERROR_APPENDER"
 		class="org.apache.log4j.DailyRollingFileAppender">
 
-		<param name="file"
-			value="./logs4j/CommonError.txt" />
+		<param name="file" value="./logs4j/CommonError.txt" />
 		<param name="append" value="true" />
 		<param name="encoding" value="GBK" />
 
@@ -137,8 +153,7 @@
 		class="org.apache.log4j.RollingFileAppender">
 
 		<!-- 设置File参数：日志输出文件名 -->
-		<param name="File"
-			value="./logs4j/mineOut.html" />
+		<param name="File" value="./logs4j/mineOut.html" />
 
 		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />
@@ -161,8 +176,7 @@
 		class="org.apache.log4j.RollingFileAppender">
 
 		<!-- 设置File参数：日志输出文件名 -->
-		<param name="File"
-			value="./logs4j/ourOutPut.html" />
+		<param name="File" value="./logs4j/ourOutPut.html" />
 
 		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />

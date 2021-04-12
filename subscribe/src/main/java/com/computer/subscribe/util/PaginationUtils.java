@@ -17,6 +17,7 @@ public class PaginationUtils {
 	private static final Object LOCK = new Object();
 
 	private PaginationUtils() {
+		System.err.println(this.getClass() + "==>私有化构造器,防止被实例化");
 	}
 
 	/**

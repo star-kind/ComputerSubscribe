@@ -62,7 +62,8 @@ public class BasicController {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public WebResponse<Void> handleMethodArgumentNotValidException(
 			MethodArgumentNotValidException e) {
-		System.err.println(this.getClass() + "+++ handleMethodArgumentNotValidException +++" + e);
+		System.err.println(this.getClass()
+				+ "+++ handleMethodArgumentNotValidException +++" + e);
 		logger.error(e.getMessage(), e);
 
 		WebResponse<Void> response = new WebResponse<Void>();
@@ -80,9 +81,10 @@ public class BasicController {
 	@ResponseBody
 	@ExceptionHandler(ValidationException.class)
 	public WebResponse<Void> handleValidationException(ValidationException e) {
-		System.err.println(this.getClass() + "+++ handleValidationException +++" + e);
+		System.err
+				.println(this.getClass() + "+++ handleValidationException +++" + e);
 		logger.error(e.getMessage(), e);
-		
+
 		WebResponse<Void> response = new WebResponse<Void>();
 
 		response.setCode(VALIDATION_CODE);
@@ -94,12 +96,14 @@ public class BasicController {
 	 * 方法参数校验:ConstraintViolationException<br>
 	 * <b>如果参数校验注解检测到异常,则返还到前台</b>
 	 */
+	@ResponseBody
 	@ExceptionHandler(ConstraintViolationException.class)
 	public WebResponse<Void> handleConstraintViolationException(
 			ConstraintViolationException e) {
-		System.err.println(this.getClass() + "+++ handleConstraintViolationException +++" + e);
+		System.err.println(
+				this.getClass() + "+++ handleConstraintViolationException +++" + e);
 		logger.error(e.getMessage(), e);
-		
+
 		WebResponse<Void> response = new WebResponse<Void>();
 
 		response.setCode(VALIDATION_CODE);
@@ -122,11 +126,11 @@ public class BasicController {
 
 		/* 根据异常信息设异常码 */
 		switch (e.getLocalizedMessage()) {
-		case "此电话号码已注册，请更换另一个号码":
+		case "此电话号码已注册,请更换另一个号码":
 			res.setCode(ExceptionsEnum.PHONE_DUPLICATE_CONFLICT.getCode());
 			break;
 
-		case "账号(学号或工号)不存在":
+		case "账号不存在":
 			res.setCode(ExceptionsEnum.ACCOUNT_NO_EXIST.getCode());
 			break;
 
@@ -138,15 +142,15 @@ public class BasicController {
 			res.setCode(ExceptionsEnum.OLD_PASSWORD_ERR.getCode());
 			break;
 
-		case "此邮箱已被注册，请更换另外一个":
+		case "此邮箱已被注册,请更换另外一个":
 			res.setCode(ExceptionsEnum.EMAIL_DUPLICATE_CONFLICT.getCode());
 			break;
 
-		case "您不是学生，无此权限":
+		case "您不是学生,无此权限":
 			res.setCode(ExceptionsEnum.NOT_STUDENT_PRIVILEGE.getCode());
 			break;
 
-		case "您不是教师，无此权限":
+		case "您不是教师,无此权限":
 			res.setCode(ExceptionsEnum.NOT_TEACHER_PRIVILEGE.getCode());
 			break;
 
@@ -166,7 +170,7 @@ public class BasicController {
 			res.setCode(ExceptionsEnum.DIDNOT_INPUT_LOGIN_KEY.getCode());
 			break;
 
-		case "请输入的要设置的新密码":
+		case "请输入要设置的新密码":
 			res.setCode(ExceptionsEnum.DIDNOT_INPUT_NEW_KWD.getCode());
 			break;
 
@@ -185,6 +189,23 @@ public class BasicController {
 		case "管理员帐户不存在":
 			res.setCode(ExceptionsEnum.ADMINISTRATOR_NO_EXIST.getCode());
 			break;
+
+		case "预约使用的日期无效,必须是下一周的周一至周五":
+			res.setCode(ExceptionsEnum.SUBSCRIBE_DATE_INVALID.getCode());
+			break;
+
+		case "您已经预约成功了另一个机房在此日同一时段的机位,请不要重复申请预约了":
+			res.setCode(ExceptionsEnum.SUCCESS_SUBSCRIBE_DUPLICATION.getCode());
+			break;
+
+		case "您此前已对某间机房,在同一日期同一时段提出了申请,其正在等待审核中,请不要重复申请预约":
+			res.setCode(ExceptionsEnum.WAITTING_APPLY_DUPLICATION.getCode());
+			break;
+
+		case "您的帐号没有这个权限":
+			res.setCode(ExceptionsEnum.U_ACCOUNT_NOT_IT_PRIVILEGE.getCode());
+			break;
+			
 		}
 		return res;
 	}

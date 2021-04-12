@@ -22,6 +22,18 @@ public class SubscribeServiceTest {
 	}
 
 	@Test
+	public void selectByWeekListTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+			subscribeService.getSubscribeListByStatus(1, 37801354154l);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
 	public void addNewTest() {
 		subscribeService = (ISubscribeService) applicationContext
 				.getBean("subscribeServiceImpl");
@@ -29,14 +41,14 @@ public class SubscribeServiceTest {
 		try {
 			TSubscribe sub = new TSubscribe();
 
-			String timeApply = "2029-1-14";
+			String timeApply = "2021-4-23";
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date dateApply = format.parse(timeApply);
 
-			sub.setApplicant(890170700L);
+			sub.setApplicant(3999706924700L);
 			sub.setApplyUseDate(dateApply);
-			sub.setRoomNum(0);
-			sub.setUseInterval(0);
+			sub.setRoomNum(2);
+			sub.setUseInterval(1);
 
 			subscribeService.addNewScuSubscribe(sub);
 		} catch (Exception e) {

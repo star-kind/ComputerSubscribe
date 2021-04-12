@@ -34,3 +34,30 @@ not null comment 'apply for the use time of computer room:0-morning,1-afternoon,
 
 mysql> ALTER TABLE t_subscribe CHANGE reviewer reviewer bigint DEFAULT NULL COMMENT 
 'Reviewer(Must be Teacher,corresponding Teacher Number)';
+
+mysql> INSERT INTO t_subscribe(applicant,subscribe_status,room_num,use_interval,apply_use_date,application_start_time) VALUES (1889970,1,2,2,'2021-04-11','2021-03-21 12:12:12');
+Query OK, 1 row affected (0.19 sec)
+
+----------------------
+SELECT id,room_num FROM t_subscribe WHERE applicant=学号 AND subscribe_status=成功(1) AND apply_use_date=同一天 AND use_interval=同时段;
+
+SELECT id,room_num FROM t_subscribe WHERE applicant=188997 AND subscribe_status=1 AND apply_use_date='2021-04-21 16:00:00' AND use_interval=2;
+
+mysql> SELECT id,room_num AS room,application_start_time AS start_time FRO
+M t_subscribe WHERE applicant=188997 AND subscribe_status=0 AND apply_use_date='2021-04-21 16:00:00' AND use_interval=2;
++----+------+---------------------+
+| id | room | start_time          |
++----+------+---------------------+
+| 12 |    1 | 2021-04-12 07:18:24 |
++----+------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT id,room_num AS room,application_start_time AS start_time FROM t_subscribe WHERE applicant=188997 AND subscribe_status=0 AND apply_use_date='2021-04-21 16:00:00' AND use_interval=1;
++----+------+---------------------+
+| id | room | start_time          |
++----+------+---------------------+
+| 11 |    1 | 2021-04-12 07:18:09 |
++----+------+---------------------+
+1 row in set (0.00 sec)
+
+----------------

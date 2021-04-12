@@ -1,4 +1,4 @@
-package com.computer.subscribe.util.account;
+package com.computer.subscribe.util.support;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

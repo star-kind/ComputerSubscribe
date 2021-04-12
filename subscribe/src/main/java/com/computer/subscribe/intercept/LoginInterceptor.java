@@ -48,7 +48,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 			PrintWriter out = response.getWriter();
 
 			LoginData data = utils.decode(token, LoginData.class);
-			System.err.println("decode:preHandle===> " + data.toString());
+			System.out.println("decode:preHandle===> " + data.toString());
 
 			LoginData data2 = utils.updateDecode(token, LoginData.class);
 			System.err.println("updateDecode::preHandle===> " + data2.toString());

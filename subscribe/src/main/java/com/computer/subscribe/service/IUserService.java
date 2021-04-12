@@ -46,7 +46,7 @@ public interface IUserService {
 	/**
 	 * 
 	 * @param userNum
-	 * @param adminNum 管理员工号
+	 * @param adminNum 管理员的工号
 	 * @return
 	 * @throws OperationException
 	 */

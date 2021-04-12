@@ -19,15 +19,14 @@ import com.computer.subscribe.pojo.response.Pagination;
 import com.computer.subscribe.service.IUserService;
 import com.computer.subscribe.util.JwtUtils;
 import com.computer.subscribe.util.PaginationUtils;
-import com.computer.subscribe.util.account.PasswordBusiness;
+import com.computer.subscribe.util.support.PasswordBusiness;
 
 @Service
 public class UserServiceImpl implements IUserService {
+	public static Logger logger = Logger.getLogger(UserServiceImpl.class);
 
 	@Autowired
 	private TUserMapper userMapper;
-
-	public static Logger logger = Logger.getLogger(UserServiceImpl.class);
 
 	PasswordBusiness pbBusiness = PasswordBusiness.getInstance();
 	PaginationUtils paginationUtil = PaginationUtils.getInstance();
@@ -375,14 +374,14 @@ public class UserServiceImpl implements IUserService {
 		criteria.andUserNumEqualTo(userNum);
 
 		List<TUser> list = userMapper.selectByExample(example);
-		// 查看普通用户是否存在
+		// 查看用户是否存在
 		if (list.isEmpty()) {
 			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
 
 			logger.error(this.getClass().getName()
-					+ "__查看普通用户是否存在__checkUserExist__== " + description);
+					+ "__查看用户是否存在__checkUserExist__== " + description);
 			System.err.println(this.getClass().getName()
-					+ "__查看普通用户是否存在__checkUserExist__==" + description);
+					+ "__查看用户是否存在__checkUserExist__==" + description);
 
 			throw new OperationException(description);
 		}
