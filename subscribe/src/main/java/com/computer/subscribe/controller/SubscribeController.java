@@ -33,6 +33,34 @@ public class SubscribeController extends BasicController {
 	private ISubscribeService iss;
 
 	/**
+	 * http://localhost:8080/subscribe/SubscribeController/queryWeekListByStudentAction?studentNum=105170048&pageOrder=0&rows=3
+	 * 
+	 * @param studentNum
+	 * @param rows
+	 * @param pageOrder
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryWeekListByStudentAction", method = RequestMethod.GET)
+	@ApiOperation(value = "学生获取本周内自己全部的预约申请单", notes = "参数为:学号,每页展示行数,页码", httpMethod = "GET")
+	public WebResponse<Pagination<List<TSubscribe>>> queryWeekListByStudentAction(
+			@RequestParam("studentNum") @ApiParam("学号") @Valid Long studentNum,
+			@RequestParam("rows") @ApiParam("每页展示行数") @Valid Integer rows,
+			@RequestParam("pageOrder") @ApiParam("页码") @Valid Integer pageOrder,
+			HttpServletRequest req) {
+		System.err.println(
+				this.getClass() + "__queryWeekListByTeacherAction__studentNum="
+						+ studentNum + ",pageOrder=" + pageOrder + ",rows=" + rows);
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.err.println("header.token== " + header);
+		Pagination<List<TSubscribe>> pagination = iss
+				.getWeekSubscribesListByStudent(studentNum, rows, pageOrder);
+		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
+	}
+
+	/**
 	 * http://localhost:8080/subscribe/SubscribeController/queryAllSubscribesByAdminAction?applicant=105170048&adminNum=393606924700&pageOrder=0&rows=3
 	 * 
 	 * @param applicant

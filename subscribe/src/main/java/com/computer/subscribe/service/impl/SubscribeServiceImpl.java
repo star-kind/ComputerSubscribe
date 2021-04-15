@@ -1,6 +1,5 @@
 package com.computer.subscribe.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -543,6 +542,42 @@ public class SubscribeServiceImpl implements ISubscribeService {
 				+ "__getCountSubscribesByApplicant__countRows=" + countRows);
 
 		return countRows;
+	}
+
+	@Override
+	public Pagination<List<TSubscribe>> getWeekSubscribesListByStudent(
+			Long studentNum, Integer rows, Integer pageOrder)
+			throws OperationException {
+		System.err.println(
+				this.getClass() + "__getWeekSubscribesListByStudent__studentNum="
+						+ studentNum + ",rows=" + rows + ",pageOrder=" + pageOrder);
+
+		// 判断是否存在,是否为指定类型的帐户
+		ius.checkAccountIsRight(studentNum, 2);
+
+		ArrayList<Date> monAndSunList = dateTimeKits.getMonAndSunList();
+		String[] arr = dateTimeKits.getStrArrFromTimeList(monAndSunList);
+
+		// 分页获取本周内的预约申请
+		pageOrder = paginationUtil.getPageNum(pageOrder);
+
+		List<TSubscribe> listLimit = mapper.selectByTimeApplicantLimit(arr[0],
+				arr[1], pageOrder * rows, rows, studentNum);
+		for (TSubscribe tSubscribe : listLimit) {
+			System.err.println(this.getClass()
+					+ "--getWeekSubscribesListByStudent--list-element:"
+					+ tSubscribe.toString());
+		}
+
+		Integer totalRows = this.getCountSubscribesByApplicant(studentNum);
+		System.err.println(this.getClass()
+				+ "--getWeekSubscribesListByStudent--totalRows:" + totalRows);
+
+		Pagination<List<TSubscribe>> pagination = paginationUtil
+				.assemblySubscribe(listLimit, totalRows, rows, pageOrder);
+		System.err.println(pagination.toString());
+
+		return pagination;
 	}
 
 }

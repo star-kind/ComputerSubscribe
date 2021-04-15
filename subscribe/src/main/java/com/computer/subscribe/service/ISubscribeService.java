@@ -22,7 +22,18 @@ import lombok.NonNull;
  */
 public interface ISubscribeService {
 	// TODO 学生撤回自己的预约,限本周内
-	// TODO 学生查阅属于自己的本周类的全部预约,分页获取
+	/**
+	 * 学生查阅属于自己的本周内的全部预约,分页获取
+	 * 
+	 * @param studentNum
+	 * @param rows
+	 * @param pageOrder
+	 * @return
+	 * @throws OperationException
+	 */
+	Pagination<List<TSubscribe>> getWeekSubscribesListByStudent(
+			@NonNull Long studentNum, @NonNull Integer rows,
+			@NonNull Integer pageOrder) throws OperationException;
 
 	/**
 	 * 按申请使用日期和时段和申请者,将除传入id以外的预约单皆设为指定状态
