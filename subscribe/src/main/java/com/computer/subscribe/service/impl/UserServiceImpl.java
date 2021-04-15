@@ -251,7 +251,7 @@ public class UserServiceImpl implements IUserService {
 
 		Integer idCount = this.getIdCount();
 
-		Pagination<List<TUser>> pagination = paginationUtil.assembly(pageData,
+		Pagination<List<TUser>> pagination = paginationUtil.assemblyUser(pageData,
 				idCount, pageRows, pageOrder);
 
 		System.err.println(pagination.toString());
@@ -267,10 +267,7 @@ public class UserServiceImpl implements IUserService {
 		System.err.println(this.getClass() + "+getUserListByLimits++pageNum== "
 				+ pageNum + ", limit== " + limit);
 
-		if (pageNum < 1) {
-			pageNum = 1;
-		}
-		pageNum -= 1;
+		pageNum = paginationUtil.getPageNum(pageNum);
 
 		TUserExample userExample = new TUserExample();
 		userExample.setOffset(pageNum * limit);
@@ -504,6 +501,29 @@ public class UserServiceImpl implements IUserService {
 					+ "__检验帐号是否符合指定权限__checkAccountIsRight__==" + desc);
 
 			throw new OperationException(desc);
+		}
+
+		return user;
+	}
+
+	@Override
+	public TUser checkBanStudent(Long userNum) throws OperationException {
+		int studentRole = 2;
+		System.err
+				.println(this.getClass() + "__checkBanStudent.__userNum=" + userNum);
+
+		// 校验工号,返回实体
+		TUser user = this.checkUserExist(userNum);
+
+		if (user.getRole() == studentRole) {
+			String description = ExceptionsEnum.U_ACCOUNT_NOT_IT_PRIVILEGE
+					.getDescription();
+
+			System.err.println(this.getClass() + "__checkBanStudent.__description="
+					+ description);
+			logger.error(this.getClass() + "__checkBanStudent.__description="
+					+ description);
+			throw new OperationException(description);
 		}
 
 		return user;

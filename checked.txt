@@ -1,12 +1,12 @@
+use computer_subscribe;
+---------
 http://localhost:8080/subscribe/SubscribeController/addNewApplyAction?applicant=156168541&useInterval=3&roomNum=11&applyUseDate=2019-12-11
 -----------------------------
 http://localhost:8080/subscribe/UsersController/registerAction?userName=stud.orm&userNum=10548711&phone=18320173627&mailbox=165214717471@qq.com&role=2
 &password=000000
 -------------------------------
 administrator=18
-
 -------------------------------
-
 http://localhost:8080/subscribe/UsersController/registerAction?userName=巴斯克德里诺&userNum=10548941&phone=18520273627&mailbox=16517471@qq.com&role=1
 ------------------------
 http://localhost:8080/subscribe/UsersController/registerAction?userName=senior&userNum=1050918&phone=18370278627&mailbox=35174714570@qq.com&role=1
@@ -1186,3 +1186,89 @@ Field error in object 'TUser' on field 'password': rejected value [null]; codes 
 ---------------------
 class com.computer.subscribe.controller.UsersController+++handleBindException+++org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
 Field error in object 'TUser' on field 'password': rejected value [null]; codes [NotBlank.TUser.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [TUser.password,password]; arguments []; default message [password]]; default message [密码不能为空]
+-------------------------
+use computer_subscribe;
+SELECT applicant,id,application_start_time AS applicationStartTime  FROM t_subscribe WHERE application_start_time BETWEEN '2021-04-12' AND '2021-04-18';
+
+SELECT applicant,id,application_start_time AS applicationStartTime  FROM t_subscribe WHERE application_start_time BETWEEN '2021-04-12 00:00:00' AND '2021-04-18 23:59:59';
+
+SELECT applicant,id,application_start_time AS applicationStartTime  FROM t_subscribe WHERE application_start_time BETWEEN '2021-04-12 00:00:00' AND '2021-04-18 23:59:59' LIMIT 0,4;
+
+SELECT id,applicant,application_start_time AS applicationStartTime  FROM t_subscribe WHERE application_start_time BETWEEN '2021-04-12 00:00:00' AND '2021-04-18 23:59:59' AND applicant=301354154 LIMIT 0,4;
+
+<select id="selectByTimeApplicantLimit"
+		resultType="college.dorm.pojo.Houseparent">
+		SELECT 
+		id,
+		applicant,
+		application_start_time AS applicationStartTime,
+		reviewer,
+		subscribe_status AS subscribeStatus,
+		room_num  AS roomNum,
+		use_interval AS useInterval,
+		handle_time AS handleTime,
+		apply_use_date AS applyUseDate
+		FROM 
+		t_subscribe 
+		WHERE 
+		application_start_time 
+		BETWEEN 
+		#{timeBegin} AND #{timeEnd} 
+		AND 
+		applicant=#{applicant} 
+		LIMIT 
+		#{offset},#{rows}
+	</select>
+--------------
+[2021-04-15 14:19:11:316][DEBUG]-==>  Preparing: SELECT id, applicant, application_start_time AS applicationStartTime, reviewer, subscribe_status AS subscribeStatus, room_num AS roomNum, use_interval AS useInterval, handle_time AS handleTime, apply_use_date AS applyUseDate FROM t_subscribe WHERE application_start_time BETWEEN ? AND ? AND applicant=? LIMIT ?,?  
+
+Parameters: 2020-12-12 00:00:01.0(Timestamp), 2020-12-19 00:00:01.0(Timestamp), 301354154(Long), 0(Integer), 4(Integer) 
+---------------
+Parameters: 2020-12-12 00:00:01.0(Timestamp), 2020-12-19 00:00:01.0(Timestamp), 301354154(Long), 0(Integer), 4(Integer) 
+---------
+application_start_time
+		BETWEEN
+		#{timeBegin}
+		AND
+		#{timeEnd}
+		AND
+---------------
+@Param("timeBegin") String timeBegin,
+			@Param("timeEnd") String timeEnd,
+-----------------
+SELECT id, applicant, application_start_time AS applicationStartTime, reviewer, subscribe_status AS subscribeStatus, room_num AS roomNum, use_interval AS useInterval, handle_time AS handleTime, apply_use_date AS applyUseDate FROM t_subscribe 
+
+WHERE applicant=? LIMIT ?,?  
+-------------------------------
+nested exception is org.apache.ibatis.exceptions.TooManyResultsException: Expected one result (or null) to be returned by selectOne(), but found: 5
+-------------
+ SELECT id, applicant, application_start_time AS applicationStartTime, reviewer, subscribe_status AS subscribeStatus, room_num AS roomNum, use_interval AS useInterval, handle_time AS handleTime, apply_use_date AS applyUseDate FROM t_subscribe WHERE application_start_time BETWEEN ? AND ? AND applicant=?  
+
+ [==> Parameters: 2021-04-12 12:04:00(String), 2021-04-18 12:04:00(String), 1889970(Long)] 
+
+
+com.computer.subscribe.pojo.TSubscribe
+------------------------
+Preparing: select id, applicant, reviewer, subscribe_status, room_num, application_start_time, use_interval, handle_time, apply_use_date from t_subscribe WHERE ( subscribe_status = ? and application_start_time between ? and ? )  
+
+[==> Parameters: 0(Integer), 2021-04-12 00:00:00.0(Timestamp), 2021-04-18 00:00:00.0(Timestamp)] 
+[2021-04-15 18:34:08:007][DEBUG]-==> Parameters: 0(Integer), 2021-04-12 00:00:00.0(Timestamp), 2021-04-18 00:00:00.0(Timestamp) 
+-------------
+SELECT id, applicant, application_start_time AS applicationStartTime, reviewer, subscribe_status AS subscribeStatus, room_num AS roomNum, use_interval AS useInterval, handle_time AS handleTime, apply_use_date AS applyUseDate FROM t_subscribe WHERE application_start_time BETWEEN ? AND ? AND applicant=?  
+--------------
+SELECT id, applicant, application_start_time AS applicationStartTime, reviewer, subscribe_status AS subscribeStatus, room_num AS roomNum, use_interval AS useInterval, handle_time AS handleTime, apply_use_date AS applyUseDate FROM t_subscribe WHERE application_start_time BETWEEN ? AND ? AND applicant=? ORDER BY id ASC LIMIT ?,?  
+
+class com.computer.subscribe.util.support.DateTimeKits__getStrArrFromTimeList__strArr=2021-04-18 12:04:00
+------------------------
+ Preparing: 
+ SELECT id, applicant, application_start_time AS applicationStartTime, reviewer, subscribe_status AS subscribeStatus, room_num AS roomNum, use_interval AS useInterval, handle_time AS handleTime, apply_use_date AS applyUseDate FROM t_subscribe WHERE application_start_time BETWEEN ? AND ? AND applicant=? ORDER BY id ASC LIMIT ?,?  
+ ------------
+ Preparing: SELECT COUNT(id) FROM t_subscribe WHERE application_start_time BETWEEN ? AND ? AND applicant=?  
+ -------------------
+ class com.computer.subscribe.service.impl.SubscribeServiceImpl__getCountSubscribesByApplicant__countRows=5
+class com.computer.subscribe.service.impl.SubscribeServiceImpl-getThisWeekSubscribeListByTeacher--totalRows:5
+class com.computer.subscribe.util.PaginationUtils__getPageBoolMap=>余数=2
+class com.computer.subscribe.util.PaginationUtils__getPageBoolMap=>has_previous,value=true
+class com.computer.subscribe.util.PaginationUtils__getPageBoolMap=>has_next,value=true
+Pagination [hasPrevious=true, hasNext=true, totalPages=2, currentPage=1, rows=3, data=[TSubscribe(id=41, applicant=1889970, reviewer=null, subscribeStatus=1, roomNum=0, applicationStartTime=Tue Apr 13 20:12:12 CST 2021, useInterval=2, handleTime=null, applyUseDate=Mon Apr 19 08:00:00 CST 2021), TSubscribe(id=47, applicant=1889970, reviewer=null, subscribeStatus=1, roomNum=0, applicationStartTime=Tue Apr 13 20:12:12 CST 2021, useInterval=2, handleTime=null, applyUseDate=Mon Apr 19 08:00:00 CST 2021), TSubscribe(id=57, applicant=1889970, reviewer=null, subscribeStatus=0, roomNum=2, applicationStartTime=Tue Apr 13 20:12:12 CST 2021, useInterval=2, handleTime=null, applyUseDate=Mon Apr 19 08:00:00 CST 2021)]]
+

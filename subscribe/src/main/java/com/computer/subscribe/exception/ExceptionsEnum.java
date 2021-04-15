@@ -16,6 +16,14 @@ public enum ExceptionsEnum {
 	SUCCESS_SUBSCRIBE_DUPLICATION(908, "您已经预约成功了另一个机房在此日同一时段的机位,请不要重复申请预约了"),
 	/** 您此前已对某间机房,在同一日期同一时段提出了申请,其正在等待审核中,请不要重复申请预约 */
 	WAITTING_APPLY_DUPLICATION(909, "您此前已对某间机房,在同一日期同一时段提出了申请,其正在等待审核中,请不要重复申请预约"),
+	/** 预约业已是这个状态,请勿重复审批 */
+	HANDLE_STATUS_DUPLICATION(910, "预约业已是这个状态,请勿重复审批"),
+	/** 申请人在该日同时段下,已有通过之预约,勿重复批准其通过 */
+	SUBSCRIBE_HAS_SUCCESS_DUPLICATION(911, "申请人在该日同时段下,已有通过之预约,勿重复批准其通过"),
+	/** 该预约申请时间不再本周内,已失效 */
+	SUBSCRIBE_NOT_IN_THIS_WEEK(912, "该预约申请发起的时间不在本周内,已失效"),
+	/** 预约申请不存在 */
+	SUBSCRIBE_NOT_EXIST(913, "预约申请不存在"),
 	/* user */
 	/** 此电话号码已注册，请更换另一个号码 */
 	PHONE_DUPLICATE_CONFLICT(1006, "此电话号码已注册,请更换另一个号码"),

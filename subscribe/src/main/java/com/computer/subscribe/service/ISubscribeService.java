@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.pojo.TSubscribe;
+import com.computer.subscribe.pojo.TUser;
+import com.computer.subscribe.pojo.response.Pagination;
 
 import lombok.NonNull;
 
@@ -19,6 +21,117 @@ import lombok.NonNull;
  *
  */
 public interface ISubscribeService {
+	// TODO 学生撤回自己的预约,限本周内
+	// TODO 学生查阅属于自己的本周类的全部预约,分页获取
+
+	/**
+	 * 按申请使用日期和时段和申请者,将除传入id以外的预约单皆设为指定状态
+	 * 
+	 * @param applicant
+	 * @param applyUseDate
+	 * @param useInterval
+	 * @param status
+	 * @param subscribeId
+	 * @param handlerNum
+	 * @return
+	 * @throws OperationException
+	 */
+	Integer reviseStatusExcludeId(@NonNull Long applicant,
+			@NonNull Date applyUseDate, @NonNull Integer useInterval,
+			@NonNull Integer status, @NonNull Long subscribeId,
+			@NonNull Long handlerNum) throws OperationException;
+
+	/**
+	 * 获取在本周发出发起申请,及指定状态的预约单集合列表
+	 * 
+	 * @param userNum 仅限教师或管理员
+	 * @param status  状态
+	 * @return
+	 * @throws OperationException
+	 */
+	List<TSubscribe> getSubscribeWeekListByStatus(@NonNull Long userNum,
+			@NonNull Integer status) throws OperationException;
+
+	/**
+	 * 根据申请人+申请使用日+申请使用时段,获取指定状态的预约集合列表
+	 * 
+	 * @param conditions
+	 * @param status
+	 * @return
+	 */
+	List<TSubscribe> getSubscribesByConditions(TSubscribe conditions,
+			@NonNull Integer status);
+
+	/**
+	 * 根据 subscribeID 获取预约信息
+	 * 
+	 * @param subscribeID
+	 * @return
+	 */
+	TSubscribe getSubscribeByID(@NonNull Long subscribeID);
+
+	/**
+	 * 根据 subscribeID 获取预约信息,三种类型用户皆可查阅
+	 * 
+	 * @param subscribeID
+	 * @param userNum
+	 * @return
+	 */
+	TSubscribe getSubscribeByID(@NonNull Long subscribeID, @NonNull Long userNum)
+			throws OperationException;
+
+	/**
+	 * 查询某位申请者本周内的全部预约申请,分页展示,限教师查阅
+	 * 
+	 * @param applicant
+	 * @param teacherNum
+	 * @return
+	 * @throws OperationException
+	 */
+	Pagination<List<TSubscribe>> getThisWeekSubscribeListByTeacher(
+			@NonNull Long applicant, @NonNull Long teacherNum, @NonNull Integer rows,
+			@NonNull Integer pageOrder) throws OperationException;
+
+	/**
+	 * 查询某位申请者的全部预约申请,分页展示,限管理员查阅
+	 * 
+	 * @param pageOrder
+	 * @param row
+	 * @param applicant
+	 * @param adminNum
+	 * @return
+	 * @throws OperationException
+	 */
+	Pagination<List<TSubscribe>> getApplicantSubscribesByAdmin(
+			@NonNull Integer pageOrder, @NonNull Integer row,
+			@NonNull Long applicant, @NonNull Long adminNum)
+			throws OperationException;
+
+	/**
+	 * 获取某位申请者本周内的预约申请总数
+	 * 
+	 * @return
+	 */
+	Integer getCountSubscribesByApplicant(@NonNull Long applicant)
+			throws OperationException;
+
+	/**
+	 * </p>
+	 * 教师对一张预约申请单进行批复处理
+	 * </p>
+	 * <p>
+	 * 仅仅允许教师操作
+	 * </p>
+	 * <ol>
+	 * <li>教师工号</li>
+	 * <li>新状态</li>
+	 * <li>待处理的预约单ID</li>
+	 * </ol>
+	 */
+	TSubscribe handleSubscribeStatus(@NonNull Integer status,
+			@NonNull Long teacherNum, @NonNull Long subscribeID)
+			throws OperationException;
+
 	/**
 	 * 获取本周内<b>(按发起申请时间)</b>的指定状态<b>(如0-待审,1-通过...etc)</b>的预约申请单列表<br>
 	 * <p>
@@ -69,4 +182,14 @@ public interface ISubscribeService {
 	 * </ul>
 	 */
 	TSubscribe addNewScuSubscribe(TSubscribe subscribe) throws OperationException;
+
+	/**
+	 * 获取上一周的全部预约申请单列表,仅仅允许管理员调阅
+	 * 
+	 * @param adminNum
+	 * @return
+	 * @throws OperationException
+	 */
+	List<TSubscribe> getPreviousWeekSubscribes(@NonNull Long adminNum)
+			throws OperationException;
 }

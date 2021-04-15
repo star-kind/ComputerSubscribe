@@ -1,3 +1,4 @@
+
 CREATE TABLE `t_subscribe` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `applicant` bigint unsigned NOT NULL COMMENT '申请者(必须是学生,对应学号)',

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.computer.subscribe.pojo.TSubscribe;
+import com.computer.subscribe.pojo.response.Pagination;
 import com.computer.subscribe.pojo.response.WebResponse;
 import com.computer.subscribe.service.ISubscribeService;
 
@@ -30,6 +31,144 @@ public class SubscribeController extends BasicController {
 
 	@Autowired
 	private ISubscribeService iss;
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/queryAllSubscribesByAdminAction?applicant=105170048&adminNum=393606924700&pageOrder=0&rows=3
+	 * 
+	 * @param applicant
+	 * @param adminNum
+	 * @param rows
+	 * @param pageOrder
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryAllSubscribesByAdminAction", method = RequestMethod.GET)
+	@ApiOperation(value = "获取某位学生全部的预约申请单", notes = "参数为:工号[限管理员],预约者的学号", httpMethod = "GET")
+	public WebResponse<Pagination<List<TSubscribe>>> queryAllSubscribesByAdminAction(
+			@RequestParam("applicant") @ApiParam("学号") @Valid Long applicant,
+			@RequestParam("adminNum") @ApiParam("管理员工号") @Valid Long adminNum,
+			@RequestParam("rows") @ApiParam("每页展示行数") @Valid Integer rows,
+			@RequestParam("pageOrder") @ApiParam("页码") @Valid Integer pageOrder,
+			HttpServletRequest req) {
+		System.err.println(
+				this.getClass() + "__queryWeekListByTeacherAction__applicant="
+						+ applicant + ",adminNum=" + adminNum + ",pageOrder="
+						+ pageOrder + ",rows=" + rows);
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.err.println("header.token== " + header);
+		Pagination<List<TSubscribe>> pagination = iss
+				.getApplicantSubscribesByAdmin(pageOrder, rows, applicant, adminNum);
+		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/queryWeekListByTeacherAction?applicant=1889970&teacherNum=41105048&pageOrder=1&rows=4
+	 * 
+	 * 
+	 * @param applicant
+	 * @param teacherNum
+	 * @param rows
+	 * @param pageOrder
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryWeekListByTeacherAction", method = RequestMethod.GET)
+	@ApiOperation(value = "获取本周内某位学生全部的预约申请单", notes = "参数为:工号[限教师],预约者的学号", httpMethod = "GET")
+	public WebResponse<Pagination<List<TSubscribe>>> queryWeekListByTeacherAction(
+			@RequestParam("applicant") @ApiParam("学号") @Valid Long applicant,
+			@RequestParam("teacherNum") @ApiParam("教师工号") @Valid Long teacherNum,
+			@RequestParam("rows") @ApiParam("每页展示行数") @Valid Integer rows,
+			@RequestParam("pageOrder") @ApiParam("页码") @Valid Integer pageOrder,
+			HttpServletRequest req) {
+		System.err.println(
+				this.getClass() + "__queryWeekListByTeacherAction__applicant="
+						+ applicant + ",teacherNum=" + teacherNum + ",pageOrder="
+						+ pageOrder + ",rows=" + rows);
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.err.println("header.token== " + header);
+		Pagination<List<TSubscribe>> pagination = iss
+				.getThisWeekSubscribeListByTeacher(applicant, teacherNum, rows,
+						pageOrder);
+		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/getSubscribeByIdAction?userNum=15165156051&subscribeID=112
+	 * 
+	 * @param userNum
+	 * @param subscribeID
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getSubscribeByIdAction", method = RequestMethod.GET)
+	@ApiOperation(value = "获取某张预约申请单的信息", notes = "参数为:工号/学号,预约单id", httpMethod = "GET")
+	public WebResponse<TSubscribe> getSubscribeByIdAction(
+			@RequestParam("userNum") @ApiParam("工号/学号") @Valid Long userNum,
+			@RequestParam("subscribeID") @ApiParam("预约单id") @Valid Long subscribeID,
+			HttpServletRequest req) {
+		System.err.println(this.getClass() + "__getSubscribeByIdAction__userNum="
+				+ userNum + ",subscribeID=" + subscribeID);
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.err.println("header.token== " + header);
+		TSubscribe subscribe = iss.getSubscribeByID(subscribeID, userNum);
+		return new WebResponse<TSubscribe>(SUCCESS, subscribe);
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/handleSubscribeStatusAction?status=0&teacherNum=3999706924700&subscribeID=12
+	 * 
+	 * @param status
+	 * @param teacherNum
+	 * @param subscribeID
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/handleSubscribeStatusAction", method = RequestMethod.GET)
+	@ApiOperation(value = "审核处理某张预约申请单", notes = "参数为:状态,工号[仅限教师],预约单id", httpMethod = "GET")
+	public WebResponse<TSubscribe> handleSubscribeStatusAction(
+			@RequestParam("status") @ApiParam("状态") @Valid Integer status,
+			@RequestParam("teacherNum") @ApiParam("工号,限教师") @Valid Long teacherNum,
+			@RequestParam("subscribeID") @ApiParam("预约单id") @Valid Long subscribeID,
+			HttpServletRequest req) {
+		System.err.println(this.getClass()
+				+ "__handleSubscribeStatusAction__teacherNum=" + teacherNum
+				+ ",status=" + status + ",subscribeID=" + subscribeID);
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.err.println("header.token== " + header);
+		TSubscribe subscribe = iss.handleSubscribeStatus(status, teacherNum,
+				subscribeID);
+		return new WebResponse<TSubscribe>(SUCCESS, subscribe);
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/getPrevWeekSubscribesListAction?adminNum=393606924700
+	 * 
+	 * @param adminNum
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getPrevWeekSubscribesListAction", method = RequestMethod.GET)
+	@ApiOperation(value = "查询上本周全部的预约申请单列表", notes = "参数为:工号[仅限管理员]", httpMethod = "GET")
+	public WebResponse<List<TSubscribe>> getPrevWeekSubscribesListAction(
+			@RequestParam("adminNum") @ApiParam("工号,限管理员") @Valid Long adminNum,
+			HttpServletRequest req) {
+		System.err.println(
+				this.getClass() + "__queryByStatusAction_adminNum=" + adminNum);
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.out.println("header.token== " + header);
+		List<TSubscribe> list = iss.getPreviousWeekSubscribes(adminNum);
+		return new WebResponse<List<TSubscribe>>(SUCCESS, list);
+	}
 
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/queryByStatusAction?userNum=156168541&status=0

@@ -36,6 +36,7 @@ public class UserServiceTest {
 		try {
 			// 0-393606924700L
 			// 1-3999706924700L
+			// 2-54059944154L
 			userService.modifyUserInfoByAdminNum("lion.pnay", "h8848@fox.com.cn",
 					"17123241037", 105170048l, 393606924700L);
 		} catch (Exception e) {
@@ -105,12 +106,12 @@ public class UserServiceTest {
 
 		TUser user = new TUser();
 
-		user.setMailbox("12046416540@tiger.com");
-		user.setPhone("17098755482");
-		user.setUserNum(1370944154l);
+		user.setMailbox("361416540@lion.com.cn");
+		user.setPhone("19034550482");
+		user.setUserNum(54059944154l);
 		user.setPassword("1234");
-		user.setRole(0);
-		user.setUserName("gov.manager.cache");
+		user.setRole(2);
+		user.setUserName("stud.school.dorm");
 
 		try {
 			Integer row = userService.regist(user);

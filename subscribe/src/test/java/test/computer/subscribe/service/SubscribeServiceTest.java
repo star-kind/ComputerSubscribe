@@ -22,6 +22,73 @@ public class SubscribeServiceTest {
 	}
 
 	@Test
+	public void getAllSubscribeListByAdminTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+			int pageNum = 1;
+			int row = 5;
+
+			subscribeService.getApplicantSubscribesByAdmin(pageNum, row, 1889970l,
+					393606924700L);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
+	public void getThisWeekListByTeacherTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+			int pageNum = 1;
+			int row = 3;
+			subscribeService.getThisWeekSubscribeListByTeacher(1889970l,
+					3999706924700L, row, pageNum);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
+	public void selectThisWeekListTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+			subscribeService.getSubscribeWeekListByStatus(3999706924700L, 0);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
+	public void updateStatusTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+			subscribeService.handleSubscribeStatus(1, 3999706924700L, 44l);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
+	public void selectByPreviousWeekListTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+			subscribeService.getPreviousWeekSubscribes(393606924700L);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
 	public void selectByWeekListTest() {
 		subscribeService = (ISubscribeService) applicationContext
 				.getBean("subscribeServiceImpl");

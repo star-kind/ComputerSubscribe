@@ -15,6 +15,14 @@ import com.computer.subscribe.pojo.response.Pagination;
  *
  */
 public interface IUserService {
+	/**
+	 * 检查是否是学生角色,若是则报错,若不是则返还[教师/管理员]实体
+	 * 
+	 * @param userNum
+	 * @return
+	 * @throws OperationException
+	 */
+	TUser checkBanStudent(@NotNull Long userNum) throws OperationException;
 
 	/**
 	 * 判断某个用户是否存在,是否为指定类型的帐户<br>

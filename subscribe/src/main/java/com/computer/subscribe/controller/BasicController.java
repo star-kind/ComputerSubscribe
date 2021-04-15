@@ -205,7 +205,23 @@ public class BasicController {
 		case "您的帐号没有这个权限":
 			res.setCode(ExceptionsEnum.U_ACCOUNT_NOT_IT_PRIVILEGE.getCode());
 			break;
-			
+
+		case "预约业已是这个状态,请勿重复审批":
+			res.setCode(ExceptionsEnum.HANDLE_STATUS_DUPLICATION.getCode());
+			break;
+
+		case "申请人在该日同时段下,已有通过之预约,勿重复批准其通过":
+			res.setCode(ExceptionsEnum.SUBSCRIBE_HAS_SUCCESS_DUPLICATION.getCode());
+			break;
+
+		case "该预约申请时间不再本周内,已失效":
+			res.setCode(ExceptionsEnum.SUBSCRIBE_NOT_IN_THIS_WEEK.getCode());
+			break;
+
+		case "预约申请不存在":
+			res.setCode(ExceptionsEnum.SUBSCRIBE_NOT_EXIST.getCode());
+			break;
+
 		}
 		return res;
 	}
