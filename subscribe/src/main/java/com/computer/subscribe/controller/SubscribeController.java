@@ -33,6 +33,35 @@ public class SubscribeController extends BasicController {
 	private ISubscribeService iss;
 
 	/**
+	 * 学生分页查询,本周内指定状态的预约列表 <br>
+	 * 
+	 * http://localhost:8080/subscribe/SubscribeController/getStudentSubscribeMyAction?studentNum=1889970&status=1&pageOrder=0&row=3
+	 * 
+	 * @param studentNum
+	 * @param status
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getStudentSubscribeMyAction", method = RequestMethod.GET)
+	public WebResponse<Pagination<List<TSubscribe>>> getStudentSubscribeMyAction(
+			@RequestParam("studentNum") Long studentNum,
+			@RequestParam("status") Integer status,
+			@RequestParam("pageOrder") Integer pageOrder,
+			@RequestParam("row") Integer row, HttpServletRequest req) {
+		System.err.println(this.getClass()
+				+ "__getStudentSubscribeMyAction__studentNum=" + studentNum
+				+ ",status=" + status + ",pageOrder=" + pageOrder + ",row=" + row);
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.err.println("header.token== " + header);
+		Pagination<List<TSubscribe>> pagination = iss
+				.getStudentSubscribeForMyPagination(studentNum, status, pageOrder,
+						row);
+		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
+	}
+
+	/**
 	 * http://localhost:8080/subscribe/SubscribeController/queryWeekListByStudentAction?studentNum=105170048&pageOrder=0&rows=3
 	 * 
 	 * @param studentNum

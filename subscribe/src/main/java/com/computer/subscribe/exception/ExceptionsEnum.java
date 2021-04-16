@@ -24,6 +24,8 @@ public enum ExceptionsEnum {
 	SUBSCRIBE_NOT_IN_THIS_WEEK(912, "该预约申请发起的时间不在本周内,已失效"),
 	/** 预约申请不存在 */
 	SUBSCRIBE_NOT_EXIST(913, "预约申请不存在"),
+	/** 你并非此份预约的申请发起者,无法对其进行修改 */
+	NOT_THIS_SUBSCRIBE_APPLIER(914, "你并非此份预约的申请发起者,无法对其进行修改"),
 	/* user */
 	/** 此电话号码已注册，请更换另一个号码 */
 	PHONE_DUPLICATE_CONFLICT(1006, "此电话号码已注册,请更换另一个号码"),

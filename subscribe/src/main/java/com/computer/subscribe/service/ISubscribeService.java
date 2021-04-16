@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.pojo.TSubscribe;
-import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.response.Pagination;
 
 import lombok.NonNull;
@@ -21,7 +20,57 @@ import lombok.NonNull;
  *
  */
 public interface ISubscribeService {
-	// TODO 学生撤回自己的预约,限本周内
+	/**
+	 * 检验想要修改的预约状态[传入]是否与原先表中的状态一致,即防止重复,<br>
+	 * 重复则报错中断,不重复则返真
+	 * 
+	 * @param newStatus 新传入的状态
+	 * @param oldStatus 原先表中的状态
+	 * @return
+	 * @throws OperationException
+	 */
+	Boolean checkStatusIsDuplicated(@NonNull Integer newStatus,
+			@NonNull Integer oldStatus) throws OperationException;
+
+	/**
+	 * 学生撤回自己的某份预约,限本周内
+	 * 
+	 * @param studentNum
+	 * @param subscribeID
+	 * @param status
+	 * @return
+	 * @throws OperationException
+	 */
+	TSubscribe studentCancelSubscribeById(@NonNull Long studentNum,
+			@NonNull Long subscribeID, @NonNull Integer status)
+			throws OperationException;
+
+	/**
+	 * 学生查询自己本周内,指定状态的全部预约
+	 * 
+	 * @param studentNum
+	 * @param status
+	 * @return
+	 * @throws OperationException
+	 */
+	List<TSubscribe> getStudentSubscribesForMyself(@NonNull Long studentNum,
+			@NonNull Integer status) throws OperationException;
+
+	/**
+	 * 学生查询自己本周内,指定状态的<b>分页</b>预约
+	 * 
+	 * @param studentNum
+	 * @param status
+	 * @param pageOrder
+	 * @param row
+	 * @return
+	 * @throws OperationException
+	 */
+	Pagination<List<TSubscribe>> getStudentSubscribeForMyPagination(
+			@NonNull Long studentNum, @NonNull Integer status,
+			@NonNull Integer pageOrder, @NonNull Integer row)
+			throws OperationException;
+
 	/**
 	 * 学生查阅属于自己的本周内的全部预约,分页获取
 	 * 
@@ -183,7 +232,7 @@ public interface ISubscribeService {
 			@NonNull Integer useInterval, @NonNull Date applyUseDate);
 
 	/**
-	 * (学生)申请使用机房,生成一张预约单子<br>
+	 * (学生)申请使用机房,生成一张预约单<br>
 	 * </ul>
 	 * 需要手动提交的参数:
 	 * <li>学号</li>

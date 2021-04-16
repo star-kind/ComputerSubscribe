@@ -245,8 +245,7 @@ public class UserServiceImpl implements IUserService {
 			throw new OperationException(description);
 		}
 
-		/* 分页 */
-		// page data
+		/* 分页 - page data */
 		List<TUser> pageData = this.getUserListByLimits(pageOrder, pageRows);
 
 		Integer idCount = this.getIdCount();

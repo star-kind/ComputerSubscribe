@@ -257,7 +257,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 				+ subscribeID);
 
 		// 校验是否属于教师帐号
-		TUser user = ius.checkAccountIsRight(teacherNum, 1);
+		ius.checkAccountIsRight(teacherNum, 1);
 
 		TSubscribe subscribe = this.getSubscribeByID(subscribeID);
 
@@ -276,16 +276,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		}
 
 		// 若与原状态一致,就不要再更改
-		if (subscribe.getSubscribeStatus() == status) {
-			String description = ExceptionsEnum.HANDLE_STATUS_DUPLICATION
-					.getDescription();
-
-			System.err.println(this.getClass()
-					+ "__handleSubscribeStatus__description=" + description);
-			logger.error(this.getClass() + "__handleSubscribeStatus__description="
-					+ description);
-			throw new OperationException(description);
-		}
+		this.checkStatusIsDuplicated(subscribe.getSubscribeStatus(), status);
 
 		// 根据申请者学生+预约使用日期,检查在同一天,同一时段是否已有通过的预约单
 		List<TSubscribe> list2 = this.getSubscribesByConditions(subscribe, 1);
@@ -578,6 +569,152 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		System.err.println(pagination.toString());
 
 		return pagination;
+	}
+
+	@Override
+	public List<TSubscribe> getStudentSubscribesForMyself(Long studentNum,
+			Integer status) throws OperationException {
+		System.err.println(
+				this.getClass() + "--getStudentSubscribesForMyself--studentNum:"
+						+ studentNum + "--status=" + status);
+		// 校验学号
+		ius.checkAccountIsRight(studentNum, 2);
+
+		ArrayList<Date> dateList = dateTimeKits.getMonAndSunList();
+
+		TSubscribeExample example = new TSubscribeExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andApplicantEqualTo(studentNum);
+		criteria.andSubscribeStatusEqualTo(status);
+		criteria.andApplicationStartTimeBetween(dateList.get(0), dateList.get(1));
+
+		List<TSubscribe> subscribeList = mapper.selectByExample(example);
+		for (TSubscribe tSubscribe : subscribeList) {
+			System.err.println(
+					this.getClass() + "__getStudentSubscribesForMyself__.tSubscribe="
+							+ tSubscribe.toString());
+		}
+
+		return subscribeList;
+	}
+
+	// TODO 等待测试
+	@Override
+	public TSubscribe studentCancelSubscribeById(Long studentNum, Long subscribeID,
+			Integer status) throws OperationException {
+		System.err.println(this.getClass()
+				+ "--studentCancelSubscribeById--studentNum:" + studentNum
+				+ "--subscribeID=" + subscribeID + "--status=" + status);
+		TUser user = ius.checkAccountIsRight(studentNum, 2);
+
+		TSubscribe subscribe = this.getSubscribeByID(subscribeID, studentNum);
+
+		// 检验预约单中的申请者是否与操作者学号一致,即是否是本人
+		if (subscribe.getApplicant() != user.getUserNum()) {
+			String description = ExceptionsEnum.NOT_THIS_SUBSCRIBE_APPLIER
+					.getDescription();
+			System.err.println(this.getClass()
+					+ "--studentCancelSubscribeById--description=" + description);
+
+			throw new OperationException(description);
+		}
+
+		// 检验预约单中的"状态"是否已经是"已取消",是则报错
+		this.checkStatusIsDuplicated(subscribe.getSubscribeStatus(), status);
+
+		// 检验预约单中的申请发起日期是否在本周内
+		Boolean isInThisWeek = dateTimeKits
+				.judgeDayIsInThisWeek(subscribe.getApplicationStartTime());
+		if (!isInThisWeek) {
+			String description = ExceptionsEnum.SUBSCRIBE_NOT_IN_THIS_WEEK
+					.getDescription();
+			System.err.println(this.getClass()
+					+ "--studentCancelSubscribeById--description=" + description);
+
+			throw new OperationException(description);
+		}
+
+		// 执行
+		TSubscribeExample example = new TSubscribeExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andIdEqualTo(subscribeID);
+
+		TSubscribe subscribe2 = new TSubscribe();
+		subscribe2.setSubscribeStatus(status);
+
+		int effect = mapper.updateByExampleSelective(subscribe2, example);
+		System.err.println(
+				this.getClass() + "--studentCancelSubscribeById--effect=" + effect);
+
+		// 返还数据
+		TSubscribe subscribe4 = this.getSubscribeByID(subscribeID);
+
+		return subscribe4;
+	}
+
+	@Override
+	public Pagination<List<TSubscribe>> getStudentSubscribeForMyPagination(
+			Long studentNum, Integer status, Integer pageOrder, Integer row)
+			throws OperationException {
+		System.err.println(this.getClass()
+				+ "--getStudentSubscribeForMyPagination--studentNum:" + studentNum
+				+ "--status=" + status + ",pageOrder=" + pageOrder + ",row=" + row);
+
+		pageOrder = paginationUtil.getPageNum(pageOrder);
+
+		ArrayList<Date> dateList = dateTimeKits.getMonAndSunList();
+
+		String[] strArr = dateTimeKits.getStrArrFromTimeList(dateList);
+
+		// Total Data Line Count
+		Integer totalSize = mapper.selectCountsByApplicantAndTime(strArr[0],
+				strArr[1], studentNum);
+		System.err.println(this.getClass()
+				+ "--getStudentSubscribeForMyPagination--totalSize=" + totalSize);
+
+		TSubscribeExample example = new TSubscribeExample();
+		example.setOffset(pageOrder * row);
+		example.setLimit(row);
+
+		Criteria criteria = example.createCriteria();
+		criteria.andApplicantEqualTo(studentNum);
+		criteria.andSubscribeStatusEqualTo(status);
+		criteria.andApplicationStartTimeBetween(dateList.get(0), dateList.get(1));
+
+		// page data
+		List<TSubscribe> pageList = mapper.selectByExample(example);
+		for (TSubscribe sub : pageList) {
+			System.err.println(sub.toString());
+		}
+
+		Pagination<List<TSubscribe>> paginationSubscribe = paginationUtil
+				.assemblySubscribe(pageList, totalSize, row, pageOrder);
+
+		System.err.println(this.getClass()
+				+ "--getStudentSubscribeForMyPagination--paginationSubscribe="
+				+ paginationSubscribe);
+
+		return paginationSubscribe;
+	}
+
+	@Override
+	public Boolean checkStatusIsDuplicated(Integer newStatus, Integer oldStatus)
+			throws OperationException {
+		System.err.println(this.getClass() + "--checkStatusIsDuplicated--newStatus="
+				+ newStatus + "--oldStatus=" + oldStatus);
+
+		// 若与原状态一致,就不要再更改
+		if (newStatus == oldStatus) {
+			String description = ExceptionsEnum.HANDLE_STATUS_DUPLICATION
+					.getDescription();
+
+			System.err.println(this.getClass()
+					+ "__handleSubscribeStatus__description=" + description);
+			logger.error(this.getClass() + "__handleSubscribeStatus__description="
+					+ description);
+			throw new OperationException(description);
+		}
+		return true;
 	}
 
 }
