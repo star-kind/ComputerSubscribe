@@ -73,16 +73,10 @@ http://localhost:8080/subscribe/SwaggerController/swagger-ui
 --------------------------
 [2021-04-05 18:12:04:332] [WARN] - No mapping found for HTTP request with URI [/subscribe/UsersController/registerAction] in DispatcherServlet with name  SpringMVC  - org.springframework.web.servlet.DispatcherServlet.noHandlerFound(DispatcherServlet.java:1108)
 
-
 No mapping found for HTTP request with URI   in DispatcherServlet with name  SpringMVC  - org.springframework.web.servlet.DispatcherServlet.noHandlerFound(DispatcherServlet.java:1108)
 --------------
-------------
-
 update t_user set role=2 where id>4;
-
 -----
--------
-
 org.springframework.beans.factory.BeanCreationException: Error creating bean with name    org.springframework.web.servlet.handler.SimpleUrlHandlerMapping#0   : Initialization of bean failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name    org.springframework.web.servlet.handler.MappedInterceptor#1   : Could not resolve matching constructor (hint: specify index/type/name arguments for simple parameters to avoid type ambiguities)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:532)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:461)
@@ -1271,4 +1265,5 @@ class com.computer.subscribe.util.PaginationUtils__getPageBoolMap=>余数=2
 class com.computer.subscribe.util.PaginationUtils__getPageBoolMap=>has_previous,value=true
 class com.computer.subscribe.util.PaginationUtils__getPageBoolMap=>has_next,value=true
 Pagination [hasPrevious=true, hasNext=true, totalPages=2, currentPage=1, rows=3, data=[TSubscribe(id=41, applicant=1889970, reviewer=null, subscribeStatus=1, roomNum=0, applicationStartTime=Tue Apr 13 20:12:12 CST 2021, useInterval=2, handleTime=null, applyUseDate=Mon Apr 19 08:00:00 CST 2021), TSubscribe(id=47, applicant=1889970, reviewer=null, subscribeStatus=1, roomNum=0, applicationStartTime=Tue Apr 13 20:12:12 CST 2021, useInterval=2, handleTime=null, applyUseDate=Mon Apr 19 08:00:00 CST 2021), TSubscribe(id=57, applicant=1889970, reviewer=null, subscribeStatus=0, roomNum=2, applicationStartTime=Tue Apr 13 20:12:12 CST 2021, useInterval=2, handleTime=null, applyUseDate=Mon Apr 19 08:00:00 CST 2021)]]
-
+-------------------------
+t_computer_room

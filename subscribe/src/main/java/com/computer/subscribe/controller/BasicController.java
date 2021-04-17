@@ -222,6 +222,30 @@ public class BasicController {
 			res.setCode(ExceptionsEnum.SUBSCRIBE_NOT_EXIST.getCode());
 			break;
 
+		case "你并非此份预约的申请发起者,无法对其进行修改":
+			res.setCode(ExceptionsEnum.NOT_THIS_SUBSCRIBE_APPLIER.getCode());
+			break;
+
+		case "本间机房现在无法使用":
+			res.setCode(ExceptionsEnum.COMPUTER_ROOM_UNAVAILABLE.getCode());
+			break;
+
+		case "机房地点位置早已重复":
+			res.setCode(ExceptionsEnum.LOCATION_DUPLICATION_ERROR.getCode());
+			break;
+
+		case "机房编号早已存在":
+			res.setCode(ExceptionsEnum.ROOM_NUM_DUPLICATION_ERROR.getCode());
+			break;
+
+		case "电脑机房不存在":
+			res.setCode(ExceptionsEnum.COMPUTER_ROOM_NOT_EXIST.getCode());
+			break;
+
+		case "实际可用电脑数不得大于电脑总数":
+			res.setCode(ExceptionsEnum.ACTUAL_CANNOT_MORE_THAN_TOAL.getCode());
+			break;
+
 		}
 		return res;
 	}

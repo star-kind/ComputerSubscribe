@@ -7,6 +7,17 @@ package com.computer.subscribe.exception;
  *
  */
 public enum ExceptionsEnum {
+	/* Computer Room */
+	/** 实际可用电脑数不得大于电脑总数 */
+	ACTUAL_CANNOT_MORE_THAN_TOAL(807, "实际可用电脑数不得大于电脑总数"),
+	/** 电脑机房不存在 */
+	COMPUTER_ROOM_NOT_EXIST(808, "电脑机房不存在"),
+	/** 机房编号早已存在 */
+	ROOM_NUM_DUPLICATION_ERROR(809, "机房编号早已存在"),
+	/** 机房地点位置早已重复 */
+	LOCATION_DUPLICATION_ERROR(810, "机房地点位置早已重复"),
+	/** 本间机房现在无法使用 */
+	COMPUTER_ROOM_UNAVAILABLE(811, "本间机房现在无法使用"),
 	/* SUBSCRIBE */
 	/** 系统在周末不接受学生预约申请,教师也不能进行任何批复 */
 	INVALID_DATE_WEEKEND(906, "系统在周末不接受学生预约申请,教师也不能进行任何批复"),

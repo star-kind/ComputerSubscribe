@@ -23,7 +23,7 @@ public class DateTimeKits {
 	private static final Object LOCK = new Object();
 
 	private DateTimeKits() {
-		System.err.println(this.getClass() + "___DateTimeKits==>私有化构造器,防止被实例化");
+		System.err.println(this.getClass() + "___DateTimeKits__私有化构造器,防止被实例化");
 	}
 
 	/**

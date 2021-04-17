@@ -57,7 +57,7 @@ public class TSubscribe {
 	 */
 	@NotNull(message = "机房编号不能为空")
 	@Min(value = 0, message = "机房编号不得小于 0")
-	@Max(value = 2, message = "机房编号不得大于 2")
+	@Max(value = 1000, message = "机房编号不得大于 1000")
 	private Integer roomNum;
 
 	/**

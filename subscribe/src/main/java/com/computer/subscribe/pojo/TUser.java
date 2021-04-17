@@ -30,8 +30,7 @@ public class TUser {
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
 	@NotNull(message = "学号或工号不能为空")
-	@Range(min = 1, max = 1000 * 1000 * 1000)
-	@ApiModelProperty(value = "学号或工号")
+	@Range(min = 1, max = 1000 * 1000 * 1000 * 1000)
 	private Long userNum;
 
 	/**
@@ -41,7 +40,6 @@ public class TUser {
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
 	@NotBlank(message = "用户名不能为空")
-	@ApiModelProperty(value = "用户名")
 	@Size(max = 19)
 	private String userName;
 
@@ -53,7 +51,6 @@ public class TUser {
 	 */
 	@NotBlank(message = "电话不能为空")
 	@Pattern(regexp = "^[1][3,4,5,6,7,8,9][0-9]{9}$", message = "电话格式有误")
-	@ApiModelProperty(value = "电话")
 	private String phone;
 
 	/**
@@ -64,7 +61,6 @@ public class TUser {
 	 */
 	@NotBlank(message = "联系邮箱不能为空")
 	@Email(message = "邮箱格式不对")
-	@ApiModelProperty(value = "邮箱")
 	@Size(min = 7, max = 79)
 	private String mailbox;
 
@@ -75,7 +71,6 @@ public class TUser {
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
 	@NotNull(message = "帐户类型不能为空")
-	@ApiModelProperty(value = "用户角色类型")
 	@Max(value = 9)
 	private Integer role;
 
@@ -87,7 +82,6 @@ public class TUser {
 	 */
 	@Size(min = 3, max = 18)
 	@NotBlank(message = "密码不能为空")
-	@ApiModelProperty(value = "密码")
 	private String password;
 
 	/**
@@ -96,7 +90,6 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	@ApiModelProperty(value = "盐值")
 	private String salt;
 
 	/**

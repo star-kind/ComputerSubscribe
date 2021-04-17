@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import com.computer.subscribe.exception.ExceptionsEnum;
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.mapper.TSubscribeMapper;
+import com.computer.subscribe.pojo.TComputerRoom;
 import com.computer.subscribe.pojo.TSubscribe;
 import com.computer.subscribe.pojo.TSubscribeExample;
 import com.computer.subscribe.pojo.TSubscribeExample.Criteria;
 import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.response.Pagination;
+import com.computer.subscribe.service.IComputerRoomService;
 import com.computer.subscribe.service.ISubscribeService;
 import com.computer.subscribe.service.IUserService;
 import com.computer.subscribe.util.PaginationUtils;
@@ -31,6 +33,9 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 	@Autowired
 	private IUserService ius;
+
+	@Autowired
+	private IComputerRoomService icrs;
 
 	DateTimeKits dateTimeKits = DateTimeKits.getInstance();
 
@@ -53,8 +58,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 			String description = ExceptionsEnum.SUBSCRIBE_DATE_INVALID
 					.getDescription();
 
-			logger.info(this.getClass() + "==>addNewScuSubscribe==>isBelong=="
-					+ description);
+			logger.info("isBelong==" + description);
 			System.err.println(this.getClass()
 					+ "==>addNewScuSubscribe==>isBelong== " + description);
 			throw new OperationException(description);
@@ -66,8 +70,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 			String description = ExceptionsEnum.INVALID_DATE_WEEKEND
 					.getDescription();
 
-			logger.info(this.getClass() + "==>addNewScuSubscribe==>isWeekEnd=="
-					+ description);
+			logger.info("isWeekEnd==" + description);
 			System.err.println(this.getClass()
 					+ "==>addNewScuSubscribe==>isWeekEnd==" + description);
 			throw new OperationException(description);
@@ -81,9 +84,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 			String description = ExceptionsEnum.SUCCESS_SUBSCRIBE_DUPLICATION
 					.getDescription();
 
-			logger.info(this.getClass()
-					+ "==>addNewScuSubscribe==>subscribe_duplication=="
-					+ description);
+			logger.info("subscribe_duplication==" + description);
 			System.err.println(this.getClass()
 					+ "==>addNewScuSubscribe==>subscribe_duplication=="
 					+ description);
@@ -98,13 +99,23 @@ public class SubscribeServiceImpl implements ISubscribeService {
 			String description = ExceptionsEnum.WAITTING_APPLY_DUPLICATION
 					.getDescription();
 
-			logger.info(this.getClass()
-					+ "==>addNewScuSubscribe==>subscribe_duplication=="
-					+ description);
+			logger.info("WAITTING_APPLY_DUPLICATION==" + description);
 			System.err.println(this.getClass()
-					+ "==>addNewScuSubscribe==>subscribe_duplication=="
+					+ "==>addNewScuSubscribe==>WAITTING_APPLY_DUPLICATION=="
 					+ description);
 
+			throw new OperationException(description);
+		}
+
+		// 获悉机房是否可用=1
+		TComputerRoom room = icrs.getComputerRoomByOrder(subscribe.getRoomNum());
+		if (room.getAvailableStatus() != 1) {
+			String description = ExceptionsEnum.COMPUTER_ROOM_UNAVAILABLE
+					.getDescription();
+			logger.info("COMPUTER_ROOM_UNAVAILABLE==" + description);
+			System.err.println(this.getClass()
+					+ "==>addNewScuSubscribe==>computer_room_unavailable=="
+					+ description);
 			throw new OperationException(description);
 		}
 
@@ -115,11 +126,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		int affect = mapper.insert(subscribe);
 
-		System.err.println(
-				this.getClass() + "==>addNewScuSubscribe==>affect==" + affect);
-		System.err.println(
-				this.getClass() + "==>addNewScuSubscribe==>TSubscribe Return== "
-						+ subscribe.toString());
+		System.err.println(this.getClass() + "==>addNewScuSubscribe==>affect=="
+				+ affect + ",==>TSubscribe Return== " + subscribe.toString());
 		return subscribe;
 	}
 
@@ -598,7 +606,6 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		return subscribeList;
 	}
 
-	// TODO 等待测试
 	@Override
 	public TSubscribe studentCancelSubscribeById(Long studentNum, Long subscribeID,
 			Integer status) throws OperationException {
@@ -609,8 +616,12 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		TSubscribe subscribe = this.getSubscribeByID(subscribeID, studentNum);
 
+		System.err.println(this.getClass()
+				+ "--studentCancelSubscribeById__subscribe.getApplicant() : user.getUserNum()="
+				+ subscribe.getApplicant() + "--" + user.getUserNum());
+
 		// 检验预约单中的申请者是否与操作者学号一致,即是否是本人
-		if (subscribe.getApplicant() != user.getUserNum()) {
+		if (!subscribe.getApplicant().equals(user.getUserNum())) {
 			String description = ExceptionsEnum.NOT_THIS_SUBSCRIBE_APPLIER
 					.getDescription();
 			System.err.println(this.getClass()
@@ -648,7 +659,6 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		// 返还数据
 		TSubscribe subscribe4 = this.getSubscribeByID(subscribeID);
-
 		return subscribe4;
 	}
 

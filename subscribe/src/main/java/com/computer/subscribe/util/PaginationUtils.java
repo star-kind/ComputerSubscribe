@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.computer.subscribe.pojo.TComputerRoom;
 import com.computer.subscribe.pojo.TSubscribe;
 import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.response.Pagination;
@@ -23,7 +24,7 @@ public class PaginationUtils {
 	private static final Object LOCK = new Object();
 
 	private PaginationUtils() {
-		System.err.println(this.getClass() + "==>私有化构造器,防止被实例化");
+		System.err.println(this.getClass() + "__PaginationUtils__私有化构造器,防止被实例化");
 	}
 
 	/**
@@ -183,4 +184,45 @@ public class PaginationUtils {
 		return boolMap;
 	}
 
+	/**
+	 * 分页组装 - 电脑机房
+	 * 
+	 * @param pageData
+	 * @param idCount
+	 * @param pageRows
+	 * @param pageOrder
+	 * @return
+	 */
+	public Pagination<List<TComputerRoom>> assemblyComputerRoom(
+			List<TComputerRoom> pageData, Integer idCount, Integer pageRows,
+			Integer pageOrder) {
+		Pagination<List<TComputerRoom>> pagin = new Pagination<List<TComputerRoom>>();
+		// get total pages
+		int totalPages = idCount / pageRows;
+
+		// 余数
+		int remainder = idCount % pageRows;
+
+		if (remainder != 0) {// 如果行数限制不可以被总行数整除,实际页数+1
+			totalPages++;
+		}
+
+		HashMap<String, Boolean> boolMap = getPageBoolMap(idCount, pageRows,
+				totalPages, pageData.size(), pageOrder);
+
+		Boolean hasPrevious = boolMap.get(has_previous_key);
+		Boolean hasNext = boolMap.get(has_next_key);
+
+		pagin.setCurrentPage(++pageOrder);
+		pagin.setData(pageData);
+		pagin.setHasNext(hasNext);
+		pagin.setHasPrevious(hasPrevious);
+		pagin.setRows(pageRows);
+		pagin.setTotalPages(totalPages);
+
+		System.err.println(this.getClass() + "__assemblyComputerRoom__pagin="
+				+ pagin.toString());
+		return pagin;
+	}
+	
 }

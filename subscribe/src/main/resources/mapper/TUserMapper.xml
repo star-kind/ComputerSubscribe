@@ -223,7 +223,8 @@
 	</insert>
 	<!-- select count(id) from t_user; -->
 	<select id="selectCountId" resultType="java.lang.Integer">
-		SELECT COUNT(id) FROM t_user
+		SELECT COUNT(id) FROM
+		t_user
 	</select>
 	<!-- -->
 	<select id="countByExample"

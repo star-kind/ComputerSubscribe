@@ -18,6 +18,7 @@ public class PasswordBusiness {
 	private static final Object LOCK = new Object();
 
 	private PasswordBusiness() {
+		System.err.println(this.getClass() + "___PasswordBusiness__私有化构造器,防止被实例化");
 	}
 
 	/**

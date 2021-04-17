@@ -41,8 +41,9 @@
 		<mvc:interceptor>
 			<!-- 拦截路径（黑名单） -->
 			<mvc:mapping path="/**" />
-			<mvc:mapping path="/**/**" />
 			<!-- 例外（白名单） -->
+			<mvc:exclude-mapping path="/SwaggerController/**"/>
+			<mvc:exclude-mapping path="/swagger/**"/>
 			<mvc:exclude-mapping path="/resource/**"/>
 			<mvc:exclude-mapping path="/UsersController/loginAction" />
 			<!-- 拦截器,各请求前往该类接受处理 -->

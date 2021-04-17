@@ -10,8 +10,32 @@ import com.auth0.jwt.JWTSigner;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JwtUtils {
-	public static Logger logger = Logger.getLogger(JwtUtils.class);
+public class JwtUtils2 {
+	public static Logger logger = Logger.getLogger(JwtUtils2.class);
+
+	private static JwtUtils2 jwtUtils2;
+
+	private static final Object LOCK = new Object();
+
+	private JwtUtils2() {
+		System.err.println(this.getClass() + "__JwtUtils2_私有化构造器,防止被实例化");
+	}
+
+	/**
+	 * 懒汉式之单例模式
+	 * 
+	 * @return
+	 */
+	public static JwtUtils2 getInstance() {
+		if (jwtUtils2 == null) {
+			synchronized (LOCK) {// 决定是否锁住
+				if (jwtUtils2 == null) {
+					jwtUtils2 = new JwtUtils2();
+				}
+			}
+		}
+		return jwtUtils2;
+	}
 
 	/**
 	 * 密钥
@@ -81,8 +105,7 @@ public class JwtUtils {
 					ObjectMapper objectMapper = new ObjectMapper();
 
 					T value = objectMapper.readValue(json, tClass);
-					System.err
-							.println(this.getClass() + "..decode().value=" + value);
+					System.err.println(this.getClass() + "..decode.value=" + value);
 
 					return value;
 				}
@@ -113,7 +136,7 @@ public class JwtUtils {
 			ObjectMapper objectMapper = new ObjectMapper();
 
 			T value = objectMapper.readValue(json, tClass);
-			System.err.println(this.getClass() + "..updateDecode().value=" + value);
+			System.err.println(this.getClass() + "..updateDecode.value=" + value);
 
 			return value;
 		} catch (Exception e) {
@@ -121,24 +144,5 @@ public class JwtUtils {
 			return null;
 		}
 	}
-
-//	public static void main(String[] args) {
-//		JwtUtils util = new JwtUtils();
-//		HashMap<String, Object> map = new HashMap<String, Object>();
-//		map.put("id", "ip4800");
-//		map.put("num", "894go");
-//		map.put("living", "ice.city.alias.winter");
-//		// 加密生成令牌
-//		String token = util.encode(map, 120 * 1000 * 1000);
-//		System.err.println("token=== " + token);
-//		// 解密
-//		HashMap decode = util.decode(token, HashMap.class);
-//		System.err.println("decode=== " + decode);
-//		System.err.println("decode.GET=== " + decode.get("num"));
-//		// 揭密
-//		HashMap updateCode = util.updateDecode(token, HashMap.class);
-//		System.err.println("updateCode=== " + updateCode);
-//		System.err.println("updateCode.getKey=== " + updateCode.get("living"));
-//	}
 
 }

@@ -34,9 +34,9 @@ public class UserServiceTest {
 		userService = (IUserService) applicationContext.getBean("userServiceImpl");
 
 		try {
-			// 0-393606924700L
-			// 1-3999706924700L
-			// 2-54059944154L
+			// 0--393606924700L,2465944154L
+			// 1--3999706924700L,13541944130L
+			// 2--54059944154L,214715547L,10548941L,19908114L
 			userService.modifyUserInfoByAdminNum("lion.pnay", "h8848@fox.com.cn",
 					"17123241037", 105170048l, 393606924700L);
 		} catch (Exception e) {
@@ -63,8 +63,8 @@ public class UserServiceTest {
 		userService = (IUserService) applicationContext.getBean("userServiceImpl");
 
 		try {
-			Pagination<List<TUser>> pagination = userService.getMembersListByOrder(9,
-					2, 18);
+			Pagination<List<TUser>> pagination = userService.getMembersListByOrder(3,
+					3, 18);
 
 			System.err.println(pagination.toString());
 			for (TUser tUser : pagination.getData()) {
@@ -106,12 +106,12 @@ public class UserServiceTest {
 
 		TUser user = new TUser();
 
-		user.setMailbox("361416540@lion.com.cn");
-		user.setPhone("19034550482");
-		user.setUserNum(54059944154l);
-		user.setPassword("1234");
-		user.setRole(2);
-		user.setUserName("stud.school.dorm");
+		user.setMailbox("3141903253518250@catch.com");
+		user.setPhone("19032535182");
+		user.setUserNum(13541944130L);
+		user.setPassword("12345");
+		user.setRole(1);
+		user.setUserName("emoji.kerus.ileg");
 
 		try {
 			Integer row = userService.regist(user);

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,6 @@ import com.computer.subscribe.pojo.response.Pagination;
 import com.computer.subscribe.pojo.response.WebResponse;
 import com.computer.subscribe.service.IUserService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -30,7 +27,6 @@ import io.swagger.annotations.ApiParam;
  * @author user
  *
  */
-@Api(value = "/UsersController")
 @Controller
 @RequestMapping("/UsersController")
 public class UsersController extends BasicController {
@@ -50,7 +46,7 @@ public class UsersController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/modifyUserAction", method = RequestMethod.GET)
-	@ApiOperation(value = "修改用户数据", notes = "参数为:管理员工号(管理员权限等级),被修改对象:[学号或教职工号,电话,邮箱,用户名]", httpMethod = "GET")
+//	@ApiOperation(value = "修改用户数据", notes = "参数为:管理员工号(管理员权限等级),被修改对象:[学号或教职工号,电话,邮箱,用户名]", httpMethod = "GET")
 	public WebResponse<TUser> modifyUserAction(
 			@ApiParam("被修改用户的姓名") @Valid String userName,
 			@ApiParam("被修改用户的邮箱") @Valid String mailbox,
@@ -84,7 +80,7 @@ public class UsersController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getMemberByOrderAction", method = RequestMethod.GET)
-	@ApiOperation(value = "分页获取用户列表数据", notes = "参数为:ID(管理员权限等级),第几页,每页展示行数", httpMethod = "GET")
+//	@ApiOperation(value = "分页获取用户列表数据", notes = "参数为:ID(管理员权限等级),第几页,每页展示行数", httpMethod = "GET")
 	public WebResponse<List<TUser>> getMemberByOrderAction(
 			@ApiParam("administrator ID") @Valid Integer id,
 			@ApiParam("页数") @Valid Integer pageOrder,
@@ -112,7 +108,7 @@ public class UsersController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/revisePasswordAction", method = RequestMethod.GET)
-	@ApiOperation(value = "改变密码", notes = "参数为:工号/学号,新密码,旧密码", httpMethod = "GET")
+//	@ApiOperation(value = "改变密码", notes = "参数为:工号/学号,新密码,旧密码", httpMethod = "GET")
 	public WebResponse<Integer> revisePasswordAction(
 			@ApiParam("User(administrator/teacher/students) Numer") @Valid Long userNum,
 			@ApiParam("新的密码") @Valid String newPasswd,
@@ -141,7 +137,7 @@ public class UsersController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/loginAction", method = RequestMethod.GET)
-	@ApiOperation(value = "帐户登录", notes = "参数为:工号/学号,密码,角色(即帐号类型)", httpMethod = "GET")
+//	@ApiOperation(value = "帐户登录", notes = "参数为:工号/学号,密码,角色(即帐号类型)", httpMethod = "GET")
 	public WebResponse<LoginData> loginAction(
 			@ApiParam("Forehand sends password") @Valid String passwd,
 			@ApiParam("User(administrator/teacher/students) Numer") @Valid Long userNum,
@@ -173,7 +169,7 @@ public class UsersController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/registerAction", method = RequestMethod.GET)
-	@ApiOperation(value = "新用户注册", notes = "参数为1个用户:(邮箱,电话,工号/学号,用户名,角色)", httpMethod = "GET")
+//	@ApiOperation(value = "新用户注册", notes = "参数为1个用户:(邮箱,电话,工号/学号,用户名,角色)", httpMethod = "GET")
 	public WebResponse<Integer> registerAction(@ApiParam("用户注册材料") @Valid TUser user)
 			throws OperationException {
 

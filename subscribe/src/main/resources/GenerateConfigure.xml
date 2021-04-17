@@ -46,10 +46,8 @@
 		</javaClientGenerator>
 
 		<!-- 指定数据库表 -->
-		<table tableName="t_subscribe" />
-		<!-- <table tableName="t_stock" /> -->
-		<!-- <table tableName="t_approval" /> -->
-		<!-- <table tableName="t_sale" /> -->
+		<!-- <table tableName="t_subscribe" /> -->
+		<table tableName="t_computer_room" />
 		<!-- <table tableName="t_user" /> -->
 
 	</context>

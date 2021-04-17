@@ -22,6 +22,19 @@ public class SubscribeServiceTest {
 	}
 
 	@Test
+	public void studentCancelSubscribeTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+
+			subscribeService.studentCancelSubscribeById(1889970l, 68l, 4);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
 	public void getAllSubscribeListByAdminTest() {
 		subscribeService = (ISubscribeService) applicationContext
 				.getBean("subscribeServiceImpl");
@@ -108,14 +121,14 @@ public class SubscribeServiceTest {
 		try {
 			TSubscribe sub = new TSubscribe();
 
-			String timeApply = "2021-4-23";
+			String timeApply = "2021-4-20";
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date dateApply = format.parse(timeApply);
 
-			sub.setApplicant(3999706924700L);
+			sub.setApplicant(1889970l);
 			sub.setApplyUseDate(dateApply);
-			sub.setRoomNum(2);
-			sub.setUseInterval(1);
+			sub.setRoomNum(1);
+			sub.setUseInterval(2);
 
 			subscribeService.addNewScuSubscribe(sub);
 		} catch (Exception e) {
