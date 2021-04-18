@@ -3,6 +3,8 @@ package com.computer.subscribe.service;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.pojo.TSubscribe;
 import com.computer.subscribe.pojo.response.Pagination;
@@ -251,5 +253,18 @@ public interface ISubscribeService {
 	 * @throws OperationException
 	 */
 	List<TSubscribe> getPreviousWeekSubscribes(@NonNull Long adminNum)
+			throws OperationException;
+
+	/**
+	 * 获取针对某间机房,其所收到的某种预约状态的申请单数量
+	 * 
+	 * @param userNum
+	 * @param roomNum
+	 * @param status
+	 * @return
+	 * @throws OperationException
+	 */
+	Integer getCountForStatusInSomeRoom(@Valid @NonNull Long userNum,
+			@Valid @NonNull Integer roomNum, @Valid @NonNull Integer status)
 			throws OperationException;
 }

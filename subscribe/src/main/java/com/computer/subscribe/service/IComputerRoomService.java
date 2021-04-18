@@ -31,7 +31,9 @@ public interface IComputerRoomService {
 			@Valid @NonNull Integer rows) throws OperationException;
 
 	/**
-	 * 为更新信息而构造一个机房对象
+	 * 为更新信息而构造一个机房对象 <br>
+	 * 在2层及以上if-else-if代码块内赋值,会导致NULL<br>
+	 * <b>两个包装类引用数据类型之间,最好不要用 == 或 != 比较值是否相等,应当使用equals</b>
 	 * 
 	 * @param oldRoomInfo
 	 * @param roomNewInfo
@@ -61,12 +63,11 @@ public interface IComputerRoomService {
 	 * </ul>
 	 * 
 	 * @param roomNewInfo 新设定之机房数据
-	 * @param adminNum
 	 * @return
 	 * @throws OperationException
 	 */
-	TComputerRoom reviseRoomInfoById(@Valid @NonNull TComputerRoom roomNewInfo,
-			@Valid @NonNull Long adminNum) throws OperationException;
+	TComputerRoom reviseRoomInfoById(@Valid @NonNull TComputerRoom roomNewInfo)
+			throws OperationException;
 
 	/**
 	 * 新增一间电脑机房<br>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,8 @@ import com.computer.subscribe.service.IUserService;
 import io.swagger.annotations.ApiParam;
 
 /**
- * 用户控制器
+ * 用户控制器<br>
+ * <b>GET方式无请求体，所以使用@RequestBody接收数据时，前端不能使用GET方式提交数据，而是用POST方式进行提交</b>
  * 
  * @author user
  *
@@ -99,20 +101,20 @@ public class UsersController extends BasicController {
 
 	/**
 	 * http://localhost:8080/subscribe/UsersController/revisePasswordAction?userNum=6515615&newPasswd=3245&oldPasswd=0014
+	 * <br>
+	 * 参数为:工号/学号,新密码,旧密码 <br>
 	 * 
-	 * @param userNum
-	 * @param newPasswd
-	 * @param oldPasswd
+	 * @param userNum   User(administrator/teacher/students) Numer"
+	 * @param newPasswd 新的密码
+	 * @param oldPasswd 旧的密码
 	 * @param req
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/revisePasswordAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "改变密码", notes = "参数为:工号/学号,新密码,旧密码", httpMethod = "GET")
-	public WebResponse<Integer> revisePasswordAction(
-			@ApiParam("User(administrator/teacher/students) Numer") @Valid Long userNum,
-			@ApiParam("新的密码") @Valid String newPasswd,
-			@ApiParam("旧的密码") @Valid String oldPasswd, HttpServletRequest req) {
+	public WebResponse<Integer> revisePasswordAction(@Valid Long userNum,
+			@Valid String newPasswd, @Valid String oldPasswd,
+			HttpServletRequest req) {
 
 		// 后期将从令牌中获取关键数据
 		// String header = req.getHeader("token");
@@ -128,21 +130,19 @@ public class UsersController extends BasicController {
 
 	/**
 	 * http://localhost:8080/subscribe/UsersController/loginAction?role=1&userNum=385170048&passwd=664
+	 * <br>
+	 * 参数为:工号/学号,密码,角色(即帐号类型)<br>
 	 * 
-	 * @param passwd
-	 * @param userNum
-	 * @param role
+	 * @param passwd  Forehand sends password
+	 * @param userNum User(administrator/teacher/students) Numer
+	 * @param role    the user's role(administrator/teacher/students)
 	 * @return
 	 * @throws OperationException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/loginAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "帐户登录", notes = "参数为:工号/学号,密码,角色(即帐号类型)", httpMethod = "GET")
-	public WebResponse<LoginData> loginAction(
-			@ApiParam("Forehand sends password") @Valid String passwd,
-			@ApiParam("User(administrator/teacher/students) Numer") @Valid Long userNum,
-			@ApiParam("the user's role(administrator/teacher/students)") @Valid Integer role)
-			throws OperationException {
+	public WebResponse<LoginData> loginAction(@Valid String passwd,
+			@Valid Long userNum, @Valid Integer role) throws OperationException {
 		logger.info(
 				"role== " + role + ",userNum== " + userNum + ",passwd== " + passwd);
 		System.err.println(
@@ -159,18 +159,15 @@ public class UsersController extends BasicController {
 	 * http://localhost:8080/subscribe/UsersController/registerAction?userName=skypt&password=3210&userNum=1050048&phone=18370273627&mailbox=165174714570@qq.com&role=2
 	 * 
 	 * <br>
+	 * 参数为1个用户:(邮箱,电话,工号/学号,用户名,角色)
 	 * 
-	 * 
-	 * <b>GET方式无请求体，所以使用@RequestBody接收数据时，前端不能使用GET方式提交数据，而是用POST方式进行提交</b>
-	 * 
-	 * @param user
+	 * @param user ("用户注册材料")
 	 * @return
 	 * @throws OperationException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/registerAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "新用户注册", notes = "参数为1个用户:(邮箱,电话,工号/学号,用户名,角色)", httpMethod = "GET")
-	public WebResponse<Integer> registerAction(@ApiParam("用户注册材料") @Valid TUser user)
+	public WebResponse<Integer> registerAction(@Valid @NotNull TUser user)
 			throws OperationException {
 
 		logger.info(user.toString());
@@ -178,4 +175,5 @@ public class UsersController extends BasicController {
 
 		return new WebResponse<Integer>(SUCCESS, "OK", row);
 	}
+	
 }

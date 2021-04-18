@@ -31,7 +31,6 @@ public class TComputerRoom {
 	 */
 	@NotNull(message = "机房编号不能为空")
 	@Min(value = 0, message = "机房编号不得小于 0")
-	@Max(value = 1000, message = "机房编号不得大于 1000*1000*1000*1000")
 	private Integer roomNum;
 
 	/**
@@ -62,6 +61,7 @@ public class TComputerRoom {
 	 *
 	 * @mbggenerated Sat Apr 17 17:02:03 CST 2021
 	 */
+	@NotNull(message = "管理员工号不能为空")
 	private Long adminNumOperated;
 
 	/**
@@ -89,7 +89,6 @@ public class TComputerRoom {
 	 * @mbggenerated Sat Apr 17 17:50:00 CST 2021
 	 */
 	@Min(value = 0, message = "实际可用电脑数量不得小于 0")
-	@Max(value = 1, message = "实际可用电脑数量不得大于 10000*10000*10000")
 	@NotNull(message = "实际可用电脑数量不能为空")
 	private Integer actAvailableQuantity;
 

@@ -10,7 +10,8 @@ import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.response.Pagination;
 
 /**
- * 处理分页实体对象的工具类
+ * 处理分页实体对象的工具类 <br>
+ * <b>警惕:</b> <i>if...else..if...else</i>坑太多
  * 
  * @author user
  *
@@ -41,6 +42,18 @@ public class PaginationUtils {
 			}
 		}
 		return paginationUtil;
+	}
+
+	/**
+	 * 打印程序执行过程中的一些数据/参数
+	 * 
+	 * @param elements
+	 */
+	public void printMethod(Object... elements) {
+		for (Object ele : elements) {
+			System.err.println("------");
+			System.err.println(ele);
+		}
 	}
 
 	/**
@@ -148,6 +161,10 @@ public class PaginationUtils {
 			int totalPages, int pageDataSize, int pageOrder) {
 		HashMap<String, Boolean> boolMap = new HashMap<String, Boolean>();
 
+		System.err.println(this.getClass() + "__getPageBoolMap--\ntotalPages="
+				+ totalPages + "--idCount=" + idCount + "--pageRows=" + pageRows
+				+ "--pageDataSize=" + pageDataSize + "--pageOrder=" + pageOrder);
+
 		// 余数
 		int remainder = idCount % pageRows;
 		System.out.println(this.getClass() + "__getPageBoolMap=>余数=" + remainder);
@@ -155,20 +172,33 @@ public class PaginationUtils {
 		Boolean hasPrevious = true;
 		Boolean hasNext = true;
 
+		if (pageOrder < 1) {// 如果传入页码 0, 形同页码 1
+			pageOrder = 1;
+
+		}
+
 		if (remainder != 0) {// 如果行数限制不可以被总行数整除
 			if (pageDataSize < pageRows) {// 如果 pageData.size < pageRows, 无下一页
 				hasNext = false;
 			}
-		} else if (pageOrder <= 1) {// 如果 page order <= 1 ,无上一页
+
+		}
+
+		if (pageOrder <= 1) {// 如果 page order <= 1 ,无上一页
 			hasPrevious = false;
 
-		} else if (pageOrder < 1) {// 如果传入页码 0, 形同页码 1
-			pageOrder = 1;
+		}
 
-		} else if (remainder == 0) {// 如果每页行数限制能被总行数整除
+		if (remainder == 0) {// 如果每页行数限制能被总行数整除
 			if (idCount <= pageOrder * pageRows) { // 如果当前页码*每页行数限制 >= 总行数, 无下一页
 				hasNext = false;
 			}
+
+		}
+
+		if (totalPages < 2) {// 只有一页时
+			hasNext = false;
+			hasPrevious = false;
 		}
 
 		boolMap.put(has_previous_key, hasPrevious);
@@ -220,9 +250,9 @@ public class PaginationUtils {
 		pagin.setRows(pageRows);
 		pagin.setTotalPages(totalPages);
 
-		System.err.println(this.getClass() + "__assemblyComputerRoom__pagin="
+		System.err.println(this.getClass() + "__assemblyComputerRoom__\npagin="
 				+ pagin.toString());
 		return pagin;
 	}
-	
+
 }

@@ -20,6 +20,19 @@ public class ComputerRoomServiceTest {
 	}
 
 	@Test
+	public void getRoomsListTest() {
+		crs = (IComputerRoomService) applicationContext
+				.getBean("computerRoomServiceImpl");
+
+		try {
+			crs.getRoomListByPagination(2465944154L, 0, 2);
+
+		} catch (OperationException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
 	public void getSingleRoomTest() {
 		crs = (IComputerRoomService) applicationContext
 				.getBean("computerRoomServiceImpl");
@@ -41,13 +54,14 @@ public class ComputerRoomServiceTest {
 			TComputerRoom room = new TComputerRoom();
 
 			room.setId(1);
-			room.setActAvailableQuantity(102);
-			room.setTotalSets(150);
-			room.setAvailableStatus(1);
-			room.setRoomNum(31);
-			room.setLocation("EMR-Eula-155200647-FE");
+			room.setActAvailableQuantity(221);
+			room.setTotalSets(320);
+			room.setAvailableStatus(0);
+			room.setRoomNum(333);
+			room.setLocation("ER-Eua-162007-FEX");
+			room.setAdminNumOperated(2465944154L);
 
-			crs.reviseRoomInfoById(room, 2465944154L);
+			crs.reviseRoomInfoById(room);
 
 		} catch (OperationException e) {
 			System.err.println(e.getMessage());

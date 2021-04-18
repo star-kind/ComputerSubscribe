@@ -20,6 +20,15 @@ public class SubscribeMapperTest {
 	}
 
 	@Test
+	public void getCountByStatusAndRoomNumTest() {
+		subscribeMapper = (TSubscribeMapper) applicationContext
+				.getBean("TSubscribeMapper");
+
+		Integer result = subscribeMapper.getCountIdByStatusAndRoom(0, 2);
+		System.out.println("result==" + result);
+	}
+
+	@Test
 	public void selectByTimeApplicantLimitTest() {
 		subscribeMapper = (TSubscribeMapper) applicationContext
 				.getBean("TSubscribeMapper");

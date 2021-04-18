@@ -250,4 +250,16 @@ public class BasicController {
 		return res;
 	}
 
+	/**
+	 * 打印程序执行过程中的一些数据/参数
+	 * 
+	 * @param elements
+	 */
+	public void printMethod(Object... elements) {
+		for (Object ele : elements) {
+			System.err.println("------");
+			System.err.println(ele);
+		}
+	}
+
 }

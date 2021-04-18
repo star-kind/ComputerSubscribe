@@ -727,4 +727,19 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		return true;
 	}
 
+	@Override
+	public Integer getCountForStatusInSomeRoom(Long userNum, Integer roomNum,
+			Integer status) throws OperationException {
+		System.err.println(
+				this.getClass() + "__\n--getCountForStatusInSomeRoom__userNum="
+						+ userNum + "--roomNum=" + roomNum + "--status=" + status);
+
+		ius.checkUserExist(userNum);
+
+		Integer counts = mapper.getCountIdByStatusAndRoom(status, roomNum);
+		System.err.println(this.getClass()
+				+ "__\n--getCountForStatusInSomeRoom__return_counts=" + counts);
+		return counts;
+	}
+
 }

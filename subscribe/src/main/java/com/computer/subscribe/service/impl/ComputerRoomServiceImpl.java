@@ -15,7 +15,6 @@ import com.computer.subscribe.pojo.TComputerRoomExample;
 import com.computer.subscribe.pojo.TComputerRoomExample.Criteria;
 import com.computer.subscribe.pojo.response.Pagination;
 import com.computer.subscribe.service.IComputerRoomService;
-import com.computer.subscribe.service.ISubscribeService;
 import com.computer.subscribe.service.IUserService;
 import com.computer.subscribe.util.PaginationUtils;
 import com.computer.subscribe.util.support.DateTimeKits;
@@ -29,9 +28,6 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 
 	@Autowired
 	private IUserService ius;
-
-	@Autowired
-	private ISubscribeService iss;
 
 	DateTimeKits dateTimeKits = DateTimeKits.getInstance();
 
@@ -191,11 +187,12 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 	}
 
 	@Override
-	public TComputerRoom reviseRoomInfoById(TComputerRoom roomNewInfo, Long adminNum)
+	public TComputerRoom reviseRoomInfoById(TComputerRoom roomNewInfo)
 			throws OperationException {
 		System.err.println(this.getClass() + "--reviseRoomInfoById--roomNewInfo="
-				+ roomNewInfo.toString() + ",adminNum=" + adminNum);
+				+ roomNewInfo.toString());
 
+		Long adminNum = roomNewInfo.getAdminNumOperated();
 		ius.checkAdminPrivilege(adminNum);
 
 		// 获取机房原信息 roomNewInfo.getId()
@@ -275,7 +272,7 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 			TComputerRoom newRoomInfo) {
 		System.err.println(
 				this.getClass() + "--getConstructDataForRevise--oldRoomInfo="
-						+ oldRoomInfo + "___newRoomInfo=" + newRoomInfo);
+						+ oldRoomInfo + "\n___newRoomInfo=" + newRoomInfo);
 
 		TComputerRoom roomData = new TComputerRoom();
 
@@ -295,47 +292,41 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 		Integer newRoomInfoTotalSets = newRoomInfo.getTotalSets();
 		Integer newRoomInfoAvailableStatus = newRoomInfo.getAvailableStatus();
 
-		/*
-		 * 如果提交的某个参数与原先在数据表中的某个列值一致,就不再构造那个属性了
+		/**
+		 * 如果提交的某个参数与原先在数据表中的某个列值一致,就不再构造那个属性了<br>
+		 * 在2层及以上if-else-if代码块内赋值,会导致NULL<br>
+		 * 两个包装类引用数据类型之间,最好不要用 == 或 != 比较值是否相等,应当使用equals
 		 */
 		if (newRoomInfoRoomNum != null) {
-
-			if (oldRoomInfoRoomNum != newRoomInfoRoomNum) {
-				System.err.println("有效----");
-
+			if (!newRoomInfoRoomNum.equals(oldRoomInfoRoomNum)) {
 				roomData.setRoomNum(newRoomInfoRoomNum);
 			}
+		}
 
-		} else if (newRoomInfoActAvailableQuantity == null) {
-			// TODO ???
-			boolean x = (oldRoomInfoActAvailableQuantity == newRoomInfoActAvailableQuantity);
-			System.err.println("放放放放x==" + x);
-
-			if (oldRoomInfoActAvailableQuantity != newRoomInfoActAvailableQuantity) {
-
-				System.err.println("雅雅雅雅放放放放x==" + x);
+		if (newRoomInfoActAvailableQuantity != null) {
+			if (!newRoomInfoActAvailableQuantity
+					.equals(oldRoomInfoActAvailableQuantity)) {
 
 				roomData.setActAvailableQuantity(newRoomInfoActAvailableQuantity);
 			}
+		}
 
-		} else if (!"".equals(newRoomInfoLocation)) {
-
-			if (!oldRoomInfoLocation.equals(newRoomInfoLocation)) {
+		if (!"".equals(newRoomInfoLocation)) {
+			if (!newRoomInfoLocation.equals(oldRoomInfoLocation)) {
 				roomData.setLocation(newRoomInfoLocation);
 			}
+		}
 
-		} else if (newRoomInfoTotalSets != null) {
-
-			if (oldRoomInfoTotalSets != newRoomInfoTotalSets) {
+		if (newRoomInfoTotalSets != null) {
+			if (!newRoomInfoTotalSets.equals(oldRoomInfoTotalSets)) {
 				roomData.setTotalSets(newRoomInfoTotalSets);
 			}
+		}
 
-		} else if (newRoomInfoAvailableStatus != null) {
-
-			if (oldRoomInfoAvailableStatus != newRoomInfoAvailableStatus) {
+		if (newRoomInfoAvailableStatus != null) {
+			if (!newRoomInfoAvailableStatus.equals(oldRoomInfoAvailableStatus)) {
 				roomData.setAvailableStatus(newRoomInfoAvailableStatus);
 			}
-
 		}
 
 		System.err.println(this.getClass() + "--getConstructDataForRevise--roomData="
@@ -351,6 +342,8 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 
 		ius.checkUserExist(userNum);
 
+		pageOrder = paginationUtil.getPageNum(pageOrder);
+
 		// 房间的数量
 		Integer idCounts = roomMapper.selectCountAllComputerRoomByIDs();
 
@@ -360,7 +353,7 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 
 		// 分页数据
 		List<TComputerRoom> pageList = roomMapper.selectByExample(example);
-		if (pageList.isEmpty()) {
+		if (!pageList.isEmpty()) {
 			for (TComputerRoom tComputerRoom : pageList) {
 				System.err.println(
 						this.getClass() + "--getRoomListByPagination.tComputerRoom="

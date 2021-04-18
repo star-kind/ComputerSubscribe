@@ -59,6 +59,17 @@
 		applicant=#{applicant}
 	</select>
 
+	<select id="getCountIdByStatusAndRoom"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(id)
+		FROM t_subscribe
+		WHERE
+		subscribe_status=#{subscribeStatus}
+		AND
+		room_num=#{roomNum}
+	</select>
+
 	<select id="getCountByApplicant" resultType="java.lang.Integer">
 		SELECT
 

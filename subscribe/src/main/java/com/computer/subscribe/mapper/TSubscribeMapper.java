@@ -8,6 +8,17 @@ import org.apache.ibatis.annotations.Param;
 
 public interface TSubscribeMapper {
 	/**
+	 * 根据机房编号+指定的预约状态,计算其收到的预约数量
+	 * 
+	 * @param subscribeStatus
+	 * @param roomNUm
+	 * @return
+	 */
+	Integer getCountIdByStatusAndRoom(
+			@Param("subscribeStatus") Integer subscribeStatus,
+			@Param("roomNum") Integer roomNum);
+
+	/**
 	 * 根据申请人学号,计算其所有预约的数量
 	 * 
 	 * @param applicant

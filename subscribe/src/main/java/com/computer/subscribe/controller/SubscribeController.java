@@ -20,14 +20,39 @@ import com.computer.subscribe.pojo.response.Pagination;
 import com.computer.subscribe.pojo.response.WebResponse;
 import com.computer.subscribe.service.ISubscribeService;
 
-import io.swagger.annotations.ApiParam;
-
 @Controller
 @RequestMapping("/SubscribeController")
 public class SubscribeController extends BasicController {
 
 	@Autowired
 	private ISubscribeService iss;
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/getCountByStatusInRoomAction?userNum=1889970&status=0&roomNum=3
+	 * 
+	 * @param userNum 任一帐户
+	 * @param status  预约单状态
+	 * @param roomNum 机房编号
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getCountByStatusInRoomAction", method = RequestMethod.GET)
+	public WebResponse<Integer> getCountByStatusInRoomAction(
+			@RequestParam("userNum") @Valid Long userNum,
+			@RequestParam("status") @Valid Integer status,
+			@RequestParam("roomNum") @Valid Integer roomNum,
+			HttpServletRequest req) {
+		System.err
+				.println(this.getClass() + "--getCountByStatusInRoomAction--userNum="
+						+ userNum + ",status=" + status + ",roomNum=" + roomNum);
+		// 后期将从令牌中获取关键数据
+		// String header = req.getHeader("token");
+		// System.err.println("header.token== " + header);
+		Integer result = iss.getCountForStatusInSomeRoom(userNum, roomNum, status);
+
+		return new WebResponse<Integer>(SUCCESS, result);
+	}
 
 	/**
 	 * 学生撤回自己的预约(:4) <br>
@@ -88,6 +113,13 @@ public class SubscribeController extends BasicController {
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/queryWeekListByStudentAction?studentNum=105170048&pageOrder=0&rows=3
 	 * 
+	 * <br>
+	 * <ol>
+	 * <li>studentNum--学号</li>
+	 * <li>rows--每页展示行数"</li>
+	 * <li>pageOrder--页码</li>
+	 * </ol>
+	 * 
 	 * @param studentNum
 	 * @param rows
 	 * @param pageOrder
@@ -98,9 +130,9 @@ public class SubscribeController extends BasicController {
 	@RequestMapping(value = "/queryWeekListByStudentAction", method = RequestMethod.GET)
 //	@ApiOperation(value = "学生获取本周内自己全部的预约申请单", notes = "参数为:学号,每页展示行数,页码", httpMethod = "GET")
 	public WebResponse<Pagination<List<TSubscribe>>> queryWeekListByStudentAction(
-			@RequestParam("studentNum") @ApiParam("学号") @Valid Long studentNum,
-			@RequestParam("rows") @ApiParam("每页展示行数") @Valid Integer rows,
-			@RequestParam("pageOrder") @ApiParam("页码") @Valid Integer pageOrder,
+			@RequestParam("studentNum") @Valid Long studentNum,
+			@RequestParam("rows") @Valid Integer rows,
+			@RequestParam("pageOrder") @Valid Integer pageOrder,
 			HttpServletRequest req) {
 		System.err.println(
 				this.getClass() + "__queryWeekListByTeacherAction__studentNum="
@@ -116,6 +148,14 @@ public class SubscribeController extends BasicController {
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/queryAllSubscribesByAdminAction?applicant=105170048&adminNum=393606924700&pageOrder=0&rows=3
 	 * 
+	 * <br>
+	 * <ol>
+	 * <li>applicant--学号</li>
+	 * <li>teacherNum--管理员工号"</li>
+	 * <li>rows--每页展示行数"</li>
+	 * <li>pageOrder--页码</li>
+	 * </ol>
+	 * 
 	 * @param applicant
 	 * @param adminNum
 	 * @param rows
@@ -127,10 +167,10 @@ public class SubscribeController extends BasicController {
 	@RequestMapping(value = "/queryAllSubscribesByAdminAction", method = RequestMethod.GET)
 //	@ApiOperation(value = "获取某位学生全部的预约申请单", notes = "参数为:工号[限管理员],预约者的学号", httpMethod = "GET")
 	public WebResponse<Pagination<List<TSubscribe>>> queryAllSubscribesByAdminAction(
-			@RequestParam("applicant") @ApiParam("学号") @Valid Long applicant,
-			@RequestParam("adminNum") @ApiParam("管理员工号") @Valid Long adminNum,
-			@RequestParam("rows") @ApiParam("每页展示行数") @Valid Integer rows,
-			@RequestParam("pageOrder") @ApiParam("页码") @Valid Integer pageOrder,
+			@RequestParam("applicant") @Valid Long applicant,
+			@RequestParam("adminNum") @Valid Long adminNum,
+			@RequestParam("rows") @Valid Integer rows,
+			@RequestParam("pageOrder") @Valid Integer pageOrder,
 			HttpServletRequest req) {
 		System.err.println(
 				this.getClass() + "__queryWeekListByTeacherAction__applicant="
@@ -147,6 +187,13 @@ public class SubscribeController extends BasicController {
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/queryWeekListByTeacherAction?applicant=1889970&teacherNum=41105048&pageOrder=1&rows=4
 	 * 
+	 * <br>
+	 * <ol>
+	 * <li>applicant--学号</li>
+	 * <li>teacherNum--教师工号"</li>
+	 * <li>rows--每页展示行数"</li>
+	 * <li>pageOrder--页码</li>
+	 * </ol>
 	 * 
 	 * @param applicant
 	 * @param teacherNum
@@ -159,10 +206,10 @@ public class SubscribeController extends BasicController {
 	@RequestMapping(value = "/queryWeekListByTeacherAction", method = RequestMethod.GET)
 //	@ApiOperation(value = "获取本周内某位学生全部的预约申请单", notes = "参数为:工号[限教师],预约者的学号", httpMethod = "GET")
 	public WebResponse<Pagination<List<TSubscribe>>> queryWeekListByTeacherAction(
-			@RequestParam("applicant") @ApiParam("学号") @Valid Long applicant,
-			@RequestParam("teacherNum") @ApiParam("教师工号") @Valid Long teacherNum,
-			@RequestParam("rows") @ApiParam("每页展示行数") @Valid Integer rows,
-			@RequestParam("pageOrder") @ApiParam("页码") @Valid Integer pageOrder,
+			@RequestParam("applicant") @Valid Long applicant,
+			@RequestParam("teacherNum") @Valid Long teacherNum,
+			@RequestParam("rows") @Valid Integer rows,
+			@RequestParam("pageOrder") @Valid Integer pageOrder,
 			HttpServletRequest req) {
 		System.err.println(
 				this.getClass() + "__queryWeekListByTeacherAction__applicant="
@@ -180,6 +227,12 @@ public class SubscribeController extends BasicController {
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/getSubscribeByIdAction?userNum=15165156051&subscribeID=112
 	 * 
+	 * <br>
+	 * <ol>
+	 * <li>userNum--工号/学号</li>
+	 * <li>subscribeID--预约单id</li>
+	 * </ol>
+	 * 
 	 * @param userNum
 	 * @param subscribeID
 	 * @param req
@@ -189,8 +242,8 @@ public class SubscribeController extends BasicController {
 	@RequestMapping(value = "/getSubscribeByIdAction", method = RequestMethod.GET)
 //	@ApiOperation(value = "获取某张预约申请单的信息", notes = "参数为:工号/学号,预约单id", httpMethod = "GET")
 	public WebResponse<TSubscribe> getSubscribeByIdAction(
-			@RequestParam("userNum") @ApiParam("工号/学号") @Valid Long userNum,
-			@RequestParam("subscribeID") @ApiParam("预约单id") @Valid Long subscribeID,
+			@RequestParam("userNum") @Valid Long userNum,
+			@RequestParam("subscribeID") @Valid Long subscribeID,
 			HttpServletRequest req) {
 		System.err.println(this.getClass() + "__getSubscribeByIdAction__userNum="
 				+ userNum + ",subscribeID=" + subscribeID);
@@ -204,6 +257,13 @@ public class SubscribeController extends BasicController {
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/handleSubscribeStatusAction?status=0&teacherNum=3999706924700&subscribeID=12
 	 * 
+	 * <br>
+	 * <ol>
+	 * <li>status--状态</li>
+	 * <li>teacherNum--工号,限教师</li>
+	 * <li>subscribeID--预约单id</li>
+	 * </ol>
+	 * 
 	 * @param status
 	 * @param teacherNum
 	 * @param subscribeID
@@ -214,9 +274,9 @@ public class SubscribeController extends BasicController {
 	@RequestMapping(value = "/handleSubscribeStatusAction", method = RequestMethod.GET)
 //	@ApiOperation(value = "审核处理某张预约申请单", notes = "参数为:状态,工号[仅限教师],预约单id", httpMethod = "GET")
 	public WebResponse<TSubscribe> handleSubscribeStatusAction(
-			@RequestParam("status") @ApiParam("状态") @Valid Integer status,
-			@RequestParam("teacherNum") @ApiParam("工号,限教师") @Valid Long teacherNum,
-			@RequestParam("subscribeID") @ApiParam("预约单id") @Valid Long subscribeID,
+			@RequestParam("status") @Valid Integer status,
+			@RequestParam("teacherNum") @Valid Long teacherNum,
+			@RequestParam("subscribeID") @Valid Long subscribeID,
 			HttpServletRequest req) {
 		System.err.println(this.getClass()
 				+ "__handleSubscribeStatusAction__teacherNum=" + teacherNum
@@ -232,6 +292,11 @@ public class SubscribeController extends BasicController {
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/getPrevWeekSubscribesListAction?adminNum=393606924700
 	 * 
+	 * <br>
+	 * <ol>
+	 * <li>adminNum--工号,限管理员</li>
+	 * </ol>
+	 * 
 	 * @param adminNum
 	 * @param req
 	 * @return
@@ -240,8 +305,7 @@ public class SubscribeController extends BasicController {
 	@RequestMapping(value = "/getPrevWeekSubscribesListAction", method = RequestMethod.GET)
 //	@ApiOperation(value = "查询上本周全部的预约申请单列表", notes = "参数为:工号[仅限管理员]", httpMethod = "GET")
 	public WebResponse<List<TSubscribe>> getPrevWeekSubscribesListAction(
-			@RequestParam("adminNum") @ApiParam("工号,限管理员") @Valid Long adminNum,
-			HttpServletRequest req) {
+			@RequestParam("adminNum") @Valid Long adminNum, HttpServletRequest req) {
 		System.err.println(
 				this.getClass() + "__queryByStatusAction_adminNum=" + adminNum);
 		// 后期将从令牌中获取关键数据
@@ -254,6 +318,12 @@ public class SubscribeController extends BasicController {
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/queryByStatusAction?userNum=156168541&status=0
 	 * 
+	 * <br>
+	 * <ol>
+	 * <li>userNum--工号,限教师和管理员</li>
+	 * <li>status--预约的审核状态</li>
+	 * </ol>
+	 * 
 	 * @param userNum
 	 * @param status
 	 * @param req
@@ -263,9 +333,8 @@ public class SubscribeController extends BasicController {
 	@RequestMapping(value = "/queryByStatusAction", method = RequestMethod.GET)
 //	@ApiOperation(value = "查询本周指定状态的预约申请单列表", notes = "参数为:工号[仅限教师和管理员],审核状态", httpMethod = "GET")
 	public WebResponse<List<TSubscribe>> queryByStatusAction(
-			@RequestParam("userNum") @ApiParam("工号,限教师和管理员") @Valid Long userNum,
-			@RequestParam("status") @ApiParam("预约的审核状态") @Valid Integer status,
-			HttpServletRequest req) {
+			@RequestParam("userNum") @Valid Long userNum,
+			@RequestParam("status") @Valid Integer status, HttpServletRequest req) {
 		System.err.println(this.getClass() + "__queryByStatusAction_userNum="
 				+ userNum + ",status=" + status);
 		// 后期将从令牌中获取关键数据
@@ -277,8 +346,13 @@ public class SubscribeController extends BasicController {
 
 	/**
 	 * http://localhost:8080/subscribe/SubscribeController/addNewApplyAction?applicant=156168541&useInterval=3&roomNum=11&applyUseDate=2019-12-11
-	 * 
-	 * 
+	 * <br>
+	 * <ul>
+	 * <li>applyUseDate--具体使用日期</li>
+	 * <li>useInterval--使用时间段</li>
+	 * <li>roomNum--机房编号</li>
+	 * <li>applicant--学号</li>
+	 * </ul>
 	 * 
 	 * @param subscribe
 	 * @param req
@@ -289,11 +363,11 @@ public class SubscribeController extends BasicController {
 	@RequestMapping(value = "/addNewApplyAction", method = RequestMethod.GET)
 //	@ApiOperation(value = "新增一张机房的使用申请单", notes = "参数为:学号,机房编号,具体使用日期,使用时间段", httpMethod = "GET")
 	public WebResponse<TSubscribe> addNewApplyAction(
-			@RequestParam("applyUseDate") @ApiParam("具体使用日期") @Valid String applyUseDate,
-			@RequestParam("useInterval") @ApiParam("使用时间段") @Valid Integer useInterval,
-			@RequestParam("roomNum") @ApiParam("机房编号") @Valid Integer roomNum,
-			@RequestParam("applicant") @ApiParam("学号") @Valid Long applicant,
-			HttpServletRequest req) throws ParseException {
+			@RequestParam("applyUseDate") @Valid String applyUseDate,
+			@RequestParam("useInterval") @Valid Integer useInterval,
+			@RequestParam("roomNum") @Valid Integer roomNum,
+			@RequestParam("applicant") @Valid Long applicant, HttpServletRequest req)
+			throws ParseException {
 		// 后期将从令牌中获取关键数据
 		// String header = req.getHeader("token");
 		// System.out.println("header.token== " + header);

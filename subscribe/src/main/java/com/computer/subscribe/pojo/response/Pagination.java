@@ -100,9 +100,9 @@ public class Pagination<T> {
 
 	@Override
 	public String toString() {
-		return "Pagination [hasPrevious=" + hasPrevious + ", hasNext=" + hasNext
-				+ ", totalPages=" + totalPages + ", currentPage=" + currentPage
-				+ ", rows=" + rows + ", data=" + data + "]";
+		return "Pagination \n[hasPrevious=" + hasPrevious + ", hasNext=" + hasNext
+				+ ", totalPages=" + totalPages + ",\n currentPage=" + currentPage
+				+ ", rows=" + rows + ", data=\n" + data + "]";
 	}
 
 }

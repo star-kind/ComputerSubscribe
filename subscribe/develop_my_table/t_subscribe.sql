@@ -61,4 +61,5 @@ mysql> SELECT id,room_num AS room,application_start_time AS start_time FROM t_su
 +----+------+---------------------+
 1 row in set (0.00 sec)
 
+mysql> SELECT COUNT(id) FROM t_subscribe WHERE subscribe_status=1 AND room_num=1;
 ----------------
