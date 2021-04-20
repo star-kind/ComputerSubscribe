@@ -37,10 +37,9 @@ public class UserServiceTest {
 			// 0--393606924700L,2465944154L
 			// 1--3999706924700L,13541944130L
 			// 2--54059944154L,214715547L,10548941L,19908114L
-
 			TUser u = new TUser();
-			u.setMailbox("666555444@souhuweibo.cn");
-			u.setUserName("geedy.kano.xtm");
+			u.setMailbox("666555444@hahaha.cn");
+			u.setUserName("geedy.kano.xdxd");
 			u.setPhone("19570351403");
 			u.setRole(1);
 			u.setId(6);

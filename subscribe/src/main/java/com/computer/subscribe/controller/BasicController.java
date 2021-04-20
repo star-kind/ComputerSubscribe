@@ -30,12 +30,11 @@ import javax.validation.ConstraintViolationException;
 public class BasicController {
 	public static Logger logger = Logger.getLogger(BasicController.class);
 
-	private static int PARAM_FAIL_CODE = 1001;
-	private static int VALIDATION_CODE = 1002;
+	private static int bind_ex_code = 777;
+	private static int method_argument_not_valid_ex_code = 776;
+	private static int validation_ex_code = 775;
+	private static int constraint_violation_ex_code = 774;
 
-	/**
-	 * "成功"
-	 */
 	public static final Integer SUCCESS = 200;
 
 	JwtUtils jwt = JwtUtils.getInstance();
@@ -47,12 +46,12 @@ public class BasicController {
 	@ResponseBody
 	@ExceptionHandler(BindException.class)
 	public WebResponse<Void> handleBindException(BindException e) {
-		System.err.println(this.getClass() + "+++ handleBindException +++" + e);
+		System.err.println(this.getClass() + "\n__handleBindException__" + e);
 		logger.error(e.getMessage(), e);
 
 		WebResponse<Void> response = new WebResponse<Void>();
 
-		response.setCode(PARAM_FAIL_CODE);
+		response.setCode(bind_ex_code);
 		response.setMessage(
 				e.getBindingResult().getFieldError().getDefaultMessage());
 		return response;
@@ -68,12 +67,12 @@ public class BasicController {
 	public WebResponse<Void> handleMethodArgumentNotValidException(
 			MethodArgumentNotValidException e) {
 		System.err.println(this.getClass()
-				+ "+++ handleMethodArgumentNotValidException +++" + e);
+				+ "\n__handleMethodArgumentNotValidException\n__" + e);
 		logger.error(e.getMessage(), e);
 
 		WebResponse<Void> response = new WebResponse<Void>();
 
-		response.setCode(PARAM_FAIL_CODE);
+		response.setCode(method_argument_not_valid_ex_code);
 		response.setMessage(
 				e.getBindingResult().getFieldError().getDefaultMessage());
 		return response;
@@ -87,12 +86,12 @@ public class BasicController {
 	@ExceptionHandler(ValidationException.class)
 	public WebResponse<Void> handleValidationException(ValidationException e) {
 		System.err
-				.println(this.getClass() + "+++ handleValidationException +++" + e);
+				.println(this.getClass() + "\n__handleValidationException\n__" + e);
 		logger.error(e.getMessage(), e);
 
 		WebResponse<Void> response = new WebResponse<Void>();
 
-		response.setCode(VALIDATION_CODE);
+		response.setCode(validation_ex_code);
 		response.setMessage(e.getCause().getMessage());
 		return response;
 	}
@@ -106,12 +105,12 @@ public class BasicController {
 	public WebResponse<Void> handleConstraintViolationException(
 			ConstraintViolationException e) {
 		System.err.println(
-				this.getClass() + "+++ handleConstraintViolationException +++" + e);
+				this.getClass() + "\n__handleConstraintViolationException\n__" + e);
 		logger.error(e.getMessage(), e);
 
 		WebResponse<Void> response = new WebResponse<Void>();
 
-		response.setCode(VALIDATION_CODE);
+		response.setCode(constraint_violation_ex_code);
 		response.setMessage(e.getCause().getMessage());
 		return response;
 	}

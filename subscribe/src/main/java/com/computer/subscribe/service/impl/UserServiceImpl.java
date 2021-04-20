@@ -2,7 +2,6 @@ package com.computer.subscribe.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,21 +41,7 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public Integer regist(TUser user) throws OperationException {
-		logger.info(user.toString());
-
-		// 防止NPE-空指针异常
-		Optional<TUser> optionalUser = Optional.ofNullable(user);
-		System.err.println(optionalUser);
-
-		if (!optionalUser.isPresent()) {
-			String description = ExceptionsEnum.REGIST_DATA_INCOMPLETE
-					.getDescription();
-
-			System.err.println(description);
-			logger.error(description);
-		}
-		TUser tUser = optionalUser.get();
-		System.err.println(tUser.toString());
+		logger.info("\n" + user.toString());
 
 		/* 检测 学号/电话/邮箱 是否唯一 */
 		TUserExample example = new TUserExample();
@@ -659,19 +644,55 @@ public class UserServiceImpl implements IUserService {
 			throws OperationException {
 		paginationUtil.printMethod(this.getClass(), "oldTblUser=" + oldTblUser,
 				"submitUpdatedUser=" + submitUpdatedUser);
-		
+
 		TUser user = new TUser();
 
 		AssemblyBean assembly = new AssemblyBean();
 		BuildUserImpl buildUser = new BuildUserImpl(user);
 
-		// TODO 空值异常
 		TUser commandEntity = assembly.getUserCommandEntity(buildUser, oldTblUser,
 				submitUpdatedUser);
+		this.validAttrsAreAllNull(commandEntity);
 
 		paginationUtil.printMethod(this.getClass(),
 				"commandEntity=" + commandEntity);
 		return commandEntity;
+	}
+
+	@Override
+	public void validAttrsAreAllNull(TUser user) throws OperationException {
+		paginationUtil.printMethod(this.getClass(),
+				"validAttrsAreAllNull..user=" + user);
+		int attrsNum = 4;// 被检验属性的数量
+		String sign = "null";
+		StringBuffer buffer = new StringBuffer(sign);
+		String str = null;
+
+		str += user.getMailbox();
+		str += user.getMailbox();
+		str += user.getRole();
+		str += user.getUserName();
+		System.err.println(this.getClass() + "..validAttrsAreAllNull..str=" + str);
+
+		for (int i = 0; i < attrsNum; i++) {
+			buffer.append(sign);
+		}
+		String bufStr = buffer.toString();
+		System.err.println(
+				this.getClass() + "..validAttrsAreAllNull..buffer.append=" + bufStr);
+
+		Boolean eq = bufStr.equals(str);
+		System.err.println(this.getClass() + "..validAttrsAreAllNull..是否相等=" + eq);
+
+		if (eq) {
+			String description = ExceptionsEnum.PROFILE_NO_DIFFERENCE
+					.getDescription();
+			logger.warn("\n" + description);
+			throw new OperationException(description);
+		}
+
+		System.err
+				.println(this.getClass() + "..validAttrsAreAllNull..else=>pass.放行");
 	}
 
 }

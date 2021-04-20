@@ -18,6 +18,16 @@ import com.computer.subscribe.pojo.response.Pagination;
  */
 public interface IUserService {
 	/**
+	 * 检验用户属性是否全部为空<br>
+	 * 效力用途:修改用<br>
+	 * 被查属性:用户名,电话,邮箱,角色
+	 * 
+	 * @param user
+	 * @throws OperationException
+	 */
+	void validAttrsAreAllNull(TUser user) throws OperationException;
+
+	/**
 	 * 获取经过精心构建的,作修改用途的用户参数实体
 	 * 
 	 * @param oldTblUser
@@ -117,8 +127,8 @@ public interface IUserService {
 	 * @return
 	 * @throws OperationException
 	 */
-	TUser modifyUserInfoByAdminNum(@Valid @NotNull TUser submitUpdatedUser,
-			@NotNull Long adminNum) throws OperationException;
+	TUser modifyUserInfoByAdminNum(@NotNull TUser submitUpdatedUser,
+			@Valid @NotNull Long adminNum) throws OperationException;
 
 	/**
 	 * 普通用户(师生)修改自己的基本资料<br>

@@ -29,7 +29,7 @@
 		class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="%n[%p]: [%c] [%M] [%l] [%m] %n" />
+				value="%n[%p]:[%c][%M][%l][%m]%n" />
 		</layout>
 	</appender>
 
@@ -171,7 +171,7 @@
 	</appender>
 
 	<!-- -->
-	<!-- new html -->
+	<!-- standard html -->
 	<appender name="ourOutPut"
 		class="org.apache.log4j.RollingFileAppender">
 

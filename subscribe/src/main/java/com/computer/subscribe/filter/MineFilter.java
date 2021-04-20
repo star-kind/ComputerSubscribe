@@ -29,8 +29,8 @@ public class MineFilter implements Filter {
 	 * @see Filter#destroy()
 	 */
 	public void destroy() {
-		System.err.println(this.getClass() + ">>>MineFilter>>>destroy:我的过滤器-摧毁");
-		logger.info(this.getClass() + ">>>MineFilter>>>destroy:我的过滤器-摧毁");
+		System.err.println(this.getClass() + "__MineFilter__destroy:某之过滤器-摧毁");
+		logger.info(this.getClass() + "\n__MineFilter__destroy:某之过滤器-摧毁");
 	}
 
 	/**
@@ -38,8 +38,8 @@ public class MineFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
-		System.err.println(this.getClass() + ">>>MineFilter>>>doFilter:我的过滤器-过程");
-		logger.info(this.getClass() + ">>>MineFilter>>>doFilter:我的过滤器-过程");
+		System.err.println(this.getClass() + "__MineFilter__doFilter:某之过滤器-过程");
+		logger.info(this.getClass() + "\n__MineFilter__doFilter:某之过滤器-过程");
 
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
@@ -61,16 +61,16 @@ public class MineFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Headers",
 				"Content-Type, x-requested-with, X-Custom-Header, StarKid-Access-Token");
 
-		// 拦截器之链
-		chain.doFilter(req, res);
+		// 将请求转发给过滤器链中的下一个对象
+		chain.doFilter(request, response);
 	}
 
 	/**
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
-		System.err.println(this.getClass() + ">>>MineFilter>>>init:我的过滤器-初始化");
-		logger.info(this.getClass() + ">>>MineFilter>>>init:我的过滤器-初始化");
+		System.err.println(this.getClass() + "__MineFilter__init:某之过滤器-初始");
+		logger.info(this.getClass() + "\n__MineFilter__init:某之过滤器-初始");
 	}
 
 }

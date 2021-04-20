@@ -27,8 +27,8 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	// @NotNull(message = "学号或工号不能为空")
 	@Min(value = 1, message = "学号或工号不能小于1")
+	@Max(value = Long.MAX_VALUE, message = "学号或工号不能大于" + Long.MAX_VALUE)
 	private Long userNum;
 
 	/**
@@ -68,8 +68,8 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	@NotNull(message = "帐户类型不能为空")
-	@Max(value = 9)
+	@NotNull(message = "帐户类型代号不能为空,且范围在0-2之间")
+	@Max(value = 2)
 	private Integer role;
 
 	/**
@@ -78,8 +78,7 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	@Size(min = 3, max = 18)
-	// @NotBlank(message = "密码不能为空")
+	@Size(min = 3, max = 18, message = "密码不能为空,且长度在3-18个字符之间")
 	private String password;
 
 	/**

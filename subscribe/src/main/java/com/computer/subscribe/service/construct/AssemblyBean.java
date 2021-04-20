@@ -1,5 +1,7 @@
 package com.computer.subscribe.service.construct;
 
+import org.apache.log4j.Logger;
+
 import com.computer.subscribe.pojo.TUser;
 
 /**
@@ -9,6 +11,8 @@ import com.computer.subscribe.pojo.TUser;
  *
  */
 public class AssemblyBean {
+	public static Logger logger = Logger.getLogger(AssemblyBean.class);
+
 	/**
 	 * 
 	 * @param cmd
@@ -19,8 +23,8 @@ public class AssemblyBean {
 	public TUser getUserCommandEntity(IBuildEntityCommand<TUser> cmd,
 			TUser oldTblData, TUser newSubmitParam) {
 		TUser buildBean = cmd.buildBean(oldTblData, newSubmitParam);
-		System.err.println(
-				this.getClass() + "--getUserCommandEntity..buildBean=" + buildBean);
+
+		logger.warn("\n Return.Build.Bean ==" + buildBean);
 		return buildBean;
 	}
 
