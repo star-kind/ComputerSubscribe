@@ -108,7 +108,8 @@ public class PasswordBusiness {
 	}
 
 	/**
-	 * 校验加盐后是否和原文一致,逆向解密
+	 * 校验加盐后是否和原文一致,逆向解密 <br>
+	 * 若一致则归真,相异则归假
 	 *
 	 * @param password 前台密码
 	 * @param text     表中原文
@@ -125,13 +126,14 @@ public class PasswordBusiness {
 		}
 
 		String salt = new String(saltStuff);
-		System.err.println("verify().salt== " + salt);
+		System.err.println(this.getClass() + "__" + "verify().salt== " + salt);
 
 		String forePwdTxt = md5Hex(salt + password);
-		System.out.println("forePwdTxt== " + forePwdTxt);
+		System.out.println(this.getClass() + "__" + "forePwdTxt== " + forePwdTxt);
 
 		String digestString = new String(digest);
-		System.err.println("digestString== " + digestString);
+		System.err
+				.println(this.getClass() + "__" + "digestString== " + digestString);
 
 		return forePwdTxt.equals(digestString);
 	}

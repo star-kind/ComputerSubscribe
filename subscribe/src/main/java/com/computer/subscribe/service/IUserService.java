@@ -2,7 +2,9 @@ package com.computer.subscribe.service;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TUser;
@@ -15,6 +17,25 @@ import com.computer.subscribe.pojo.response.Pagination;
  *
  */
 public interface IUserService {
+	/**
+	 * 获取经过精心构建的,作修改用途的用户参数实体
+	 * 
+	 * @param oldTblUser
+	 * @param submitUpdatedUser
+	 * @return
+	 */
+	TUser getUserBeanForBuild(@Valid TUser oldTblUser,
+			@Valid TUser submitUpdatedUser) throws OperationException;
+
+	/**
+	 * 阻止其他任何人修改某位管理员的信息
+	 * 
+	 * @param adminAccount
+	 * @return
+	 * @throws OperationException
+	 */
+	void stopAdminUpdatedByOther(TUser adminAccount) throws OperationException;
+
 	/**
 	 * 检查是否是学生角色,若是则报错,若不是则返还[教师/管理员]实体
 	 * 
@@ -36,12 +57,21 @@ public interface IUserService {
 			throws OperationException;
 
 	/**
-	 * 检查某个用户是否存在,若是存在则返回对象
+	 * 检查某个用户是否存在,若是存在则返回对象[据学号/工号]
 	 * 
 	 * @param userNum
 	 * @return
 	 */
 	TUser checkUserExist(@NotNull Long userNum) throws OperationException;
+
+	/**
+	 * 检查某个用户是否存在,若是存在则返回对象,不存在则报错[据用户ID]<br>
+	 * 密文+密钥不返回
+	 * 
+	 * @param userID
+	 * @return
+	 */
+	TUser checkUserByIdIfExist(@NotNull Integer userID) throws OperationException;
 
 	/**
 	 * 校验管理员的存在与权限
@@ -62,22 +92,55 @@ public interface IUserService {
 			throws OperationException;
 
 	/**
+	 * 根据工号/学号获取用户数据(全部,含密文+盐值)
+	 * 
+	 * @param userNum
+	 * @return
+	 * @throws OperationException
+	 */
+	TUser getUserByUserNum(@Valid @NotNull Long userNum) throws OperationException;
+
+	/**
+	 * <b>管理员之间不能互相修改</b> <br>
 	 * 修改用户资料,只能由管理员进行修改<br>
-	 * 基于user number(工号)-管理员; 可修改字段: 电话,邮箱,用户名<br>
+	 * 基于[工号]-管理员+被修改对象的ID;
+	 * <ol>
+	 * 可修改字段:
+	 * <li>电话</li>
+	 * <li>邮箱</li>
+	 * <li>用户名</li>
+	 * <li>角色权限</li>
+	 * </ol>
 	 * 
-	 * <b>管理员之间不能互相修改</b>
-	 * 
-	 * @param userName
-	 * @param mailbox
-	 * @param phone
-	 * @param userNum  被修改对象的user numer
+	 * @param submitUpdatedUser 对被修改帐户提交的的新信息
 	 * @param adminNum
 	 * @return
 	 * @throws OperationException
 	 */
-	Integer modifyUserInfoByAdminNum(@NotNull String userName,
-			@NotNull String mailbox, @NotNull String phone, @NotNull Long userNum,
+	TUser modifyUserInfoByAdminNum(@Valid @NotNull TUser submitUpdatedUser,
 			@NotNull Long adminNum) throws OperationException;
+
+	/**
+	 * 普通用户(师生)修改自己的基本资料<br>
+	 * 基于[ID]-普通师生自身的; 可修改字段: 电话,邮箱,用户名<br>
+	 * 
+	 * @param submitUser
+	 * @return
+	 * @throws OperationException
+	 */
+	TUser modifyInfoByNormalUser(@Valid @NotNull TUser submitUser)
+			throws OperationException;
+
+	/**
+	 * 管理员修改自己的资料;可修改:电话,邮箱,用户名,角色权限 <br>
+	 * 基于帐号ID
+	 * 
+	 * @param admin
+	 * @return
+	 * @throws OperationException
+	 */
+	TUser modifyInfoByAdminMySelf(@Valid @NotNull TUser admin)
+			throws OperationException;
 
 	/**
 	 * 统计获取ID的数量
@@ -111,13 +174,22 @@ public interface IUserService {
 	 * 
 	 * @param pageOrder 页码
 	 * @param pageRows  每页多少人,每页行数
-	 * @param id        查询者的id
+	 * @param id        查询者的id(必须是管理员)
 	 * @return
 	 * @throws OperationException
 	 */
 	Pagination<List<TUser>> getMembersListByOrder(@NotNull Integer pageOrder,
 			@NotNull Integer pageRows, @NotNull Integer id)
 			throws OperationException;
+
+	/**
+	 * 根据用户ID获取用户数据[含密文+密钥]
+	 * 
+	 * @param id
+	 * @return
+	 * @throws OperationException
+	 */
+	TUser getUserById(@Valid @NotNull Integer id) throws OperationException;
 
 	/**
 	 * 改变密码

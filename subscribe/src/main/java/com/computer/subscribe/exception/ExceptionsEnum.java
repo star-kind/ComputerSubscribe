@@ -38,14 +38,16 @@ public enum ExceptionsEnum {
 	/** 你并非此份预约的申请发起者,无法对其进行修改 */
 	NOT_THIS_SUBSCRIBE_APPLIER(914, "你并非此份预约的申请发起者,无法对其进行修改"),
 	/* user */
+	/** 您尚未登录,请先登录 */
+	HADNOT_LOGINED(1005, "您尚未登录,请先登录"),
 	/** 此电话号码已注册，请更换另一个号码 */
 	PHONE_DUPLICATE_CONFLICT(1006, "此电话号码已注册,请更换另一个号码"),
 	/** 账号不存在 */
 	ACCOUNT_NO_EXIST(1007, "账号不存在"),
 	/** 登录密码错误 */
 	LOGIN_PASSWORD_ERR(1008, "登录密码错误"),
-	/** 您要修改的原密码不正确 */
-	OLD_PASSWORD_ERR(1009, "您要修改的原密码不正确"),
+	/** 您提交的原密码不正确 */
+	OLD_PASSWORD_ERR(1009, "您提交的原密码不正确"),
 	/** 此邮箱已被注册，请更换另外一个 */
 	EMAIL_DUPLICATE_CONFLICT(1010, "此邮箱已被注册,请更换另外一个"),
 	/** 您不是管理员，无此权限 */
@@ -73,7 +75,11 @@ public enum ExceptionsEnum {
 	/** 您的帐号没有这个权限 */
 	U_ACCOUNT_NOT_IT_PRIVILEGE(1022, "您的帐号没有这个权限"),
 	/** 管理员帐户不存在 */
-	ADMINISTRATOR_NO_EXIST(1030, "管理员帐户不存在"),;
+	ADMINISTRATOR_NO_EXIST(1030, "管理员帐户不存在"),
+	/** 提交的新密码与原先的登录密码一致,无需修改 */
+	NEWKEYWD_SAME_AS_OLDKEYWDTEXT(1031, "提交的新密码与原先的登录密码一致,无需修改"),
+	/**您提交的新信息与原有的资料没有差别,若您真的想要修改资料,请认真填写*/
+	PROFILE_NO_DIFFERENCE(1032, "您提交的新信息与原有的资料没有差别,若您真的想要修改资料,请认真填写"),;
 
 	/**
 	 * 异常码

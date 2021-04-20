@@ -99,7 +99,7 @@ public class PaginationUtils {
 		Boolean hasPrevious = boolMap.get(has_previous_key);
 		Boolean hasNext = boolMap.get(has_next_key);
 
-		pagin.setCurrentPage(++pageOrder);
+		pagin.setCurrentPage(pageOrder);
 		pagin.setData(pageData);
 		pagin.setHasNext(hasNext);
 		pagin.setHasPrevious(hasPrevious);

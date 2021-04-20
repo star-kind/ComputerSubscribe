@@ -10,19 +10,49 @@ import com.auth0.jwt.JWTSigner;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * token加密/解密之工具类
+ * 
+ * @author user
+ *
+ */
 public class JwtUtils {
 	public static Logger logger = Logger.getLogger(JwtUtils.class);
+
+	private static JwtUtils jwtUtils;
+
+	private static final Object LOCK = new Object();
+
+	private JwtUtils() {
+		System.err.println(this.getClass() + "__JwtUtils_私有化构造器,防止被实例化");
+	}
+
+	/**
+	 * 懒汉式之单例模式
+	 * 
+	 * @return
+	 */
+	public static JwtUtils getInstance() {
+		if (jwtUtils == null) {
+			synchronized (LOCK) {// 决定是否锁住
+				if (jwtUtils == null) {
+					jwtUtils = new JwtUtils();
+				}
+			}
+		}
+		return jwtUtils;
+	}
 
 	/**
 	 * 密钥
 	 */
-	private static final String SECRET = "xxxx-xxx-xxxx";
+	private static final String SECRET = "secret";
 	/**
-	 * 默认字段key:expression
+	 * 默认字段key:expire-到期
 	 */
-	private static final String EXP = "expression";
+	private static final String EXP = "expire";
 	/**
-	 * 默认字段key:payload
+	 * 默认字段key:payload-有效载荷
 	 */
 	private static final String PAYLOAD = "payload";
 
@@ -47,7 +77,7 @@ public class JwtUtils {
 			data.put(EXP, System.currentTimeMillis() + maxTime);
 
 			String sign = signer.sign(data);
-			System.out.println(this.getClass() + "..encode.sign=" + sign);
+			System.out.println(this.getClass() + "__encode.sign=" + sign);
 
 			return sign;
 		} catch (IOException e) {
@@ -82,7 +112,7 @@ public class JwtUtils {
 
 					T value = objectMapper.readValue(json, tClass);
 					System.err
-							.println(this.getClass() + "..decode().value=" + value);
+							.println(this.getClass() + "__decode().value=" + value);
 
 					return value;
 				}
@@ -125,20 +155,20 @@ public class JwtUtils {
 //	public static void main(String[] args) {
 //		JwtUtils util = new JwtUtils();
 //		HashMap<String, Object> map = new HashMap<String, Object>();
-//		map.put("id", "ip4800");
-//		map.put("num", "894go");
+//		map.put("id", 265);
+//		map.put("userNum", 1316618515L);
 //		map.put("living", "ice.city.alias.winter");
 //		// 加密生成令牌
 //		String token = util.encode(map, 120 * 1000 * 1000);
-//		System.err.println("token=== " + token);
+//		System.out.println("token=== " + token);
 //		// 解密
 //		HashMap decode = util.decode(token, HashMap.class);
-//		System.err.println("decode=== " + decode);
-//		System.err.println("decode.GET=== " + decode.get("num"));
+//		System.out.println("decode=== " + decode);
+//		System.out.println("decode.GET-userNum=== " + decode.get("userNum"));
 //		// 揭密
 //		HashMap updateCode = util.updateDecode(token, HashMap.class);
-//		System.err.println("updateCode=== " + updateCode);
-//		System.err.println("updateCode.getKey=== " + updateCode.get("living"));
+//		System.out.println("updateCode=== " + updateCode);
+//		System.out.println("updateCode.getValueByKey=== " + updateCode.get("living"));
 //	}
 
 }

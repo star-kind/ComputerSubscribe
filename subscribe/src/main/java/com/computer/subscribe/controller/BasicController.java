@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.computer.subscribe.exception.ExceptionsEnum;
 import com.computer.subscribe.exception.OperationException;
+import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.response.WebResponse;
+import com.computer.subscribe.util.JwtUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 
 /**
@@ -34,6 +37,8 @@ public class BasicController {
 	 * "成功"
 	 */
 	public static final Integer SUCCESS = 200;
+
+	JwtUtils jwt = JwtUtils.getInstance();
 
 	/**
 	 * 方法参数校验:BindException<br>
@@ -138,7 +143,7 @@ public class BasicController {
 			res.setCode(ExceptionsEnum.LOGIN_PASSWORD_ERR.getCode());
 			break;
 
-		case "您要修改的原密码不正确":
+		case "您提交的原密码不正确":
 			res.setCode(ExceptionsEnum.OLD_PASSWORD_ERR.getCode());
 			break;
 
@@ -246,6 +251,18 @@ public class BasicController {
 			res.setCode(ExceptionsEnum.ACTUAL_CANNOT_MORE_THAN_TOAL.getCode());
 			break;
 
+		case "提交的新密码与原先的登录密码一致,无需修改":
+			res.setCode(ExceptionsEnum.NEWKEYWD_SAME_AS_OLDKEYWDTEXT.getCode());
+			break;
+
+		case "您尚未登录,请先登录":
+			res.setCode(ExceptionsEnum.HADNOT_LOGINED.getCode());
+			break;
+
+		case "您提交的新信息与原有的资料没有差别,若您真的想要修改资料,请认真填写":
+			res.setCode(ExceptionsEnum.PROFILE_NO_DIFFERENCE.getCode());
+			break;
+
 		}
 		return res;
 	}
@@ -260,6 +277,29 @@ public class BasicController {
 			System.err.println("------");
 			System.err.println(ele);
 		}
+	}
+
+	/**
+	 * 从请求头中的令牌里,获取相应数据
+	 * 
+	 * @param req
+	 * @return
+	 */
+	public LoginData getLoginDataByToken(HttpServletRequest req) {
+		String headerToken = req.getHeader("token");
+
+		if (!"".equals(headerToken)) {
+			System.err.println(this.getClass() + "\n__getDataFromToken__headerToken="
+					+ headerToken);
+
+			LoginData loginData = jwt.decode(headerToken, LoginData.class);
+			printMethod(this.getClass().getName(), "loginData",
+					loginData.toString());
+
+			return loginData;
+		}
+
+		return null;
 	}
 
 }

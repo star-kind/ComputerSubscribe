@@ -10,17 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.computer.subscribe.controller.BasicController;
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.response.Pagination;
 import com.computer.subscribe.pojo.response.WebResponse;
 import com.computer.subscribe.service.IUserService;
-
-import io.swagger.annotations.ApiParam;
 
 /**
  * 用户控制器<br>
@@ -37,74 +35,66 @@ public class UsersController extends BasicController {
 	private IUserService ius;
 
 	/**
-	 * http://localhost:8080/subscribe/UsersController/modifyUserAction?userName=curtly.hash&phone=19703640870&mailbox=168451685@qq.cn.com&userNum=1564851611&adminNum=123185161
+	 * http://localhost:8080/subscribe/UsersController/modifyUserAction?userName=currant.goden&phone=19703640870&mailbox=506897004@qq.com&role=2&id=15
 	 * 
-	 * @param userName
-	 * @param mailbox
-	 * @param phone
-	 * @param userNum
-	 * @param adminNum
+	 * <br>
+	 * <ul>
+	 * <li>被修改用户的姓名</li>
+	 * <li>被修改用户的角色类型</li>
+	 * <li>被修改用户的邮箱</li>
+	 * <li>被修改用户的电话</li>
+	 * <li>基于:被修改用户的ID</li>
+	 * <li>校验:管理员工号(修改者)</li>
+	 * </ul>
+	 * 
+	 * @param submitUserParam
+	 * @param request
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/modifyUserAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "修改用户数据", notes = "参数为:管理员工号(管理员权限等级),被修改对象:[学号或教职工号,电话,邮箱,用户名]", httpMethod = "GET")
-	public WebResponse<TUser> modifyUserAction(
-			@ApiParam("被修改用户的姓名") @Valid String userName,
-			@ApiParam("被修改用户的邮箱") @Valid String mailbox,
-			@ApiParam("被修改用户的电话") @Valid String phone,
-			@ApiParam("被修改用户的学号或者教职工号") @Valid Long userNum,
-			@ApiParam("管理员工号") @Valid Long adminNum) {
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.out.println("header.token== " + header);
-		System.err.println(this.getClass() + "--modifyUserAction--userName== "
-				+ userName + ",mailbox== " + mailbox + ",phone== " + phone
-				+ ",userNum== " + userNum + ",adminNum== " + adminNum);
+	public WebResponse<TUser> modifyUserAction(@Valid @NotNull TUser submitUserParam,
+			HttpServletRequest request) {
+		LoginData loginData = getLoginDataByToken(request);
+		Long adminNum = loginData.getUserNum();
 
-		Integer affect = ius.modifyUserInfoByAdminNum(userName, mailbox, phone,
-				userNum, adminNum);
+		printMethod(this.getClass() + "--modifyUserAction==", submitUserParam,
+				"adminNum===" + adminNum);
 
-		TUser user = ius.getUserByUserNum(userNum, adminNum);
-		user.setPassword(null);
-		user.setSalt(null);
+		TUser user = ius.modifyUserInfoByAdminNum(submitUserParam,
+				loginData.getUserNum());
 
-		return new WebResponse<TUser>(SUCCESS, "成功修改" + affect + "名用户", user);
+		return new WebResponse<TUser>(SUCCESS, "管理员成功修改一名用户的基本资料", user);
 	}
 
 	/**
 	 * http://localhost:8080/subscribe/UsersController/getMemberByOrderAction?pageOrder=0&rows=2&id=18
 	 * 
-	 * @param id
-	 * @param pageOrder
-	 * @param rows
+	 * @param id        Administrator.ID
+	 * @param pageOrder 页数
+	 * @param rows      每页展示行数
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getMemberByOrderAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "分页获取用户列表数据", notes = "参数为:ID(管理员权限等级),第几页,每页展示行数", httpMethod = "GET")
-	public WebResponse<List<TUser>> getMemberByOrderAction(
-			@ApiParam("administrator ID") @Valid Integer id,
-			@ApiParam("页数") @Valid Integer pageOrder,
-			@ApiParam("每页展示行数") @Valid Integer rows) {
+	public WebResponse<List<TUser>> getMemberByOrderAction(@Valid Integer pageOrder,
+			@Valid Integer rows, HttpServletRequest request) {
 		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.out.println("header.token== " + header);
-		logger.info("ID== " + id + ",pageOrder== " + pageOrder + ",rows== " + rows);
-		System.err.println(
-				"ID== " + id + ",pageOrder== " + pageOrder + ",rows== " + rows);
+		LoginData loginData = getLoginDataByToken(request);
+
+		System.err.println(this.getClass() + "__getMemberByOrderAction.pageOrder== "
+				+ pageOrder + ",rows== " + rows);
 
 		Pagination<List<TUser>> pagination = ius.getMembersListByOrder(pageOrder,
-				rows, id);
+				rows, loginData.getId());
 		return new WebResponse<List<TUser>>(SUCCESS, pagination);
 	}
 
 	/**
 	 * http://localhost:8080/subscribe/UsersController/revisePasswordAction?userNum=6515615&newPasswd=3245&oldPasswd=0014
 	 * <br>
-	 * 参数为:工号/学号,新密码,旧密码 <br>
+	 * 参数为:新密码,旧密码 <br>
 	 * 
-	 * @param userNum   User(administrator/teacher/students) Numer"
 	 * @param newPasswd 新的密码
 	 * @param oldPasswd 旧的密码
 	 * @param req
@@ -112,16 +102,19 @@ public class UsersController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/revisePasswordAction", method = RequestMethod.GET)
-	public WebResponse<Integer> revisePasswordAction(@Valid Long userNum,
-			@Valid String newPasswd, @Valid String oldPasswd,
+	public WebResponse<Integer> revisePasswordAction(
+			@RequestParam("newPasswd") @Valid String newPasswd,
+			@RequestParam("oldPasswd") @Valid String oldPasswd,
 			HttpServletRequest req) {
+		printMethod(this.getClass(), "revisePasswordAction--newpassword== "
+				+ newPasswd + ", oldpassword== " + oldPasswd);
 
 		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.out.println("header.token== " + header);
-
-		System.out.println("revisePasswordAction===> newpassword== " + newPasswd
-				+ ", oldpassword== " + oldPasswd + ", usernumber==" + userNum);
+		String header = req.getHeader("token");
+		System.out.println(this.getClass()
+				+ ".revisePasswordAction\n.header.token== " + header);
+		LoginData loginData = jwt.decode(header, LoginData.class);
+		Long userNum = loginData.getUserNum();
 
 		Integer affect = ius.revisePassword(newPasswd, oldPasswd, userNum);
 		return new WebResponse<Integer>(SUCCESS, "SUCCESSFUL REVISE PASSWORD",
@@ -143,9 +136,7 @@ public class UsersController extends BasicController {
 	@RequestMapping(value = "/loginAction", method = RequestMethod.GET)
 	public WebResponse<LoginData> loginAction(@Valid String passwd,
 			@Valid Long userNum, @Valid Integer role) throws OperationException {
-		logger.info(
-				"role== " + role + ",userNum== " + userNum + ",passwd== " + passwd);
-		System.err.println(
+		printMethod(this.getClass(), "loginAction()",
 				"role== " + role + ",userNum== " + userNum + ",passwd== " + passwd);
 
 		LoginData data = ius.login(userNum, passwd, role);
@@ -175,5 +166,5 @@ public class UsersController extends BasicController {
 
 		return new WebResponse<Integer>(SUCCESS, "OK", row);
 	}
-	
+
 }

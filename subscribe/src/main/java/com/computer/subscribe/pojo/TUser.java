@@ -1,15 +1,14 @@
 package com.computer.subscribe.pojo;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.Range;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
@@ -20,7 +19,6 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	@ApiModelProperty(value = "ID")
 	private Integer id;
 
 	/**
@@ -29,8 +27,8 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	@NotNull(message = "学号或工号不能为空")
-	@Range(min = 1, max = 1000 * 1000 * 1000 * 1000)
+	// @NotNull(message = "学号或工号不能为空")
+	@Min(value = 1, message = "学号或工号不能小于1")
 	private Long userNum;
 
 	/**
@@ -81,7 +79,7 @@ public class TUser {
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
 	@Size(min = 3, max = 18)
-	@NotBlank(message = "密码不能为空")
+	// @NotBlank(message = "密码不能为空")
 	private String password;
 
 	/**

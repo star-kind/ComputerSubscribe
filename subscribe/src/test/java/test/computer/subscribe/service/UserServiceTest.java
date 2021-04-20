@@ -37,9 +37,32 @@ public class UserServiceTest {
 			// 0--393606924700L,2465944154L
 			// 1--3999706924700L,13541944130L
 			// 2--54059944154L,214715547L,10548941L,19908114L
-			userService.modifyUserInfoByAdminNum("lion.pnay", "h8848@fox.com.cn",
-					"17123241037", 105170048l, 393606924700L);
-		} catch (Exception e) {
+
+			TUser u = new TUser();
+			u.setMailbox("666555444@souhuweibo.cn");
+			u.setUserName("geedy.kano.xtm");
+			u.setPhone("19570351403");
+			u.setRole(1);
+			u.setId(6);
+			userService.modifyUserInfoByAdminNum(u, 2465944154L);
+		} catch (OperationException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
+	public void modifyAdminMyselfTest() {
+		userService = (IUserService) applicationContext.getBean("userServiceImpl");
+
+		try {
+			TUser u = new TUser();
+			u.setMailbox("1517415415@qq.com.cn");
+			u.setPhone("15243606940");
+			u.setUserName("victories.failed");
+			u.setId(18);
+
+			userService.modifyInfoByAdminMySelf(u);
+		} catch (OperationException e) {
 			System.err.println(e.getMessage());
 		}
 	}
@@ -47,15 +70,32 @@ public class UserServiceTest {
 	@Test
 	public void allUserListTest() {
 		userService = (IUserService) applicationContext.getBean("userServiceImpl");
-
 		userService.getAllUsers();
+	}
+
+	@Test
+	public void modifyDataByNormalTest() {
+		userService = (IUserService) applicationContext.getBean("userServiceImpl");
+
+		try {
+			TUser u = new TUser();
+			u.setMailbox("16456680791@qq.com");
+			u.setUserName("PaulKing");
+			u.setPhone("16456680791");
+			u.setId(1);
+
+			userService.modifyInfoByNormalUser(u);
+
+		} catch (OperationException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	@Test
 	public void getUserListByLimitTest() {
 		userService = (IUserService) applicationContext.getBean("userServiceImpl");
 
-		userService.getUserListByLimits(3, 3);
+		userService.getUserListByLimits(1, 7);
 	}
 
 	@Test
@@ -70,7 +110,7 @@ public class UserServiceTest {
 			for (TUser tUser : pagination.getData()) {
 				System.err.println(tUser.toString());
 			}
-		} catch (Exception e) {
+		} catch (OperationException e) {
 			System.err.println(e.getMessage());
 		}
 	}
