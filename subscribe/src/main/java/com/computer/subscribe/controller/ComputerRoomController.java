@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.computer.subscribe.pojo.TComputerRoom;
@@ -35,8 +36,10 @@ public class ComputerRoomController extends BasicController {
 	@ResponseBody
 	@RequestMapping(value = "/getRoomListByPaginAction", method = RequestMethod.GET)
 	public WebResponse<Pagination<List<TComputerRoom>>> getRoomListByPaginAction(
-			@Valid @NotNull Long userNum, @Valid @NotNull Integer pageOrder,
-			@Valid @NotNull Integer rows, HttpServletRequest req) {
+			@RequestParam("userNum") @Valid @NotNull Long userNum,
+			@RequestParam("pageOrder") @Valid @NotNull Integer pageOrder,
+			@RequestParam("rows") @Valid @NotNull Integer rows,
+			HttpServletRequest req) {
 		printMethod(this.getClass(), "getRoomListByPaginAction", "userNum", userNum,
 				"pageOrder", pageOrder, "rows", rows);
 		// 后期将从令牌中获取关键数据
@@ -61,7 +64,8 @@ public class ComputerRoomController extends BasicController {
 	@ResponseBody
 	@RequestMapping(value = "/reviseRoomInfoAction", method = RequestMethod.GET)
 	public WebResponse<TComputerRoom> reviseRoomInfoAction(
-			@Valid @NotNull TComputerRoom roomNewInfo, @Valid @NotNull Long adminNum,
+			@Valid @NotNull TComputerRoom roomNewInfo,
+			@RequestParam("adminNum") @Valid @NotNull Long adminNum,
 			HttpServletRequest req) {
 		printMethod(this.getClass(), "reviseRoomInfoAction", roomNewInfo.toString());
 		// 后期将从令牌中获取关键数据

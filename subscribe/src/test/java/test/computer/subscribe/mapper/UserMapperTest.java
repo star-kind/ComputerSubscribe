@@ -19,6 +19,20 @@ public class UserMapperTest {
 	}
 
 	@Test
+	public void countsIdColumnValueTest() {
+		userMapper = (TUserMapper) applicationContext.getBean("TUserMapper");
+
+		Integer res = userMapper.selectCountIdByUserNumValue(19908114L);
+
+		Integer res1 = userMapper.selectCountIdByPhoneValue("18450243690");
+
+		Integer res2 = userMapper.selectCountIdByMailBoxValue("15651606848@qq.cn");
+
+		System.out.println(this.getClass() + "\n__res=" + res + ",res1=" + res1
+				+ ",res2=" + res2);
+	}
+
+	@Test
 	public void countsIdTest() {
 		userMapper = (TUserMapper) applicationContext.getBean("TUserMapper");
 

@@ -7,6 +7,19 @@ package com.computer.subscribe.exception;
  *
  */
 public enum ExceptionsEnum {
+	/* Verify Attribute Null Pointer */
+	/** 学号或工号未填写,请填写好后再提交 */
+	USER_USERNUM_IS_NULL(707, "学号或工号未填写,请填写好后再提交"),
+	/** 用户姓名未填写,请填写好后再提交 */
+	USER_USERNAME_IS_NULL(708, "用户姓名未填写,请填写好后再提交"),
+	/** 用户电话未填写,请填写好后再提交 */
+	USER_PHONE_IS_NULL(709, "用户电话未填写,请填写好后再提交"),
+	/** 用户邮箱未填写,请填写好后再提交 */
+	USER_MAILBOX_IS_NULL(710, "用户邮箱未填写,请填写好后再提交"),
+	/** 用户密码未填写,请填写好后再提交 */
+	USER_PASSWORD_IS_NULL(710, "用户密码未填写,请填写好后再提交"),
+	/** 帐户类型未填写,请填写好后再提交 */
+	USER_ROLE_IS_NULL(711, "帐户类型未填写,请填写好后再提交"),
 	/* Computer Room */
 	/** 实际可用电脑数不得大于电脑总数 */
 	ACTUAL_CANNOT_MORE_THAN_TOAL(807, "实际可用电脑数不得大于电脑总数"),
@@ -58,8 +71,7 @@ public enum ExceptionsEnum {
 	NOT_TEACHER_PRIVILEGE(1013, "您不是教师,无此权限"),
 	/** 管理员至多允许同时存在5位 */
 	OUT_ADMIN_QUANTITY(1014, "管理员数量超出规定"),
-	/** 注册时提交的材料不完整 */
-	REGIST_DATA_INCOMPLETE(1015, "注册时提交的材料不完整"),
+
 	/** 请输入账号(学号或工号) */
 	DIDNOT_INPUT_ACCOUNT(1016, "请输入账号(学号或工号)"),
 	/** 请输入登录密码 */
@@ -78,8 +90,10 @@ public enum ExceptionsEnum {
 	ADMINISTRATOR_NO_EXIST(1030, "管理员帐户不存在"),
 	/** 提交的新密码与原先的登录密码一致,无需修改 */
 	NEWKEYWD_SAME_AS_OLDKEYWDTEXT(1031, "提交的新密码与原先的登录密码一致,无需修改"),
-	/**您提交的新信息与原有的资料没有差别,若您真的想要修改资料,请认真填写*/
-	PROFILE_NO_DIFFERENCE(1032, "您提交的新信息与原有的资料没有差别,若您真的想要修改资料,请认真填写"),;
+	/** 您提交的新信息与原有的资料没有差别,若您真的想要修改资料,请认真填写 */
+	PROFILE_NO_DIFFERENCE(1032, "您提交的新信息与原有的资料没有差别,若您真的想要修改资料,请认真填写"),
+	/** 您尚未登录,请先登录帐号 */
+	ACCOUNT_BEING_OFFLINE(1033, "您尚未登录,请先登录帐号"),;
 
 	/**
 	 * 异常码

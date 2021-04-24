@@ -1,5 +1,7 @@
 package com.computer.subscribe.service.construct;
 
+import org.springframework.util.StringUtils;
+
 import com.computer.subscribe.pojo.TUser;
 
 /**
@@ -32,13 +34,13 @@ public class BuildUserImpl implements IBuildEntityCommand<TUser> {
 		Integer newRole = newSubmitParam.getRole();
 		String newUserName = newSubmitParam.getUserName();
 
-		if (!"".equals(newMailBox)) {
+		if (!StringUtils.isEmpty(newMailBox)) {
 			if (!newMailBox.equals(oldMailBox)) {
 				updateForUser.setMailbox(newMailBox);
 			}
 		}
 
-		if (!"".equals(newPhone)) {
+		if (!StringUtils.isEmpty(newPhone)) {
 			if (!newPhone.equals(oldPhone)) {
 				updateForUser.setPhone(newPhone);
 			}
@@ -51,7 +53,7 @@ public class BuildUserImpl implements IBuildEntityCommand<TUser> {
 			}
 		}
 
-		if (!"".equals(newUserName)) {
+		if (!StringUtils.isEmpty(newUserName)) {
 			if (!newUserName.equals(oldUserName)) {
 				updateForUser.setUserName(newUserName);
 			}

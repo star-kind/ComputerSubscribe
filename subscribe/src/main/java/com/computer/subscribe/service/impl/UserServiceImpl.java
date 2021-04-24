@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.computer.subscribe.exception.ExceptionsEnum;
 import com.computer.subscribe.exception.OperationException;
+import com.computer.subscribe.exception.ValidatEntityNPException;
 import com.computer.subscribe.mapper.TUserMapper;
 import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TUser;
@@ -34,78 +35,20 @@ public class UserServiceImpl implements IUserService {
 	PasswordBusiness pbBusiness = PasswordBusiness.getInstance();
 	PaginationUtils paginationUtil = PaginationUtils.getInstance();
 
+	String ts = this.getClass().getName() + "___\n";
+
 	/**
 	 * 管理员人数限制
 	 */
-	private static int admin_mounts = 90;
+	private static int admin_mounts = 900;
 
 	@Override
-	public Integer regist(TUser user) throws OperationException {
+	public Integer regist(TUser user)
+			throws OperationException, ValidatEntityNPException {
 		logger.info("\n" + user.toString());
 
 		/* 检测 学号/电话/邮箱 是否唯一 */
-		TUserExample example = new TUserExample();
-		Criteria criteria = example.createCriteria();
-
-		criteria.andUserNumEqualTo(user.getUserNum());
-		List<TUser> list = userMapper.selectByExample(example);
-
-		if (list.size() > 0) {
-			String description = ExceptionsEnum.ACCOUNT_DUPLICATE_CONFLICT
-					.getDescription();
-			System.err.println(description);
-			logger.error(description);
-
-			throw new OperationException(description);
-		}
-
-		TUserExample example2 = new TUserExample();
-		Criteria criteria2 = example2.createCriteria();
-
-		criteria2.andPhoneEqualTo(user.getPhone());
-		List<TUser> list2 = userMapper.selectByExample(example2);
-
-		if (list2.size() > 0) {
-			String description = ExceptionsEnum.PHONE_DUPLICATE_CONFLICT
-					.getDescription();
-			System.err.println(description);
-			logger.error(description);
-
-			throw new OperationException(description);
-		}
-
-		TUserExample example3 = new TUserExample();
-		Criteria criteria3 = example3.createCriteria();
-
-		criteria3.andMailboxEqualTo(user.getMailbox());
-		List<TUser> list3 = userMapper.selectByExample(example3);
-
-		if (list3.size() > 0) {
-			String description = ExceptionsEnum.EMAIL_DUPLICATE_CONFLICT
-					.getDescription();
-			System.err.println(description);
-			logger.error(description);
-
-			throw new OperationException(description);
-		}
-
-		// 如果是注册新的管理员，检查管理员总数是否超过限制
-		if (user.getRole() == 0) {
-			TUserExample example4 = new TUserExample();
-			Criteria criteria4 = example4.createCriteria();
-
-			criteria4.andRoleEqualTo(0);
-			List<TUser> list4 = userMapper.selectByExample(example4);
-
-			if (list4.size() > admin_mounts) {
-				String description = ExceptionsEnum.OUT_ADMIN_QUANTITY
-						.getDescription();
-				System.err.println(description);
-				logger.error(description);
-
-				throw new OperationException(description);
-			}
-		}
+		this.verifyCountAttributeForReg(user);
 
 		// 盐值
 		String salt = pbBusiness.extractSalt();
@@ -693,6 +636,97 @@ public class UserServiceImpl implements IUserService {
 
 		System.err
 				.println(this.getClass() + "..validAttrsAreAllNull..else=>pass.放行");
+	}
+
+	@Override
+	public void verifyCountAttributeForReg(TUser user) throws OperationException {
+		logger.info("\n==" + user.toString());
+
+		String phone = user.getPhone();
+		String mailbox = user.getMailbox();
+		Long userNum = user.getUserNum();
+		Integer role = user.getRole();
+
+		Integer countMailBox = userMapper.selectCountIdByMailBoxValue(mailbox);
+		Integer countPhone = userMapper.selectCountIdByPhoneValue(phone);
+		Integer countUserNum = userMapper.selectCountIdByUserNumValue(userNum);
+
+		paginationUtil.printMethod(ts, "verifyCountAttributeForReg",
+				"countMailBox=" + countMailBox, "countPhone=" + countPhone,
+				"countUserNum=" + countUserNum);
+
+		if (countUserNum > 0) {
+			String description = ExceptionsEnum.ACCOUNT_DUPLICATE_CONFLICT
+					.getDescription();
+			System.err.println(ts + description);
+			logger.error(description);
+
+			throw new OperationException(description);
+		}
+
+		if (countPhone > 0) {
+			String description = ExceptionsEnum.PHONE_DUPLICATE_CONFLICT
+					.getDescription();
+			System.err.println(ts + description);
+			logger.error(description);
+
+			throw new OperationException(description);
+		}
+
+		if (countMailBox > 0) {
+			String description = ExceptionsEnum.EMAIL_DUPLICATE_CONFLICT
+					.getDescription();
+			System.err.println(ts + description);
+			logger.error(description);
+
+			throw new OperationException(description);
+		}
+
+		/* 如果是注册新的管理员，检查管理员总数是否超过限制 */
+		if (role == 0) {
+			Integer countRole = userMapper.selectCountIdByRoleValue(role);
+			System.err.println(
+					ts + "verifyCountAttributeForReg__countRole=" + countRole);
+
+			if (countRole > admin_mounts) {
+				String description = ExceptionsEnum.OUT_ADMIN_QUANTITY
+						.getDescription();
+
+				System.err.println(ts + description);
+				logger.error(description);
+				throw new OperationException(description);
+			}
+		}
+	}
+
+	@Override
+	public TUser getProfileByMySelf(Integer userID, Long userNum)
+			throws OperationException, ValidatEntityNPException {
+		if (userID == null) {
+			String description = ExceptionsEnum.ACCOUNT_BEING_OFFLINE
+					.getDescription();
+			logger.error(description);
+			throw new OperationException(description);
+		}
+
+		if (userNum == null) {
+			String description = ExceptionsEnum.ACCOUNT_BEING_OFFLINE
+					.getDescription();
+			logger.error(description);
+			throw new OperationException(description);
+		}
+
+		paginationUtil.printMethod(ts,
+				"..getProfileByMySelf..id=" + userID + "..user.num=" + userNum);
+		TUser user = checkUserByIdIfExist(userID);
+
+		if (!userNum.equals(user.getUserNum())) {
+			String description = ExceptionsEnum.HADNOT_LOGINED.getDescription();
+			logger.error(description);
+			throw new OperationException(description);
+		}
+
+		return user;
 	}
 
 }

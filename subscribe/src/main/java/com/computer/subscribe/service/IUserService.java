@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.computer.subscribe.exception.OperationException;
+import com.computer.subscribe.exception.ValidatEntityNPException;
 import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.response.Pagination;
@@ -17,6 +18,33 @@ import com.computer.subscribe.pojo.response.Pagination;
  *
  */
 public interface IUserService {
+	/**
+	 * 基于ID+(学号或工号),用户获取自己的个人资料(不含密文+盐值)<br>
+	 * 仅能获取自己的信息,如果不是自己的,报错
+	 * 
+	 * @param userID
+	 * @param userNum
+	 * @return
+	 * @throws OperationException
+	 * @throws ValidatEntityNPException
+	 */
+	TUser getProfileByMySelf(Integer userID, Long userNum)
+			throws OperationException, ValidatEntityNPException;
+
+	/**
+	 * 为注册事项而检验统计
+	 * <ol>
+	 * <li>学号/工号是否唯一</li>
+	 * <li>邮箱是否唯一</li>
+	 * <li>电话是否唯一</li>
+	 * <li>角色类型数量是否超出规定</li>
+	 * </ol>
+	 * 
+	 * @param user
+	 * @throws OperationException
+	 */
+	void verifyCountAttributeForReg(TUser user) throws OperationException;
+
 	/**
 	 * 检验用户属性是否全部为空<br>
 	 * 效力用途:修改用<br>
@@ -220,7 +248,8 @@ public interface IUserService {
 	 * @return
 	 * @throws OperationException
 	 */
-	Integer regist(@NotNull TUser user) throws OperationException;
+	Integer regist(@NotNull TUser user)
+			throws OperationException, ValidatEntityNPException;
 
 	/**
 	 * 登录

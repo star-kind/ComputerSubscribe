@@ -6,6 +6,39 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TUserMapper {
+
+	/**
+	 * 根据指定的学号/工号列值,统计计算符合条件的ID数量
+	 * 
+	 * @param value
+	 * @return
+	 */
+	Integer selectCountIdByUserNumValue(@Param("value") Long value);
+
+	/**
+	 * 根据指定的角色类型列值,统计计算符合条件的ID数量
+	 * 
+	 * @param value
+	 * @return
+	 */
+	Integer selectCountIdByRoleValue(@Param("value") Integer value);
+
+	/**
+	 * 根据指定的邮箱列值,统计计算符合条件的ID数量
+	 * 
+	 * @param value
+	 * @return
+	 */
+	Integer selectCountIdByMailBoxValue(@Param("value") String value);
+
+	/**
+	 * 根据指定的电话列值,统计计算符合条件的ID数量
+	 * 
+	 * @param value
+	 * @return
+	 */
+	Integer selectCountIdByPhoneValue(@Param("value") String value);
+
 	/**
 	 * select count(id) from t_user;
 	 * 

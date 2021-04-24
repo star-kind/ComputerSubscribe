@@ -50,6 +50,17 @@ public class UserServiceTest {
 	}
 
 	@Test
+	public void retrieveMyselfTest() {
+		userService = (IUserService) applicationContext.getBean("userServiceImpl");
+
+		try {
+			userService.getProfileByMySelf(11, 239915547L);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
 	public void modifyAdminMyselfTest() {
 		userService = (IUserService) applicationContext.getBean("userServiceImpl");
 
@@ -145,16 +156,16 @@ public class UserServiceTest {
 
 		TUser user = new TUser();
 
-		user.setMailbox("3141903253518250@catch.com");
-		user.setPhone("19032535182");
-		user.setUserNum(13541944130L);
+		user.setMailbox("48018250@cat.com");
+		user.setPhone("19354035182");
+		user.setUserNum(135994030L);
 		user.setPassword("12345");
-		user.setRole(1);
-		user.setUserName("emoji.kerus.ileg");
+		user.setRole(0);
+		user.setUserName("luea.asen");
 
 		try {
 			Integer row = userService.regist(user);
-			System.out.println("execute===" + row);
+			System.err.println("execute === " + row);
 		} catch (OperationException e) {
 			System.err.println(e.getMessage());
 		}

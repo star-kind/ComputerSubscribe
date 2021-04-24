@@ -2,13 +2,10 @@ package com.computer.subscribe.pojo;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
-
 import lombok.Data;
 
 @Data
@@ -37,7 +34,6 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	@NotBlank(message = "用户名不能为空")
 	@Size(max = 19)
 	private String userName;
 
@@ -47,7 +43,6 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	@NotBlank(message = "电话不能为空")
 	@Pattern(regexp = "^[1][3,4,5,6,7,8,9][0-9]{9}$", message = "电话格式有误")
 	private String phone;
 
@@ -57,9 +52,8 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	@NotBlank(message = "联系邮箱不能为空")
 	@Email(message = "邮箱格式不对")
-	@Size(min = 7, max = 79)
+	@Size(min = 7, max = 80)
 	private String mailbox;
 
 	/**
@@ -68,7 +62,6 @@ public class TUser {
 	 *
 	 * @mbggenerated Thu Apr 08 23:43:19 CST 2021
 	 */
-	@NotNull(message = "帐户类型代号不能为空,且范围在0-2之间")
 	@Max(value = 2)
 	private Integer role;
 

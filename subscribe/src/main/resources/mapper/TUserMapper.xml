@@ -94,6 +94,50 @@
 			23:43:19 CST 2021. -->
 		id, user_num, user_name, phone, mailbox, role, password, salt
 	</sql>
+	<!-- -->
+	<select id="selectCountIdByPhoneValue"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(id)
+		FROM
+		t_user
+		WHERE
+		phone=#{value}
+	</select>
+
+	<!-- -->
+	<select id="selectCountIdByMailBoxValue"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(id)
+		FROM
+		t_user
+		WHERE
+		mailbox=#{value}
+	</select>
+	
+	<!-- -->
+	<select id="selectCountIdByRoleValue"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(id)
+		FROM
+		t_user
+		WHERE
+		role=#{value}
+	</select>
+
+	<!-- -->
+	<select id="selectCountIdByUserNumValue"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(id)
+		FROM
+		t_user
+		WHERE
+		user_num=#{value}
+	</select>
+
 	<select id="selectByExample"
 		parameterType="com.computer.subscribe.pojo.TUserExample"
 		resultMap="BaseResultMap">

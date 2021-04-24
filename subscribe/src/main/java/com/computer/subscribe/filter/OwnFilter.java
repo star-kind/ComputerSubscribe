@@ -13,24 +13,24 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 /**
- * Servlet Filter implementation class MineFilter<br>
+ * Servlet Filter implementation class Filter<br>
  * 跨域设置拦截器
  */
-public class MineFilter implements Filter {
-	public static Logger logger = Logger.getLogger(MineFilter.class);
+public class OwnFilter implements Filter {
+	public static Logger logger = Logger.getLogger(OwnFilter.class);
 
 	/**
 	 * Default constructor.
 	 */
-	public MineFilter() {
+	public OwnFilter() {
 	}
 
 	/**
 	 * @see Filter#destroy()
 	 */
 	public void destroy() {
-		System.err.println(this.getClass() + "__MineFilter__destroy:某之过滤器-摧毁");
-		logger.info(this.getClass() + "\n__MineFilter__destroy:某之过滤器-摧毁");
+		System.err.println(this.getClass() + "__Filter__destroy:某之过滤器-摧毁");
+		logger.info(this.getClass() + "\n__Filter__destroy:某之过滤器-摧毁");
 	}
 
 	/**
@@ -38,8 +38,8 @@ public class MineFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
-		System.err.println(this.getClass() + "__MineFilter__doFilter:某之过滤器-过程");
-		logger.info(this.getClass() + "\n__MineFilter__doFilter:某之过滤器-过程");
+		System.err.println(this.getClass() + "__Filter__doFilter:某之过滤器-过程");
+		logger.info(this.getClass() + "\n__Filter__doFilter:某之过滤器-过程");
 
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
@@ -69,8 +69,8 @@ public class MineFilter implements Filter {
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
-		System.err.println(this.getClass() + "__MineFilter__init:某之过滤器-初始");
-		logger.info(this.getClass() + "\n__MineFilter__init:某之过滤器-初始");
+		System.err.println(this.getClass() + "__Filter__init:某之过滤器-初始");
+		logger.info(this.getClass() + "\n__Filter__init:某之过滤器-初始");
 	}
 
 }

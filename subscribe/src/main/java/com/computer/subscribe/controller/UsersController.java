@@ -1,6 +1,7 @@
 package com.computer.subscribe.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.computer.subscribe.exception.ExceptionsEnum;
 import com.computer.subscribe.exception.OperationException;
+import com.computer.subscribe.exception.ValidatEntityNPException;
 import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TUser;
 import com.computer.subscribe.pojo.response.Pagination;
@@ -33,6 +36,82 @@ public class UsersController extends BasicController {
 
 	@Autowired
 	private IUserService ius;
+
+	/**
+	 * http://localhost:8080/subscribe/UsersController/retrieveProfileByMySelf <br>
+	 * 基于ID+(学号或工号),用户获取自己的个人资料(不含密文+盐值)<br>
+	 * 仅能获取自己的信息,如果不是自己的,报错
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retrieveProfileByMySelf", method = RequestMethod.GET)
+	public WebResponse<TUser> retrieveProfileByMySelf(HttpServletRequest request) {
+		LoginData loginData = getLoginDataByToken(request);
+
+		TUser user = ius.getProfileByMySelf(loginData.getId(),
+				loginData.getUserNum());
+		return new WebResponse<TUser>(SUCCESS, user);
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/UsersController/modifyByAdminMySelfAction?phone=13543046970&mailbox=1654631554@msn.cn&userName=landreid&role=0
+	 * 
+	 * 管理员修改自己的资料;可修改:电话,邮箱,用户名,角色权限 <br>
+	 * 基于帐号ID
+	 * 
+	 * @param admin
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/modifyByAdminMySelfAction", method = RequestMethod.GET)
+	public WebResponse<TUser> modifyByAdminMySelfAction(@Valid @NotNull TUser admin,
+			HttpServletRequest request) {
+		printMethod(this.getClass(), "admin==" + admin);
+		String description = ExceptionsEnum.ACCOUNT_BEING_OFFLINE.getDescription();
+
+		LoginData loginData = getLoginDataByToken(request);
+		Optional<LoginData> op = Optional.ofNullable(loginData);
+
+		op.filter(login -> login.getId() != null).map(LoginData::getId)
+				.orElseThrow(() -> new ValidatEntityNPException(description));
+
+		admin.setId(loginData.getId());
+
+		TUser mySelf = ius.modifyInfoByAdminMySelf(admin);
+		return new WebResponse<TUser>(SUCCESS, mySelf);
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/UsersController/modifyInfoByUserAction?phone=19703215406&mailbox=16345165@qq.com&userName=wwwmmm
+	 * 
+	 * 普通用户(师生)修改自己的基本资料<br>
+	 * 基于[ID]-普通师生自身的; 可修改字段: 电话,邮箱,用户名<br>
+	 * 
+	 * @param normalUser
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/modifyInfoByUserAction", method = RequestMethod.GET)
+	public WebResponse<TUser> modifyInfoByUserAction(
+			@Valid @NotNull TUser normalUser, HttpServletRequest request) {
+		printMethod(this.getClass(), "normalUser==" + normalUser);
+		String description = ExceptionsEnum.ACCOUNT_BEING_OFFLINE.getDescription();
+
+		LoginData loginData = getLoginDataByToken(request);
+		Optional<LoginData> op = Optional.ofNullable(loginData);
+
+		op.filter(login -> login.getId() != null).map(LoginData::getId)
+				.orElseThrow(() -> new ValidatEntityNPException(description));
+
+		normalUser.setId(loginData.getId());
+
+		TUser user = ius.modifyInfoByNormalUser(normalUser);
+		return new WebResponse<TUser>(SUCCESS, user);
+	}
 
 	/**
 	 * http://localhost:8080/subscribe/UsersController/modifyUserAction?userName=currant.goden&phone=19703640870&mailbox=506897004@qq.com&role=2&id=15
@@ -150,7 +229,7 @@ public class UsersController extends BasicController {
 	 * http://localhost:8080/subscribe/UsersController/registerAction?userName=skypt&password=3210&userNum=1050048&phone=18370273627&mailbox=165174714570@qq.com&role=2
 	 * 
 	 * <br>
-	 * 参数为1个用户:(邮箱,电话,工号/学号,用户名,角色)
+	 * 参数为1个用户:(邮箱,电话,工号/学号,用户名,角色,密码)
 	 * 
 	 * @param user ("用户注册材料")
 	 * @return
@@ -160,8 +239,13 @@ public class UsersController extends BasicController {
 	@RequestMapping(value = "/registerAction", method = RequestMethod.GET)
 	public WebResponse<Integer> registerAction(@Valid @NotNull TUser user)
 			throws OperationException {
-
 		logger.info(user.toString());
+
+		String description = ExceptionsEnum.USER_USERNUM_IS_NULL.getDescription();
+		Optional<TUser> optional = Optional.ofNullable(user);
+		optional.filter(u -> u.getUserNum() != null).map(TUser::getUserNum)
+				.orElseThrow(() -> new ValidatEntityNPException(description));
+
 		Integer row = ius.regist(user);
 
 		return new WebResponse<Integer>(SUCCESS, "OK", row);

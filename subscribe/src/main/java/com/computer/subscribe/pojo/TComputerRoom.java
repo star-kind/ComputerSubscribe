@@ -9,8 +9,6 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.computer.subscribe.pojo.response.LimitExample;
-
 import lombok.ToString;
 
 @ToString

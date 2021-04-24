@@ -90,12 +90,12 @@
 	<!-- -->
 	<!-- -->
 	<filter>
-		<display-name>MineFilter</display-name>
-		<filter-name>MineFilter</filter-name>
-		<filter-class>com.computer.subscribe.filter.MineFilter</filter-class>
+		<display-name>OwnFilter</display-name>
+		<filter-name>OwnFilter</filter-name>
+		<filter-class>com.computer.subscribe.filter.OwnFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>MineFilter</filter-name>
+		<filter-name>OwnFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<!-- -->
