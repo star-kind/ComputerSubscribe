@@ -24,3 +24,6 @@ location 地点位置-varchar
 mysql> alter table t_computer_room add act_available_quantity int not null comment 'actual number of computers available in the computer room';
 Query OK, 0 rows affected (2.83 sec)
 Records: 0  Duplicates: 0  Warnings: 0
+
+select id, room_num from t_computer_room order by id asc;
+select id, room_num from t_computer_room  order by id asc limit 0,2;

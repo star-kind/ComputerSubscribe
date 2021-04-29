@@ -1,4 +1,4 @@
- CREATE TABLE `t_user` (
+CREATE TABLE `t_user` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_num` bigint unsigned NOT NULL COMMENT '工号或学号',
   `user_name` varchar(20) NOT NULL COMMENT '姓名',

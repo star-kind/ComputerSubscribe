@@ -1,9 +1,8 @@
-
 CREATE TABLE `t_subscribe` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `applicant` bigint unsigned NOT NULL COMMENT '申请者(必须是学生,对应学号)',
   `reviewer`  bigint DEFAULT NULL COMMENT 'Reviewer(Must be Teacher,corresponding Teacher Number)',
-  `subscribe_status` mediumint NOT NULL COMMENT '预约状态:0-审核中,1-预约成功,2-预约失败,4-取消预约',
+  `subscribe_status` mediumint NOT NULL COMMENT '预约状态:0-审核中,1-预约成功,2-预约失败,3-取消预约',
   `room_num` mediumint NOT NULL COMMENT '所申请的机房编号',
   `application_start_time` timestamp NOT NULL COMMENT '申请发起时间',
   `use_interval` mediumint NOT NULL COMMENT 'apply for the use time of computer room:0-morning,1-afternoon,2-night',
