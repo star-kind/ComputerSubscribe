@@ -11,12 +11,18 @@ import com.computer.subscribe.pojo.response.Pagination;
 
 /**
  * 处理分页实体对象的工具类 <br>
- * <b>警惕:</b> <i>if...else..if...else</i>坑太多
+ * <b>警惕:</b> <i>if...else..if...else</i>坑太多><br>
+ * <p>
+ * 页码[page]对应偏移量[offset]公式: <b> offset=(page-1)*limit </b> <br>
+ * limit alias rows
+ * </p>
  * 
  * @author user
  *
  */
 public class PaginationUtils {
+	String ts = this.getClass().getCanonicalName() + "===\n";
+
 	public static String has_previous_key = "has_previous";
 	public static String has_next_key = "has_next";
 
@@ -25,7 +31,7 @@ public class PaginationUtils {
 	private static final Object LOCK = new Object();
 
 	private PaginationUtils() {
-		System.err.println(this.getClass() + "__PaginationUtils__私有化构造器,防止被实例化");
+		System.err.println(ts + "__PaginationUtils__私有化构造器,防止被实例化");
 	}
 
 	/**
@@ -57,18 +63,38 @@ public class PaginationUtils {
 	}
 
 	/**
-	 * 分页查询时,对现实页码(1...n),与数据库索引(0...n)之间的对应关系进行调整
+	 * 如果页码参数为0,甚至负数,对此进行准备
 	 * 
 	 * @param pageNum
 	 * @return
 	 */
 	public int getPageNum(int pageNum) {
-		System.err.println(this.getClass() + "__getPageNum__pageNum=" + pageNum);
+		System.err.println(ts + "__getPageNum__pageNum=" + pageNum);
 		if (pageNum < 1) {
 			pageNum = 1;
 		}
-		pageNum -= 1;
 		return pageNum;
+	}
+
+	/**
+	 * 根据页码获取偏移量
+	 * 
+	 * @param page
+	 * @param limit
+	 * @return
+	 */
+	public int getOffsetByPage(int page, int limit) {
+		System.err.println(
+				ts + "__getOffsetByPage__page=" + page + "--limit=" + limit);
+
+		page = getPageNum(page);
+		if (limit < 1) {
+			limit = 1;
+		}
+		int offset = (page - 1) * limit;
+
+		System.err.println(ts + "__getOffsetByPage__offset=" + offset);
+		return offset;
 	}
 
 	/**
@@ -137,13 +163,14 @@ public class PaginationUtils {
 		Boolean hasPrevious = boolMap.get(has_previous_key);
 		Boolean hasNext = boolMap.get(has_next_key);
 
-		pagin.setCurrentPage(++pageOrder);
+		pagin.setCurrentPage(pageOrder);
 		pagin.setData(pageData);
 		pagin.setHasNext(hasNext);
 		pagin.setHasPrevious(hasPrevious);
 		pagin.setRows(pageRows);
 		pagin.setTotalPages(totalPages);
 
+		System.err.println(ts + "assemblySubscribe=" + pagin);
 		return pagin;
 	}
 
@@ -154,51 +181,54 @@ public class PaginationUtils {
 	 * @param pageRows
 	 * @param totalPages
 	 * @param pageDataSize
-	 * @param pageOrder
+	 * @param pageOrder    当前页码,相当于current-page
 	 * @return
 	 */
 	public HashMap<String, Boolean> getPageBoolMap(int idCount, int pageRows,
 			int totalPages, int pageDataSize, int pageOrder) {
 		HashMap<String, Boolean> boolMap = new HashMap<String, Boolean>();
 
-		System.err.println(this.getClass() + "__getPageBoolMap--\ntotalPages="
-				+ totalPages + "--idCount=" + idCount + "--pageRows=" + pageRows
+		System.err.println(ts + "__getPageBoolMap--\ntotalPages=" + totalPages
+				+ "--idCount=" + idCount + "--pageRows=" + pageRows
 				+ "--pageDataSize=" + pageDataSize + "--pageOrder=" + pageOrder);
 
 		// 余数
 		int remainder = idCount % pageRows;
-		System.out.println(this.getClass() + "__getPageBoolMap=>余数=" + remainder);
+		System.out.println(ts + "__getPageBoolMap=>余数=" + remainder);
 
 		Boolean hasPrevious = true;
 		Boolean hasNext = true;
 
 		if (pageOrder < 1) {// 如果传入页码 0, 形同页码 1
 			pageOrder = 1;
-
 		}
 
 		if (remainder != 0) {// 如果行数限制不可以被总行数整除
 			if (pageDataSize < pageRows) {// 如果 pageData.size < pageRows, 无下一页
 				hasNext = false;
 			}
-
 		}
 
 		if (pageOrder <= 1) {// 如果 page order <= 1 ,无上一页
 			hasPrevious = false;
-
 		}
 
 		if (remainder == 0) {// 如果每页行数限制能被总行数整除
 			if (idCount <= pageOrder * pageRows) { // 如果当前页码*每页行数限制 >= 总行数, 无下一页
 				hasNext = false;
 			}
-
 		}
 
 		if (totalPages < 2) {// 只有一页时
 			hasNext = false;
 			hasPrevious = false;
+		}
+
+		if (totalPages >= 3) {
+			if (pageOrder > 1 && pageOrder < totalPages) {
+				hasNext = true;
+				hasPrevious = true;
+			}
 		}
 
 		boolMap.put(has_previous_key, hasPrevious);
@@ -207,8 +237,7 @@ public class PaginationUtils {
 		for (Map.Entry<String, Boolean> entry : boolMap.entrySet()) {
 			String key = entry.getKey();
 			Boolean value = entry.getValue();
-			System.err.println(this.getClass() + "__getPageBoolMap=>" + key
-					+ ",value=" + value);
+			System.err.println(ts + "__getPageBoolMap=>" + key + ",value=" + value);
 		}
 
 		return boolMap;
@@ -243,15 +272,15 @@ public class PaginationUtils {
 		Boolean hasPrevious = boolMap.get(has_previous_key);
 		Boolean hasNext = boolMap.get(has_next_key);
 
-		pagin.setCurrentPage(++pageOrder);
+		pagin.setCurrentPage(pageOrder);
 		pagin.setData(pageData);
 		pagin.setHasNext(hasNext);
 		pagin.setHasPrevious(hasPrevious);
 		pagin.setRows(pageRows);
 		pagin.setTotalPages(totalPages);
 
-		System.err.println(this.getClass() + "__assemblyComputerRoom__\npagin="
-				+ pagin.toString());
+		System.err
+				.println(ts + "__assemblyComputerRoom__\npagin=" + pagin.toString());
 		return pagin;
 	}
 

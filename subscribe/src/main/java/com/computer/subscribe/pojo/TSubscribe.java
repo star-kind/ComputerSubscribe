@@ -55,7 +55,6 @@ public class TSubscribe {
 	 *
 	 * @mbggenerated Sun Apr 11 11:21:42 CST 2021
 	 */
-	@NotNull(message = "机房编号不能为空")
 	@Min(value = 0, message = "机房编号不得小于 0")
 	@Max(value = 1000, message = "机房编号不得大于 1000")
 	private Integer roomNum;
@@ -76,7 +75,6 @@ public class TSubscribe {
 	 *
 	 * @mbggenerated Sun Apr 11 11:21:42 CST 2021
 	 */
-	@NotNull(message = "申请使用时段(上午,下午,夜晚)不能为空")
 	@Min(value = 0, message = "使用时段不得早于上午")
 	@Max(value = 2, message = "使用时段不得晚于夜晚")
 	private Integer useInterval;
@@ -96,7 +94,6 @@ public class TSubscribe {
 	 *
 	 * @mbggenerated Sun Apr 11 13:28:41 CST 2021
 	 */
-	@NotNull(message = "申请使用机房的具体日期,不能为空")
 	@Future(message = "申请使用机房的具体日期必须比当前晚")
 	private Date applyUseDate;
 

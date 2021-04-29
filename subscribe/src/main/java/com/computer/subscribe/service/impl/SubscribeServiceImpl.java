@@ -26,6 +26,7 @@ import com.computer.subscribe.util.support.DateTimeKits;
 
 @Service
 public class SubscribeServiceImpl implements ISubscribeService {
+	String ts = this.getClass().getCanonicalName() + "------\n";
 	public static Logger logger = Logger.getLogger(UserServiceImpl.class);
 
 	@Autowired
@@ -44,8 +45,16 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	@Override
 	public TSubscribe addNewScuSubscribe(TSubscribe subscribe)
 			throws OperationException {
-		System.err.println(this.getClass() + "==>addNewScuSubscribe==>TSubscribe=="
-				+ subscribe.toString());
+		System.err.println(
+				ts + "==>addNewScuSubscribe==>TSubscribe==" + subscribe.toString());
+
+		// useInterval不得小于0,大于2
+		if (subscribe.getUseInterval() < 0 || subscribe.getUseInterval() > 2) {
+			String description = ExceptionsEnum.SUBSCRIBE_USEINTERVAL_OUT_RANGE
+					.getDescription();
+			System.err.println(ts + "==>addNewScuSubscribe==>" + description);
+			throw new OperationException(description);
+		}
 
 		Date nowDate = new Date();
 
@@ -58,9 +67,9 @@ public class SubscribeServiceImpl implements ISubscribeService {
 			String description = ExceptionsEnum.SUBSCRIBE_DATE_INVALID
 					.getDescription();
 
-			logger.info("isBelong==" + description);
-			System.err.println(this.getClass()
-					+ "==>addNewScuSubscribe==>isBelong== " + description);
+			logger.info(description);
+			System.err.println(
+					ts + "==>addNewScuSubscribe==>isBelong== " + description);
 			throw new OperationException(description);
 		}
 
@@ -71,8 +80,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 					.getDescription();
 
 			logger.info("isWeekEnd==" + description);
-			System.err.println(this.getClass()
-					+ "==>addNewScuSubscribe==>isWeekEnd==" + description);
+			System.err.println(
+					ts + "==>addNewScuSubscribe==>isWeekEnd==" + description);
 			throw new OperationException(description);
 		}
 
@@ -85,8 +94,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 					.getDescription();
 
 			logger.info("subscribe_duplication==" + description);
-			System.err.println(this.getClass()
-					+ "==>addNewScuSubscribe==>subscribe_duplication=="
+			System.err.println(ts + "==>addNewScuSubscribe==>subscribe_duplication=="
 					+ description);
 
 			throw new OperationException(description);
@@ -100,22 +108,32 @@ public class SubscribeServiceImpl implements ISubscribeService {
 					.getDescription();
 
 			logger.info("WAITTING_APPLY_DUPLICATION==" + description);
-			System.err.println(this.getClass()
-					+ "==>addNewScuSubscribe==>WAITTING_APPLY_DUPLICATION=="
-					+ description);
+			System.err.println(
+					ts + "==>addNewScuSubscribe==>WAITTING_APPLY_DUPLICATION=="
+							+ description);
 
 			throw new OperationException(description);
 		}
 
-		// 获悉机房是否可用=1
 		TComputerRoom room = icrs.getComputerRoomByOrder(subscribe.getRoomNum());
+		if (room == null) {// 是否存在此间机房
+			String description = ExceptionsEnum.COMPUTER_ROOM_NOT_EXIST
+					.getDescription();
+			logger.info("computer_room_not_exist==" + description);
+			System.err
+					.println(ts + "==>addNewScuSubscribe==>computer_room_not_exist=="
+							+ description);
+			throw new OperationException(description);
+		}
+
+		// 获悉机房是否可用=1
 		if (room.getAvailableStatus() != 1) {
 			String description = ExceptionsEnum.COMPUTER_ROOM_UNAVAILABLE
 					.getDescription();
-			logger.info("COMPUTER_ROOM_UNAVAILABLE==" + description);
-			System.err.println(this.getClass()
-					+ "==>addNewScuSubscribe==>computer_room_unavailable=="
-					+ description);
+			logger.info("computer_room_unavailable==" + description);
+			System.err.println(
+					ts + "==>addNewScuSubscribe==>computer_room_unavailable=="
+							+ description);
 			throw new OperationException(description);
 		}
 
@@ -126,8 +144,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		int affect = mapper.insert(subscribe);
 
-		System.err.println(this.getClass() + "==>addNewScuSubscribe==>affect=="
-				+ affect + ",==>TSubscribe Return== " + subscribe.toString());
+		System.err.println(ts + "==>addNewScuSubscribe==>affect==" + affect
+				+ ",==>TSubscribe Return== " + subscribe.toString());
 		return subscribe;
 	}
 
@@ -141,7 +159,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	 */
 	public Boolean checkApplyDuplicate(Long applicant, Integer useInterval,
 			Integer subscribeStatus, Date applyUseDate) {
-		System.err.println(this.getClass()
+		System.err.println(ts
 				+ "==>addNewScuSubscribe==>checkApplyDuplicate.applicant="
 				+ applicant + ",useInterval=" + useInterval + ",subscribeStatus="
 				+ subscribeStatus + ",applyUseDate=" + applyUseDate);
@@ -166,8 +184,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 			checks = true;
 		}
 
-		System.out.println(
-				this.getClass() + "checkApplyDuplicate.return..checks=" + checks);
+		System.out.println(ts + "checkApplyDuplicate.return..checks=" + checks);
 		return checks;
 	}
 
@@ -206,8 +223,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	@Override
 	public List<TSubscribe> getSubscribeListByStatus(Integer status, Long userNum)
 			throws OperationException {
-		System.err.println(this.getClass() + "_getSubscribeListByStatus.status="
-				+ status + ",userNum=" + userNum);
+		System.err.println(ts + "_getSubscribeListByStatus.status=" + status
+				+ ",userNum=" + userNum);
 
 		// 检验工号是否属于教师或管理员
 		ius.checkBanStudent(userNum);
@@ -223,8 +240,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		List<TSubscribe> list = mapper.selectByExample(example);
 		for (TSubscribe sub : list) {
-			System.err.println(this.getClass() + "_getSubscribeListByStatus.list="
-					+ sub.toString());
+			System.err.println(
+					ts + "_getSubscribeListByStatus.list=" + sub.toString());
 		}
 
 		return list;
@@ -260,9 +277,16 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	@Override
 	public TSubscribe handleSubscribeStatus(Integer status, Long teacherNum,
 			Long subscribeID) throws OperationException {
-		System.err.println(this.getClass() + "__handleSubscribeStatus.status="
-				+ status + ",teacherNum=" + teacherNum + ",subscribeID="
-				+ subscribeID);
+		System.err.println(ts + "__handleSubscribeStatus.status=" + status
+				+ ",teacherNum=" + teacherNum + ",subscribeID=" + subscribeID);
+
+		// 新的审核状态不得超过指定范围
+		if (status < 0 || status > 3) {
+			String description = ExceptionsEnum.INVALID_SUBSCRIBE_STATUS
+					.getDescription();
+			System.err.println(ts + "handleSubscribeStatus==" + description);
+			throw new OperationException(description);
+		}
 
 		// 校验是否属于教师帐号
 		ius.checkAccountIsRight(teacherNum, 1);
@@ -276,10 +300,9 @@ public class SubscribeServiceImpl implements ISubscribeService {
 			String description = ExceptionsEnum.SUBSCRIBE_NOT_IN_THIS_WEEK
 					.getDescription();
 
-			System.err.println(this.getClass()
-					+ "__handleSubscribeStatus__description=" + description);
-			logger.error(this.getClass() + "__handleSubscribeStatus__description="
-					+ description);
+			System.err.println(
+					ts + "__handleSubscribeStatus__description=" + description);
+			logger.error(ts + "__handleSubscribeStatus__description=" + description);
 			throw new OperationException(description);
 		}
 
@@ -294,8 +317,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 			System.err.println(this.getClass()
 					+ "__handleSubscribeStatus__description=" + description);
-			logger.error(this.getClass() + "__handleSubscribeStatus__description="
-					+ description);
+			logger.error(ts + "__handleSubscribeStatus__description=" + description);
 			throw new OperationException(description);
 		}
 
@@ -310,8 +332,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		subscribe2.setReviewer(teacherNum);
 
 		int affect = mapper.updateByExampleSelective(subscribe2, example4);
-		System.err.println(
-				this.getClass() + "__handleSubscribeStatus__affect=" + affect);
+		System.err.println(ts + "__handleSubscribeStatus__affect=" + affect);
 
 		// 若批准本单通过,则处于同日同时段的,属于该申请人的其它预约,皆变为失败:2
 		this.reviseStatusExcludeId(subscribe.getApplicant(),
@@ -319,8 +340,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 				subscribeID, teacherNum);
 
 		TSubscribe subscribe6 = this.getSubscribeByID(subscribeID);
-		System.err.println(this.getClass() + "__handleSubscribeStatus__subscribe6="
-				+ subscribe6.toString());
+		System.err.println(
+				ts + "__handleSubscribeStatus__subscribe6=" + subscribe6.toString());
 
 		return subscribe6;
 	}
@@ -342,9 +363,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 			throw new OperationException(description);
 		} else {
 			for (TSubscribe tSubscribe : list) {
-				System.err.println(
-						this.getClass() + "__getSubscribeByID.list.tSubscribe="
-								+ tSubscribe.toString());
+				System.err.println(ts + "__getSubscribeByID.list.tSubscribe="
+						+ tSubscribe.toString());
 			}
 
 			subscribe = list.get(0);
@@ -355,7 +375,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	@Override
 	public List<TSubscribe> getSubscribesByConditions(TSubscribe conditions,
 			Integer status) {
-		System.err.println(this.getClass() + "__getSubscribesByConditions__="
+		System.err.println(ts + "__getSubscribesByConditions__="
 				+ conditions.toString() + ",_status=" + status);
 
 		TSubscribeExample example2 = new TSubscribeExample();
@@ -369,8 +389,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		List<TSubscribe> list2 = mapper.selectByExample(example2);
 		if (!list2.isEmpty()) {
 			for (TSubscribe tSubscribe : list2) {
-				System.err.println(this.getClass() + "__getSubscribesByConditions="
-						+ tSubscribe.toString());
+				System.err.println(
+						ts + "__getSubscribesByConditions=" + tSubscribe.toString());
 			}
 		}
 
@@ -392,9 +412,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		List<TSubscribe> subscribeList = mapper.selectByExample(example);
 		for (TSubscribe tSubscribe : subscribeList) {
-			System.err.println(
-					this.getClass() + "__getSubscribeWeekListByStatus__.tSubscribe="
-							+ tSubscribe.toString());
+			System.err.println(ts + "__getSubscribeWeekListByStatus__.tSubscribe="
+					+ tSubscribe.toString());
 		}
 
 		return subscribeList;
@@ -404,9 +423,9 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	public Integer reviseStatusExcludeId(Long applicant, Date applyUseDate,
 			Integer useInterval, Integer status, Long subscribeId, Long handlerNum)
 			throws OperationException {
-		System.out.println(this.getClass() + "__reviseStatusExcludeId__applicant="
-				+ applicant + ",applyUseDate=" + applyUseDate + ",useInterval="
-				+ useInterval + ",status=" + status + ",subscribeId=" + subscribeId
+		System.out.println(ts + "__reviseStatusExcludeId__applicant=" + applicant
+				+ ",applyUseDate=" + applyUseDate + ",useInterval=" + useInterval
+				+ ",status=" + status + ",subscribeId=" + subscribeId
 				+ ",handlerNum=" + handlerNum);
 
 		// 校验用户工号
@@ -424,8 +443,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		subscribe4.setSubscribeStatus(status);
 
 		int affect4 = mapper.updateByExampleSelective(subscribe4, example6);
-		System.err.println(
-				this.getClass() + "__reviseStatusExcludeId__affect4=" + affect4);
+		System.err.println(ts + "__reviseStatusExcludeId__affect4=" + affect4);
 
 		return affect4;
 	}
@@ -466,10 +484,9 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	public Pagination<List<TSubscribe>> getThisWeekSubscribeListByTeacher(
 			Long applicant, Long teacherNum, Integer rows, Integer pageOrder)
 			throws OperationException {
-		System.err.println(
-				this.getClass() + "__getThisWeekSubscribeListByTeacher__applicant="
-						+ applicant + ",teacherNum=" + teacherNum + ",rows=" + rows
-						+ ",pageOrder=" + pageOrder);
+		System.err.println(ts + "__getThisWeekSubscribeListByTeacher__applicant="
+				+ applicant + ",teacherNum=" + teacherNum + ",rows=" + rows
+				+ ",pageOrder=" + pageOrder);
 
 		// 判断是否存在,是否为指定类型的帐户
 		ius.checkAccountIsRight(teacherNum, 1);
@@ -480,18 +497,19 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		// 分页获取本周内的预约申请
 		pageOrder = paginationUtil.getPageNum(pageOrder);
+		int offset = paginationUtil.getOffsetByPage(pageOrder, rows);
 
 		List<TSubscribe> listLimit = mapper.selectByTimeApplicantLimit(arr[0],
-				arr[1], pageOrder * rows, rows, applicant);
+				arr[1], offset, rows, applicant);
 		for (TSubscribe tSubscribe : listLimit) {
-			System.err.println(this.getClass()
-					+ "-getThisWeekSubscribeListByTeacher-list-element:"
-					+ tSubscribe.toString());
+			System.err
+					.println(ts + "-getThisWeekSubscribeListByTeacher-list-element:"
+							+ tSubscribe.toString());
 		}
 
 		Integer totalRows = this.getCountSubscribesByApplicant(applicant);
-		System.err.println(this.getClass()
-				+ "-getThisWeekSubscribeListByTeacher--totalRows:" + totalRows);
+		System.err.println(
+				ts + "-getThisWeekSubscribeListByTeacher--totalRows:" + totalRows);
 
 		Pagination<List<TSubscribe>> pagination = paginationUtil
 				.assemblySubscribe(listLimit, totalRows, rows, pageOrder);
@@ -504,17 +522,18 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	public Pagination<List<TSubscribe>> getApplicantSubscribesByAdmin(
 			Integer pageOrder, Integer row, Long applicant, Long adminNum)
 			throws OperationException {
-		System.err.println(
-				this.getClass() + "--getApplicantSubscribesByAdmin..applicant="
-						+ applicant + "..adminNum=" + adminNum + "..pageOrder="
-						+ pageOrder + "..row=" + row);
+		System.err.println(ts + "--getApplicantSubscribesByAdmin..applicant="
+				+ applicant + "..adminNum=" + adminNum + "..pageOrder=" + pageOrder
+				+ "..row=" + row);
 
 		ius.checkAdminPrivilege(adminNum);
 		ius.checkUserExist(applicant);
 
 		pageOrder = paginationUtil.getPageNum(pageOrder);
-		List<TSubscribe> limitList = mapper
-				.selectByApplicantAndLimit(pageOrder * row, row, applicant);
+		int offset = paginationUtil.getOffsetByPage(pageOrder, row);
+
+		List<TSubscribe> limitList = mapper.selectByApplicantAndLimit(offset, row,
+				applicant);
 
 		Integer counts = mapper.getCountByApplicant(applicant);
 		System.err.println(this.getClass()
@@ -547,9 +566,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	public Pagination<List<TSubscribe>> getWeekSubscribesListByStudent(
 			Long studentNum, Integer rows, Integer pageOrder)
 			throws OperationException {
-		System.err.println(
-				this.getClass() + "__getWeekSubscribesListByStudent__studentNum="
-						+ studentNum + ",rows=" + rows + ",pageOrder=" + pageOrder);
+		System.err.println(ts + "__getWeekSubscribesListByStudent__studentNum="
+				+ studentNum + ",rows=" + rows + ",pageOrder=" + pageOrder);
 
 		// 判断是否存在,是否为指定类型的帐户
 		ius.checkAccountIsRight(studentNum, 2);
@@ -557,20 +575,19 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		ArrayList<Date> monAndSunList = dateTimeKits.getMonAndSunList();
 		String[] arr = dateTimeKits.getStrArrFromTimeList(monAndSunList);
 
-		// 分页获取本周内的预约申请
 		pageOrder = paginationUtil.getPageNum(pageOrder);
+		int offset = paginationUtil.getOffsetByPage(pageOrder, rows);
 
 		List<TSubscribe> listLimit = mapper.selectByTimeApplicantLimit(arr[0],
-				arr[1], pageOrder * rows, rows, studentNum);
+				arr[1], offset, rows, studentNum);
 		for (TSubscribe tSubscribe : listLimit) {
-			System.err.println(this.getClass()
-					+ "--getWeekSubscribesListByStudent--list-element:"
+			System.err.println(ts + "--getWeekSubscribesListByStudent--list-element:"
 					+ tSubscribe.toString());
 		}
 
 		Integer totalRows = this.getCountSubscribesByApplicant(studentNum);
-		System.err.println(this.getClass()
-				+ "--getWeekSubscribesListByStudent--totalRows:" + totalRows);
+		System.err.println(
+				ts + "--getWeekSubscribesListByStudent--totalRows:" + totalRows);
 
 		Pagination<List<TSubscribe>> pagination = paginationUtil
 				.assemblySubscribe(listLimit, totalRows, rows, pageOrder);
@@ -582,9 +599,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	@Override
 	public List<TSubscribe> getStudentSubscribesForMyself(Long studentNum,
 			Integer status) throws OperationException {
-		System.err.println(
-				this.getClass() + "--getStudentSubscribesForMyself--studentNum:"
-						+ studentNum + "--status=" + status);
+		System.err.println(ts + "--getStudentSubscribesForMyself--studentNum:"
+				+ studentNum + "--status=" + status);
 		// 校验学号
 		ius.checkAccountIsRight(studentNum, 2);
 
@@ -598,9 +614,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		List<TSubscribe> subscribeList = mapper.selectByExample(example);
 		for (TSubscribe tSubscribe : subscribeList) {
-			System.err.println(
-					this.getClass() + "__getStudentSubscribesForMyself__.tSubscribe="
-							+ tSubscribe.toString());
+			System.err.println(ts + "__getStudentSubscribesForMyself__.tSubscribe="
+					+ tSubscribe.toString());
 		}
 
 		return subscribeList;
@@ -614,9 +629,18 @@ public class SubscribeServiceImpl implements ISubscribeService {
 				+ "--subscribeID=" + subscribeID + "--status=" + status);
 		TUser user = ius.checkAccountIsRight(studentNum, 2);
 
+		if (status != 3) {// 状态范围限定在0-3,在此只能是:3
+			String description = ExceptionsEnum.INVALID_SUBSCRIBE_STATUS
+					.getDescription();
+
+			System.err.println(
+					ts + "--studentCancelSubscribeById--description=" + description);
+			throw new OperationException(description);
+		}
+
 		TSubscribe subscribe = this.getSubscribeByID(subscribeID, studentNum);
 
-		System.err.println(this.getClass()
+		System.err.println(ts
 				+ "--studentCancelSubscribeById__subscribe.getApplicant() : user.getUserNum()="
 				+ subscribe.getApplicant() + "--" + user.getUserNum());
 
@@ -624,8 +648,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		if (!subscribe.getApplicant().equals(user.getUserNum())) {
 			String description = ExceptionsEnum.NOT_THIS_SUBSCRIBE_APPLIER
 					.getDescription();
-			System.err.println(this.getClass()
-					+ "--studentCancelSubscribeById--description=" + description);
+			System.err.println(
+					ts + "--studentCancelSubscribeById--description=" + description);
 
 			throw new OperationException(description);
 		}
@@ -636,11 +660,12 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		// 检验预约单中的申请发起日期是否在本周内
 		Boolean isInThisWeek = dateTimeKits
 				.judgeDayIsInThisWeek(subscribe.getApplicationStartTime());
+
 		if (!isInThisWeek) {
 			String description = ExceptionsEnum.SUBSCRIBE_NOT_IN_THIS_WEEK
 					.getDescription();
-			System.err.println(this.getClass()
-					+ "--studentCancelSubscribeById--description=" + description);
+			System.err.println(
+					ts + "--studentCancelSubscribeById--description=" + description);
 
 			throw new OperationException(description);
 		}
@@ -654,8 +679,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		subscribe2.setSubscribeStatus(status);
 
 		int effect = mapper.updateByExampleSelective(subscribe2, example);
-		System.err.println(
-				this.getClass() + "--studentCancelSubscribeById--effect=" + effect);
+		System.err.println(ts + "--studentCancelSubscribeById--effect=" + effect);
 
 		// 返还数据
 		TSubscribe subscribe4 = this.getSubscribeByID(subscribeID);
@@ -671,19 +695,19 @@ public class SubscribeServiceImpl implements ISubscribeService {
 				+ "--status=" + status + ",pageOrder=" + pageOrder + ",row=" + row);
 
 		pageOrder = paginationUtil.getPageNum(pageOrder);
+		int offset = paginationUtil.getOffsetByPage(pageOrder, row);
 
 		ArrayList<Date> dateList = dateTimeKits.getMonAndSunList();
-
 		String[] strArr = dateTimeKits.getStrArrFromTimeList(dateList);
 
 		// Total Data Line Count
 		Integer totalSize = mapper.selectCountsByApplicantAndTime(strArr[0],
 				strArr[1], studentNum);
-		System.err.println(this.getClass()
-				+ "--getStudentSubscribeForMyPagination--totalSize=" + totalSize);
+		System.err.println(
+				ts + "--getStudentSubscribeForMyPagination--totalSize=" + totalSize);
 
 		TSubscribeExample example = new TSubscribeExample();
-		example.setOffset(pageOrder * row);
+		example.setOffset(offset);
 		example.setLimit(row);
 
 		Criteria criteria = example.createCriteria();
@@ -710,8 +734,8 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	@Override
 	public Boolean checkStatusIsDuplicated(Integer newStatus, Integer oldStatus)
 			throws OperationException {
-		System.err.println(this.getClass() + "--checkStatusIsDuplicated--newStatus="
-				+ newStatus + "--oldStatus=" + oldStatus);
+		System.err.println(ts + "--checkStatusIsDuplicated--newStatus=" + newStatus
+				+ "--oldStatus=" + oldStatus);
 
 		// 若与原状态一致,就不要再更改
 		if (newStatus == oldStatus) {
@@ -720,8 +744,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 			System.err.println(this.getClass()
 					+ "__handleSubscribeStatus__description=" + description);
-			logger.error(this.getClass() + "__handleSubscribeStatus__description="
-					+ description);
+			logger.error(ts + "__handleSubscribeStatus__description=" + description);
 			throw new OperationException(description);
 		}
 		return true;
@@ -730,16 +753,193 @@ public class SubscribeServiceImpl implements ISubscribeService {
 	@Override
 	public Integer getCountForStatusInSomeRoom(Long userNum, Integer roomNum,
 			Integer status) throws OperationException {
-		System.err.println(
-				this.getClass() + "__\n--getCountForStatusInSomeRoom__userNum="
-						+ userNum + "--roomNum=" + roomNum + "--status=" + status);
+		System.err.println(ts + "__\n--getCountForStatusInSomeRoom__userNum="
+				+ userNum + "--roomNum=" + roomNum + "--status=" + status);
 
 		ius.checkUserExist(userNum);
 
 		Integer counts = mapper.getCountIdByStatusAndRoom(status, roomNum);
-		System.err.println(this.getClass()
-				+ "__\n--getCountForStatusInSomeRoom__return_counts=" + counts);
+		System.err.println(
+				ts + "__\n--getCountForStatusInSomeRoom__return_counts=" + counts);
 		return counts;
+	}
+
+	@Override
+	public Pagination<List<TSubscribe>> getSubcribeByTeacherReview(
+			Long reviewTeacher, Integer pageOrder, Integer row)
+			throws OperationException {
+		System.err.println(ts + "--getSubcribeByTeacherReview__reviewTeacher="
+				+ reviewTeacher + "--pageOrder=" + pageOrder + "--row=" + row);
+
+		ius.checkAccountIsRight(reviewTeacher, 1);
+
+		pageOrder = paginationUtil.getPageNum(pageOrder);
+		int offset = paginationUtil.getOffsetByPage(pageOrder, row);
+
+		// 获取本周首尾日期
+		ArrayList<Date> monAndSunList = dateTimeKits.getMonAndSunList();
+
+		TSubscribeExample example = new TSubscribeExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andReviewerEqualTo(reviewTeacher);
+		criteria.andHandleTimeBetween(monAndSunList.get(0), monAndSunList.get(1));
+
+		// 根据审核者工号,获取本周内全部数据==>总行数
+		List<TSubscribe> weekTotalList = mapper.selectByExample(example);
+		int totalSize = weekTotalList.size();
+		System.err.println(
+				ts + "--getSubcribeByTeacherReview--totalSize=" + totalSize);
+
+		// 获取本周内分页数据
+		TSubscribeExample limitExample = new TSubscribeExample();
+		limitExample.setLimit(row);
+		limitExample.setOffset(offset);
+
+		Criteria limitCriteria = limitExample.createCriteria();
+		limitCriteria.andReviewerEqualTo(reviewTeacher);
+		limitCriteria.andHandleTimeBetween(monAndSunList.get(0),
+				monAndSunList.get(1));
+		List<TSubscribe> limitListData = mapper.selectByExample(limitExample);
+
+		Pagination<List<TSubscribe>> pagination = paginationUtil
+				.assemblySubscribe(limitListData, totalSize, row, pageOrder);
+
+		return pagination;
+	}
+
+	@Override
+	public Pagination<List<TSubscribe>> getSubcribeByTeacherReview(
+			Long reviewTeacher, Integer page, Integer limit, Integer status)
+			throws OperationException {
+		System.err.println(
+				ts + "--getSubcribeByTeacherReview__(Override)__reviewTeacher="
+						+ reviewTeacher + "--page=" + page + "--limit=" + limit);
+
+		ius.checkAccountIsRight(reviewTeacher, 1);
+
+		page = paginationUtil.getPageNum(page);
+		int offset = paginationUtil.getOffsetByPage(page, limit);
+
+		// 获取本周首尾日期
+		ArrayList<Date> monAndSunList = dateTimeKits.getMonAndSunList();
+
+		TSubscribeExample example = new TSubscribeExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andReviewerEqualTo(reviewTeacher);
+		criteria.andHandleTimeBetween(monAndSunList.get(0), monAndSunList.get(1));
+		criteria.andSubscribeStatusEqualTo(status);
+
+		// 根据审核者工号,获取本周内全部数据==>总行数
+		List<TSubscribe> weekTotalList = mapper.selectByExample(example);
+		int totalSize = weekTotalList.size();
+		System.err.println(
+				ts + "--getSubcribeByTeacherReview--totalSize=" + totalSize);
+
+		// 获取本周内分页数据
+		TSubscribeExample limitExample = new TSubscribeExample();
+		limitExample.setLimit(limit);
+		limitExample.setOffset(offset);
+
+		Criteria limitCriteria = limitExample.createCriteria();
+		limitCriteria.andReviewerEqualTo(reviewTeacher);
+		limitCriteria.andHandleTimeBetween(monAndSunList.get(0),
+				monAndSunList.get(1));
+		limitCriteria.andSubscribeStatusEqualTo(status);
+		List<TSubscribe> limitListData = mapper.selectByExample(limitExample);
+
+		Pagination<List<TSubscribe>> pagination = paginationUtil
+				.assemblySubscribe(limitListData, totalSize, limit, page);
+
+		return pagination;
+	}
+
+	@Override
+	public Pagination<List<TSubscribe>> getRoomSubscribesListByTeacher(
+			Long teacherNum, Integer pageOrder, Integer limit, Integer roomNum)
+			throws OperationException {
+		System.err.println(ts + "--getRoomSubscribesListByTeacher--pageOrder="
+				+ pageOrder + ",limit=" + limit + ",roomNum=" + roomNum);
+
+		ius.checkAccountIsRight(teacherNum, 1);
+
+		pageOrder = paginationUtil.getPageNum(pageOrder);
+		int offset = paginationUtil.getOffsetByPage(pageOrder, limit);
+
+		// 获取本周首尾
+		ArrayList<Date> monSunList = dateTimeKits.getMonAndSunList();
+
+		// 获取符合参数条件的全部数据
+		TSubscribeExample example = new TSubscribeExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andRoomNumEqualTo(roomNum);
+		criteria.andApplicationStartTimeBetween(monSunList.get(0),
+				monSunList.get(1));
+
+		// 总行数
+		int totalSize = mapper.selectByExample(example).size();
+		System.err.println(
+				ts + "getRoomSubscribesListByTeacher..totalSize=" + totalSize);
+
+		// 获取符合参数条件的分页数据
+		TSubscribeExample limitExample = new TSubscribeExample();
+		Criteria limitCriteria = limitExample.createCriteria();
+		limitCriteria.andRoomNumEqualTo(roomNum);
+		limitCriteria.andApplicationStartTimeBetween(monSunList.get(0),
+				monSunList.get(1));
+
+		limitExample.setLimit(limit);
+		limitExample.setOffset(offset);
+		List<TSubscribe> pageData = mapper.selectByExample(limitExample);
+
+		Pagination<List<TSubscribe>> pagination = paginationUtil
+				.assemblySubscribe(pageData, totalSize, limit, pageOrder);
+		return pagination;
+	}
+
+	@Override
+	public Pagination<List<TSubscribe>> getRoomSubscribesListByTeacher(
+			Long teacherNum, Integer pageOrder, Integer limit, Integer roomNum,
+			Integer status) throws OperationException {
+		System.err.println(ts + "--getRoomSubscribesListByTeacher--pageOrder="
+				+ pageOrder + ",limit=" + limit + ",roomNum=" + roomNum + ",status="
+				+ status);
+
+		ius.checkAccountIsRight(teacherNum, 1);
+
+		pageOrder = paginationUtil.getPageNum(pageOrder);
+		int offset = paginationUtil.getOffsetByPage(pageOrder, limit);
+
+		// 获取本周首尾
+		ArrayList<Date> monSunList = dateTimeKits.getMonAndSunList();
+
+		// 获取符合参数条件的全部数据
+		TSubscribeExample example = new TSubscribeExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andRoomNumEqualTo(roomNum);
+		criteria.andApplicationStartTimeBetween(monSunList.get(0),
+				monSunList.get(1));
+		criteria.andSubscribeStatusEqualTo(status);
+
+		// 总行数
+		int totalSize = mapper.selectByExample(example).size();
+		System.err.println(
+				ts + "getRoomSubscribesListByTeacher..totalSize=" + totalSize);
+
+		// 获取符合参数条件的分页数据
+		TSubscribeExample limitExample = new TSubscribeExample();
+		Criteria limitCriteria = limitExample.createCriteria();
+		limitCriteria.andRoomNumEqualTo(roomNum);
+		limitCriteria.andApplicationStartTimeBetween(monSunList.get(0),
+				monSunList.get(1));
+		limitCriteria.andSubscribeStatusEqualTo(status);
+
+		limitExample.setLimit(limit);
+		limitExample.setOffset(offset);
+		List<TSubscribe> pageData = mapper.selectByExample(limitExample);
+
+		Pagination<List<TSubscribe>> pagination = paginationUtil
+				.assemblySubscribe(pageData, totalSize, limit, pageOrder);
+		return pagination;
 	}
 
 }

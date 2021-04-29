@@ -187,6 +187,14 @@ public class OperationExEnumHandler {
 			res.setCode(ExceptionsEnum.ACCOUNT_BEING_OFFLINE.getCode());
 			break;
 
+		case "无效的审核预约状态":
+			res.setCode(ExceptionsEnum.INVALID_SUBSCRIBE_STATUS.getCode());
+			break;
+
+		case "预约申请时段超出范围,请在上午,下午,晚上三者之间选择":
+			res.setCode(ExceptionsEnum.SUBSCRIBE_USEINTERVAL_OUT_RANGE.getCode());
+			break;
+
 		}
 
 		return res;

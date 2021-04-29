@@ -18,7 +18,31 @@ public class SubscribeServiceTest {
 	@Before
 	public void initialize() throws Exception {
 		applicationContext = new ClassPathXmlApplicationContext(
-				new String[] { "spring/springDAO.xml", "spring/springService.xml" });
+				new String[] { "spring/SpringDAO.xml", "spring/SpringService.xml" });
+	}
+
+	@Test
+	public void getReviewerHandleSubscribeTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+			subscribeService.getSubcribeByTeacherReview(3999706924700L, 0, 2);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
+	public void getReviewerHandleByStatusTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+			subscribeService.getSubcribeByTeacherReview(3999706924700L, 0, 2, 1);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	@Test

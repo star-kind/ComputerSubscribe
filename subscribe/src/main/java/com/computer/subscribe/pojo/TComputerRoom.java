@@ -4,10 +4,7 @@ import java.util.Date;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.ToString;
 
@@ -27,7 +24,6 @@ public class TComputerRoom {
 	 *
 	 * @mbggenerated Sat Apr 17 17:02:03 CST 2021
 	 */
-	@NotNull(message = "机房编号不能为空")
 	@Min(value = 0, message = "机房编号不得小于 0")
 	private Integer roomNum;
 
@@ -37,7 +33,6 @@ public class TComputerRoom {
 	 *
 	 * @mbggenerated Sat Apr 17 17:02:03 CST 2021
 	 */
-	@NotNull(message = "机位总数不能为空")
 	@Min(value = 0, message = "机位总数不得小于 0")
 	@Max(value = 10000, message = "机位总数不得大于 10000*10000*10000")
 	private Integer totalSets;
@@ -48,9 +43,8 @@ public class TComputerRoom {
 	 *
 	 * @mbggenerated Sat Apr 17 17:02:03 CST 2021
 	 */
-	@Min(value = 0, message = "可用状态小于 0")
-	@Max(value = 1, message = "可用状态不得大于 1")
-	@NotNull(message = "可用状态不能为空")
+	@Min(value = 0, message = "机房可用状态小于 0")
+	@Max(value = 1, message = "机房可用状态不得大于 1")
 	private Integer availableStatus;
 
 	/**
@@ -59,7 +53,6 @@ public class TComputerRoom {
 	 *
 	 * @mbggenerated Sat Apr 17 17:02:03 CST 2021
 	 */
-	@NotNull(message = "管理员工号不能为空")
 	private Long adminNumOperated;
 
 	/**
@@ -77,7 +70,6 @@ public class TComputerRoom {
 	 * @mbggenerated Sat Apr 17 17:02:03 CST 2021
 	 */
 	@Size(min = 1, max = 120)
-	@NotBlank(message = "地点位置不能为空")
 	private String location;
 
 	/**
@@ -87,7 +79,6 @@ public class TComputerRoom {
 	 * @mbggenerated Sat Apr 17 17:50:00 CST 2021
 	 */
 	@Min(value = 0, message = "实际可用电脑数量不得小于 0")
-	@NotNull(message = "实际可用电脑数量不能为空")
 	private Integer actAvailableQuantity;
 
 	/**

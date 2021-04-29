@@ -16,7 +16,7 @@ public class SubscribeMapperTest {
 	@Before
 	public void before() throws Exception {
 		applicationContext = new ClassPathXmlApplicationContext(
-				"spring/springDAO.xml");
+				"spring/SpringDAO.xml");
 	}
 
 	@Test

@@ -49,7 +49,7 @@
 			value="classpath*:mapper/*.xml" />
 		<!-- configLocation:指定mybatis的主配置文件 -->
 		<property name="configLocation"
-			value="classpath:mybatis-config.xml"></property>
+			value="classpath:MybatisConfig.xml"></property>
 		<!-- entity package -->
 		<property name="typeAliasesPackage"
 			value="com.computer.subscribe.pojo"></property>

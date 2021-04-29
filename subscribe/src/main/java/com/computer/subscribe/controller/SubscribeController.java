@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.pojo.TSubscribe;
 import com.computer.subscribe.pojo.response.Pagination;
 import com.computer.subscribe.pojo.response.WebResponse;
@@ -23,12 +25,15 @@ import com.computer.subscribe.service.ISubscribeService;
 @Controller
 @RequestMapping("/SubscribeController")
 public class SubscribeController extends BasicController {
+	String t = this.getClass().getName() + "---\n";
 
 	@Autowired
 	private ISubscribeService iss;
 
 	/**
-	 * http://localhost:8080/subscribe/SubscribeController/getCountByStatusInRoomAction?userNum=1889970&status=0&roomNum=3
+	 * 获取某间机房,其所收到的某种预约状态的申请单统计数量<br>
+	 * 
+	 * http://localhost:8080/subscribe/SubscribeController/getCountByStatusInRoomAction?status=0&roomNum=3
 	 * 
 	 * @param userNum 任一帐户
 	 * @param status  预约单状态
@@ -39,24 +44,24 @@ public class SubscribeController extends BasicController {
 	@ResponseBody
 	@RequestMapping(value = "/getCountByStatusInRoomAction", method = RequestMethod.GET)
 	public WebResponse<Integer> getCountByStatusInRoomAction(
-			@RequestParam("userNum") @Valid Long userNum,
 			@RequestParam("status") @Valid Integer status,
 			@RequestParam("roomNum") @Valid Integer roomNum,
 			HttpServletRequest req) {
-		System.err
-				.println(this.getClass() + "--getCountByStatusInRoomAction--userNum="
-						+ userNum + ",status=" + status + ",roomNum=" + roomNum);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.err.println("header.token== " + header);
+
+		LoginData loginData = getLoginDataByToken(req);
+		Long userNum = loginData.getUserNum();
+
+		printMethod(t, "--getCountByStatusInRoomAction--userNum=" + userNum
+				+ ",status=" + status + ",roomNum=" + roomNum);
+
 		Integer result = iss.getCountForStatusInSomeRoom(userNum, roomNum, status);
 
 		return new WebResponse<Integer>(SUCCESS, result);
 	}
 
 	/**
-	 * 学生撤回自己的预约(:4) <br>
-	 * http://localhost:8080/subscribe/SubscribeController/studentCancelSubscribeAction?studentNum=1889970&status=4&subscribeID=71
+	 * 学生撤回自己的预约(:3) <br>
+	 * http://localhost:8080/subscribe/SubscribeController/studentCancelSubscribeAction?status=4&subscribeID=71
 	 * 
 	 * @param studentNum
 	 * @param status
@@ -66,15 +71,15 @@ public class SubscribeController extends BasicController {
 	@ResponseBody
 	@RequestMapping(value = "/studentCancelSubscribeAction", method = RequestMethod.GET)
 	public WebResponse<TSubscribe> studentCancelSubscribeAction(
-			@RequestParam("studentNum") Long studentNum,
 			@RequestParam("status") Integer status,
 			@RequestParam("subscribeID") Long subscribeID, HttpServletRequest req) {
-		System.err.println(this.getClass()
-				+ "__studentCancelSubscribeAction__studentNum=" + studentNum
+
+		LoginData loginData = getLoginDataByToken(req);
+		Long studentNum = loginData.getUserNum();
+
+		printMethod(t, "__studentCancelSubscribeAction__studentNum=" + studentNum
 				+ ",status=" + status + ",subscribeID=" + subscribeID);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.err.println("header.token== " + header);
+
 		TSubscribe subscribe = iss.studentCancelSubscribeById(studentNum,
 				subscribeID, status);
 
@@ -82,9 +87,8 @@ public class SubscribeController extends BasicController {
 	}
 
 	/**
-	 * 学生分页查询,本周内指定状态的预约列表 <br>
-	 * 
-	 * http://localhost:8080/subscribe/SubscribeController/getStudentSubscribeMyAction?studentNum=1889970&status=1&pageOrder=0&row=3
+	 * 学生分页查询,本周内自己的指定状态的预约列表 <br>
+	 * http://localhost:8080/subscribe/SubscribeController/getStudentSubscribeMyAction?status=1&pageOrder=0&row=3
 	 * 
 	 * @param studentNum
 	 * @param status
@@ -94,16 +98,16 @@ public class SubscribeController extends BasicController {
 	@ResponseBody
 	@RequestMapping(value = "/getStudentSubscribeMyAction", method = RequestMethod.GET)
 	public WebResponse<Pagination<List<TSubscribe>>> getStudentSubscribeMyAction(
-			@RequestParam("studentNum") Long studentNum,
 			@RequestParam("status") Integer status,
 			@RequestParam("pageOrder") Integer pageOrder,
 			@RequestParam("row") Integer row, HttpServletRequest req) {
-		System.err.println(this.getClass()
-				+ "__getStudentSubscribeMyAction__studentNum=" + studentNum
+
+		LoginData loginData = getLoginDataByToken(req);
+		Long studentNum = loginData.getUserNum();
+
+		printMethod(t, "__getStudentSubscribeMyAction__studentNum=" + studentNum
 				+ ",status=" + status + ",pageOrder=" + pageOrder + ",row=" + row);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.err.println("header.token== " + header);
+
 		Pagination<List<TSubscribe>> pagination = iss
 				.getStudentSubscribeForMyPagination(studentNum, status, pageOrder,
 						row);
@@ -111,11 +115,14 @@ public class SubscribeController extends BasicController {
 	}
 
 	/**
-	 * http://localhost:8080/subscribe/SubscribeController/queryWeekListByStudentAction?studentNum=105170048&pageOrder=0&rows=3
+	 * http://localhost:8080/subscribe/SubscribeController/queryWeekListByStudentAction?pageOrder=0&rows=3
+	 * <br>
+	 * 
+	 * 学生分页获取本周内自己全部的预约申请单
 	 * 
 	 * <br>
 	 * <ol>
-	 * <li>studentNum--学号</li>
+	 * <li>studentNum--学号,限学生</li>
 	 * <li>rows--每页展示行数"</li>
 	 * <li>pageOrder--页码</li>
 	 * </ol>
@@ -128,30 +135,28 @@ public class SubscribeController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/queryWeekListByStudentAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "学生获取本周内自己全部的预约申请单", notes = "参数为:学号,每页展示行数,页码", httpMethod = "GET")
 	public WebResponse<Pagination<List<TSubscribe>>> queryWeekListByStudentAction(
-			@RequestParam("studentNum") @Valid Long studentNum,
 			@RequestParam("rows") @Valid Integer rows,
 			@RequestParam("pageOrder") @Valid Integer pageOrder,
 			HttpServletRequest req) {
-		System.err.println(
-				this.getClass() + "__queryWeekListByTeacherAction__studentNum="
-						+ studentNum + ",pageOrder=" + pageOrder + ",rows=" + rows);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.err.println("header.token== " + header);
+		LoginData loginData = getLoginDataByToken(req);
+		Long studentNum = loginData.getUserNum();
+
+		printMethod(t, "__queryWeekListByTeacherAction__studentNum=" + studentNum
+				+ ",pageOrder=" + pageOrder + ",rows=" + rows);
+
 		Pagination<List<TSubscribe>> pagination = iss
 				.getWeekSubscribesListByStudent(studentNum, rows, pageOrder);
 		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
 	}
 
 	/**
-	 * http://localhost:8080/subscribe/SubscribeController/queryAllSubscribesByAdminAction?applicant=105170048&adminNum=393606924700&pageOrder=0&rows=3
-	 * 
+	 * http://localhost:8080/subscribe/SubscribeController/queryAllSubscribesByAdminAction?applicant=105170048&pageOrder=0&rows=3
 	 * <br>
+	 * 管理员分页获取某位学生全部的预约申请单 <br>
 	 * <ol>
-	 * <li>applicant--学号</li>
-	 * <li>teacherNum--管理员工号"</li>
+	 * <li>applicant--预约者学号,限学生</li>
+	 * <li>teacherNum--管理员工号,限管理员</li>
 	 * <li>rows--每页展示行数"</li>
 	 * <li>pageOrder--页码</li>
 	 * </ol>
@@ -165,32 +170,32 @@ public class SubscribeController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/queryAllSubscribesByAdminAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "获取某位学生全部的预约申请单", notes = "参数为:工号[限管理员],预约者的学号", httpMethod = "GET")
 	public WebResponse<Pagination<List<TSubscribe>>> queryAllSubscribesByAdminAction(
 			@RequestParam("applicant") @Valid Long applicant,
-			@RequestParam("adminNum") @Valid Long adminNum,
 			@RequestParam("rows") @Valid Integer rows,
 			@RequestParam("pageOrder") @Valid Integer pageOrder,
 			HttpServletRequest req) {
-		System.err.println(
-				this.getClass() + "__queryWeekListByTeacherAction__applicant="
-						+ applicant + ",adminNum=" + adminNum + ",pageOrder="
-						+ pageOrder + ",rows=" + rows);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.err.println("header.token== " + header);
+		LoginData loginData = getLoginDataByToken(req);
+		Long adminNum = loginData.getUserNum();
+
+		printMethod(t,
+				"__queryWeekListByTeacherAction__applicant=" + applicant
+						+ ",adminNum=" + adminNum + ",pageOrder=" + pageOrder
+						+ ",rows=" + rows);
+
 		Pagination<List<TSubscribe>> pagination = iss
 				.getApplicantSubscribesByAdmin(pageOrder, rows, applicant, adminNum);
 		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
 	}
 
 	/**
-	 * http://localhost:8080/subscribe/SubscribeController/queryWeekListByTeacherAction?applicant=1889970&teacherNum=41105048&pageOrder=1&rows=4
-	 * 
+	 * http://localhost:8080/subscribe/SubscribeController/queryWeekListByTeacherAction?applicant=1889970&pageOrder=1&rows=4
+	 *
 	 * <br>
+	 * 分页获取本周内某位学生全部的预约申请单 <br>
 	 * <ol>
-	 * <li>applicant--学号</li>
-	 * <li>teacherNum--教师工号"</li>
+	 * <li>applicant--学号[限学生]</li>
+	 * <li>teacherNum--教师工号[限教师]</li>
 	 * <li>rows--每页展示行数"</li>
 	 * <li>pageOrder--页码</li>
 	 * </ol>
@@ -204,20 +209,19 @@ public class SubscribeController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/queryWeekListByTeacherAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "获取本周内某位学生全部的预约申请单", notes = "参数为:工号[限教师],预约者的学号", httpMethod = "GET")
 	public WebResponse<Pagination<List<TSubscribe>>> queryWeekListByTeacherAction(
 			@RequestParam("applicant") @Valid Long applicant,
-			@RequestParam("teacherNum") @Valid Long teacherNum,
 			@RequestParam("rows") @Valid Integer rows,
 			@RequestParam("pageOrder") @Valid Integer pageOrder,
 			HttpServletRequest req) {
-		System.err.println(
-				this.getClass() + "__queryWeekListByTeacherAction__applicant="
-						+ applicant + ",teacherNum=" + teacherNum + ",pageOrder="
-						+ pageOrder + ",rows=" + rows);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.err.println("header.token== " + header);
+		LoginData loginData = getLoginDataByToken(req);
+		Long teacherNum = loginData.getUserNum();
+
+		printMethod(t,
+				"__queryWeekListByTeacherAction__applicant=" + applicant
+						+ ",teacherNum=" + teacherNum + ",pageOrder=" + pageOrder
+						+ ",rows=" + rows);
+
 		Pagination<List<TSubscribe>> pagination = iss
 				.getThisWeekSubscribeListByTeacher(applicant, teacherNum, rows,
 						pageOrder);
@@ -225,7 +229,67 @@ public class SubscribeController extends BasicController {
 	}
 
 	/**
-	 * http://localhost:8080/subscribe/SubscribeController/getSubscribeByIdAction?userNum=15165156051&subscribeID=112
+	 * 教师分页获取,某间机房在本周内,收到的预约申请列表(不限定审核状态)<br>
+	 * http://localhost:8080/subscribe/SubscribeController/retrieveSubscribeByRoomReceived?roomNum=1&pageOrder=1&limit=2
+	 * 
+	 * @param roomNum
+	 * @param pageOrder
+	 * @param limit
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retrieveSubscribeByRoomReceived", method = RequestMethod.GET)
+	public WebResponse<Pagination<List<TSubscribe>>> retrieveSubscribeByRoomReceived(
+			@RequestParam("roomNum") @Valid Integer roomNum,
+			@RequestParam("pageOrder") @Valid Integer pageOrder,
+			@RequestParam("limit") @Valid Integer limit, HttpServletRequest req) {
+		System.err.println(t + "retrieveSubscribeByRoomReceived..pageOrder="
+				+ pageOrder + "..limit=" + limit + "..roomNum=" + roomNum);
+
+		Long teacherNum = getLoginDataByToken(req).getUserNum();
+
+		Pagination<List<TSubscribe>> pagination = iss.getRoomSubscribesListByTeacher(
+				teacherNum, pageOrder, limit, roomNum);
+		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/retriSubscribeByRoomAndStatusReceiv?roomNum=1&pageOrder=1&limit=2&status=0
+	 * 
+	 * 教师分页获取,某间机房在本周内,收到的预约申请列表(指定审核状态)
+	 * 
+	 * @param roomNum
+	 * @param pageOrder
+	 * @param limit
+	 * @param status
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retriSubscribeByRoomAndStatusReceiv", method = RequestMethod.GET)
+	public WebResponse<Pagination<List<TSubscribe>>> retriSubscribeByRoomAndStatusReceiv(
+			@RequestParam("roomNum") @Valid Integer roomNum,
+			@RequestParam("pageOrder") @Valid Integer pageOrder,
+			@RequestParam("limit") @Valid Integer limit,
+			@RequestParam("status") @Valid Integer status, HttpServletRequest req) {
+		System.err.println(t + "retriSubscribeByRoomAndStatusReceiv..pageOrder="
+				+ pageOrder + "..limit=" + limit + "..status=" + status
+				+ "..roomNum=" + roomNum);
+
+		Long teacherNum = getLoginDataByToken(req).getUserNum();
+
+		Pagination<List<TSubscribe>> pagination = iss.getRoomSubscribesListByTeacher(
+				teacherNum, pageOrder, limit, roomNum, status);
+		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/getSubscribeByIdAction?subscribeID=112
+	 * 
+	 * <p>
+	 * 获取某张预约申请单的信息
+	 * </p>
 	 * 
 	 * <br>
 	 * <ol>
@@ -240,22 +304,26 @@ public class SubscribeController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getSubscribeByIdAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "获取某张预约申请单的信息", notes = "参数为:工号/学号,预约单id", httpMethod = "GET")
 	public WebResponse<TSubscribe> getSubscribeByIdAction(
-			@RequestParam("userNum") @Valid Long userNum,
 			@RequestParam("subscribeID") @Valid Long subscribeID,
 			HttpServletRequest req) {
-		System.err.println(this.getClass() + "__getSubscribeByIdAction__userNum="
-				+ userNum + ",subscribeID=" + subscribeID);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.err.println("header.token== " + header);
+
+		LoginData loginData = getLoginDataByToken(req);
+		Long userNum = loginData.getUserNum();
+
+		printMethod(t, "__getSubscribeByIdAction__userNum=" + userNum
+				+ ",subscribeID=" + subscribeID);
+
 		TSubscribe subscribe = iss.getSubscribeByID(subscribeID, userNum);
 		return new WebResponse<TSubscribe>(SUCCESS, subscribe);
 	}
 
 	/**
-	 * http://localhost:8080/subscribe/SubscribeController/handleSubscribeStatusAction?status=0&teacherNum=3999706924700&subscribeID=12
+	 * http://localhost:8080/subscribe/SubscribeController/handleSubscribeStatusAction?status=0&subscribeID=12
+	 * 
+	 * <p>
+	 * 教师审核处理某张预约申请单
+	 * </p>
 	 * 
 	 * <br>
 	 * <ol>
@@ -272,27 +340,26 @@ public class SubscribeController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/handleSubscribeStatusAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "审核处理某张预约申请单", notes = "参数为:状态,工号[仅限教师],预约单id", httpMethod = "GET")
 	public WebResponse<TSubscribe> handleSubscribeStatusAction(
 			@RequestParam("status") @Valid Integer status,
-			@RequestParam("teacherNum") @Valid Long teacherNum,
 			@RequestParam("subscribeID") @Valid Long subscribeID,
 			HttpServletRequest req) {
-		System.err.println(this.getClass()
-				+ "__handleSubscribeStatusAction__teacherNum=" + teacherNum
+
+		LoginData loginData = getLoginDataByToken(req);
+		Long teacherNum = loginData.getUserNum();
+
+		printMethod(t, "__handleSubscribeStatusAction__teacherNum=" + teacherNum
 				+ ",status=" + status + ",subscribeID=" + subscribeID);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.err.println("header.token== " + header);
+
 		TSubscribe subscribe = iss.handleSubscribeStatus(status, teacherNum,
 				subscribeID);
 		return new WebResponse<TSubscribe>(SUCCESS, subscribe);
 	}
 
 	/**
-	 * http://localhost:8080/subscribe/SubscribeController/getPrevWeekSubscribesListAction?adminNum=393606924700
-	 * 
+	 * http://localhost:8080/subscribe/SubscribeController/getPrevWeekSubscribesListAction
 	 * <br>
+	 * 查询上周全部的预约申请单列表 <br>
 	 * <ol>
 	 * <li>adminNum--工号,限管理员</li>
 	 * </ol>
@@ -303,22 +370,21 @@ public class SubscribeController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getPrevWeekSubscribesListAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "查询上本周全部的预约申请单列表", notes = "参数为:工号[仅限管理员]", httpMethod = "GET")
 	public WebResponse<List<TSubscribe>> getPrevWeekSubscribesListAction(
-			@RequestParam("adminNum") @Valid Long adminNum, HttpServletRequest req) {
-		System.err.println(
-				this.getClass() + "__queryByStatusAction_adminNum=" + adminNum);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.out.println("header.token== " + header);
+			HttpServletRequest req) {
+		LoginData loginData = getLoginDataByToken(req);
+		Long adminNum = loginData.getUserNum();
+
+		printMethod(t, "__queryByStatusAction_adminNum=" + adminNum);
+
 		List<TSubscribe> list = iss.getPreviousWeekSubscribes(adminNum);
 		return new WebResponse<List<TSubscribe>>(SUCCESS, list);
 	}
 
 	/**
-	 * http://localhost:8080/subscribe/SubscribeController/queryByStatusAction?userNum=156168541&status=0
+	 * http://localhost:8080/subscribe/SubscribeController/queryByStatusAction?status=0
 	 * 
-	 * <br>
+	 * 查询本周指定状态的预约申请单列表 <br>
 	 * <ol>
 	 * <li>userNum--工号,限教师和管理员</li>
 	 * <li>status--预约的审核状态</li>
@@ -331,65 +397,122 @@ public class SubscribeController extends BasicController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/queryByStatusAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "查询本周指定状态的预约申请单列表", notes = "参数为:工号[仅限教师和管理员],审核状态", httpMethod = "GET")
 	public WebResponse<List<TSubscribe>> queryByStatusAction(
-			@RequestParam("userNum") @Valid Long userNum,
 			@RequestParam("status") @Valid Integer status, HttpServletRequest req) {
-		System.err.println(this.getClass() + "__queryByStatusAction_userNum="
-				+ userNum + ",status=" + status);
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.out.println("header.token== " + header);
+
+		LoginData loginData = getLoginDataByToken(req);
+		Long userNum = loginData.getUserNum();
+
+		printMethod(t, "__queryByStatusAction_userNum=" + userNum,
+				",status=" + status);
+
 		List<TSubscribe> list = iss.getSubscribeListByStatus(status, userNum);
 		return new WebResponse<List<TSubscribe>>(SUCCESS, list);
 	}
 
 	/**
-	 * http://localhost:8080/subscribe/SubscribeController/addNewApplyAction?applicant=156168541&useInterval=3&roomNum=11&applyUseDate=2019-12-11
+	 * 教师分页查阅,本周内自己经手过的预约申请单,不限预约状态<br>
+	 * http://localhost:8080/subscribe/SubscribeController/retrieveHandleByTeacher?pageOrder=0&rows=3
+	 * 
+	 * @param req
+	 * @param pageOrder
+	 * @param rows
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retrieveHandleByTeacher", method = RequestMethod.GET)
+	public WebResponse<Pagination<List<TSubscribe>>> retrieveHandleByTeacher(
+			HttpServletRequest req, @RequestParam("pageOrder") Integer pageOrder,
+			@RequestParam("rows") Integer rows) {
+		System.err.println(t + "--retrieveHandleByTeacherAction--pageOrder="
+				+ pageOrder + ",rows=" + rows);
+		LoginData loginData = getLoginDataByToken(req);
+		Long teacherReviewer = loginData.getUserNum();
+
+		Pagination<List<TSubscribe>> pagination = iss
+				.getSubcribeByTeacherReview(teacherReviewer, pageOrder, rows);
+
+		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
+	}
+
+	/**
+	 * 教师分页查阅,本周内自己经手过的预约申请单,指定预约状态<br>
+	 * http://localhost:8080/subscribe/SubscribeController/retrieveHandleByTeacherAndStatus?page=0&limit=3&status=0
+	 * 
+	 * @param req
+	 * @param page
+	 * @param limit
+	 * @param status
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retrieveHandleByTeacherAndStatus", method = RequestMethod.GET)
+	public WebResponse<Pagination<List<TSubscribe>>> retrieveHandleByTeacherAndStatus(
+			HttpServletRequest req, @RequestParam("page") Integer page,
+			@RequestParam("limit") Integer limit,
+			@RequestParam("status") Integer status) {
+		System.err.println(t + "--retrieveHandleByTeacherAndStatus--page=" + page
+				+ ",limit=" + limit + ",status=" + status);
+		LoginData loginData = getLoginDataByToken(req);
+		Long teacherReviewer = loginData.getUserNum();
+
+		Pagination<List<TSubscribe>> pagination = iss
+				.getSubcribeByTeacherReview(teacherReviewer, page, limit, status);
+
+		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/SubscribeController/addNewApplyAction?useInterval=3&roomNum=11&applyUseDate=2019-12-11
+	 * 
+	 * <p>
+	 * 新增一张机房的使用申请单
+	 * </p>
+	 * <p>
+	 * 参数为:学号,机房编号,具体使用日期,使用时间段
+	 * </p>
 	 * <br>
 	 * <ul>
 	 * <li>applyUseDate--具体使用日期</li>
 	 * <li>useInterval--使用时间段</li>
 	 * <li>roomNum--机房编号</li>
-	 * <li>applicant--学号</li>
+	 * <li>applicant--学号[不用显式输入]</li>
 	 * </ul>
 	 * 
-	 * @param subscribe
+	 * @param useInterval
+	 * @param roomNum
+	 * @param applyUseDate
 	 * @param req
 	 * @return
 	 * @throws ParseException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/addNewApplyAction", method = RequestMethod.GET)
-//	@ApiOperation(value = "新增一张机房的使用申请单", notes = "参数为:学号,机房编号,具体使用日期,使用时间段", httpMethod = "GET")
 	public WebResponse<TSubscribe> addNewApplyAction(
-			@RequestParam("applyUseDate") @Valid String applyUseDate,
-			@RequestParam("useInterval") @Valid Integer useInterval,
-			@RequestParam("roomNum") @Valid Integer roomNum,
-			@RequestParam("applicant") @Valid Long applicant, HttpServletRequest req)
-			throws ParseException {
-		// 后期将从令牌中获取关键数据
-		// String header = req.getHeader("token");
-		// System.out.println("header.token== " + header);
-
-		System.err.println(this.getClass() + "+++useDate==" + applyUseDate
-				+ ",useInterval==" + useInterval + ",roomNum==" + roomNum
-				+ ",studentNum==" + applicant);
-
-		logger.info("useDate==" + applyUseDate + ",useInterval==" + useInterval
-				+ ",roomNum==" + roomNum + ",studentNum==" + applicant);
-
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date useTimeDate = format.parse(applyUseDate);
+			@RequestParam("useInterval") @Valid @NotNull Integer useInterval,
+			@RequestParam("roomNum") @Valid @NotNull Integer roomNum,
+			@RequestParam("applyUseDate") @Valid @NotNull String applyUseDate,
+			HttpServletRequest req) throws ParseException {
+		printMethod(t, "addNewApplyAction..useInterval=" + useInterval,
+				"roomNum=" + roomNum, "applyUseDate=" + applyUseDate);
 
 		TSubscribe sub = new TSubscribe();
-		sub.setApplicant(applicant);
-		sub.setApplyUseDate(useTimeDate);
 		sub.setUseInterval(useInterval);
 		sub.setRoomNum(roomNum);
 
-		TSubscribe subscribe1 = iss.addNewScuSubscribe(sub);
-		return new WebResponse<TSubscribe>(SUCCESS, subscribe1);
+		// 转换为时间类型
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date useDate = format.parse(applyUseDate);
+		sub.setApplyUseDate(useDate);
+
+		// 有选择检验参数的NPE
+		validFieldNPExUtil.centralize(sub, "applyUseDate", "useInterval", "roomNum");
+
+		LoginData loginData = getLoginDataByToken(req);
+		sub.setApplicant(loginData.getUserNum());
+
+		TSubscribe res = iss.addNewScuSubscribe(sub);
+		return new WebResponse<TSubscribe>(SUCCESS, res);
 	}
 
 }

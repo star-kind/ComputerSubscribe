@@ -23,6 +23,66 @@ import lombok.NonNull;
  */
 public interface ISubscribeService {
 	/**
+	 * 教师分页获取,某间机房在本周内,收到的预约申请列表(指定审核状态)
+	 * 
+	 * @param teacherNum
+	 * @param pageOrder
+	 * @param limit
+	 * @param roomNum
+	 * @param status
+	 * @return
+	 * @throws OperationException
+	 */
+	Pagination<List<TSubscribe>> getRoomSubscribesListByTeacher(
+			@NonNull Long teacherNum, @NonNull Integer pageOrder,
+			@NonNull Integer limit, @NonNull Integer roomNum,
+			@NonNull Integer status) throws OperationException;
+
+	/**
+	 * 教师分页获取,某间机房在本周内,收到的预约申请列表(不限定审核状态)
+	 * 
+	 * @param teacherNum
+	 * @param pageOrder
+	 * @param limit
+	 * @param roomNum
+	 * @return
+	 * @throws OperationException
+	 */
+	Pagination<List<TSubscribe>> getRoomSubscribesListByTeacher(
+			@NonNull Long teacherNum, @NonNull Integer pageOrder,
+			@NonNull Integer limit, @NonNull Integer roomNum)
+			throws OperationException;
+
+	/**
+	 * 教师分页查阅,本周内自己经手过的预约申请单,<b>不限预约状态</b>
+	 * 
+	 * @param reviewTeacher TSubscribe.reviewer
+	 * @param pageOrder
+	 * @param row
+	 * @return
+	 * @throws OperationException
+	 */
+	Pagination<List<TSubscribe>> getSubcribeByTeacherReview(
+			@NonNull Long reviewTeacher, @NonNull Integer pageOrder,
+			@NonNull Integer row) throws OperationException;
+
+	/**
+	 * (Override)<br>
+	 * 教师分页查阅,本周内自己经办过的预约申请单,<b>指定预约状态</b>
+	 * 
+	 * @param reviewTeacher
+	 * @param page
+	 * @param limit
+	 * @param status
+	 * @return
+	 * @throws OperationException
+	 */
+	Pagination<List<TSubscribe>> getSubcribeByTeacherReview(
+			@NonNull Long reviewTeacher, @NonNull Integer page,
+			@NonNull Integer limit, @NonNull Integer status)
+			throws OperationException;
+
+	/**
 	 * 检验想要修改的预约状态[传入]是否与原先表中的状态一致,即防止重复,<br>
 	 * 重复则报错中断,不重复则返真
 	 * 
@@ -59,7 +119,7 @@ public interface ISubscribeService {
 			@NonNull Integer status) throws OperationException;
 
 	/**
-	 * 学生查询自己本周内,指定状态的<b>分页</b>预约
+	 * 学生查询自己在本周内,指定状态的<b>分页</b>预约
 	 * 
 	 * @param studentNum
 	 * @param status

@@ -26,7 +26,7 @@ public class UserServiceTest {
 	@Before
 	public void initialize() throws Exception {
 		applicationContext = new ClassPathXmlApplicationContext(
-				new String[] { "spring/springDAO.xml", "spring/springService.xml" });
+				new String[] { "spring/SpringDAO.xml", "spring/SpringService.xml" });
 	}
 
 	@Test

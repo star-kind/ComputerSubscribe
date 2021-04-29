@@ -21,6 +21,8 @@ import com.computer.subscribe.util.support.DateTimeKits;
 
 @Service
 public class ComputerRoomServiceImpl implements IComputerRoomService {
+	String t = this.getClass().getCanonicalName() + "\n";
+
 	public static Logger logger = Logger.getLogger(UserServiceImpl.class);
 
 	@Autowired
@@ -36,8 +38,8 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 	@Override
 	public TComputerRoom saveNewRoom(TComputerRoom computerRoom)
 			throws OperationException {
-		System.err.println(this.getClass() + "--saveNewRoom--computerRoom--"
-				+ computerRoom.toString());
+		System.err.println(
+				t + "--saveNewRoom--computerRoom--" + computerRoom.toString());
 
 		// 校验管理员的存在与权限
 		ius.checkAdminPrivilege(computerRoom.getAdminNumOperated());
@@ -51,9 +53,9 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 			String description = ExceptionsEnum.ROOM_NUM_DUPLICATION_ERROR
 					.getDescription();
 			logger.info(description);
-			System.err.println(this.getClass()
-					+ "--saveNewRoom--actual_cannot_more_than_toal--description--"
-					+ description);
+			System.err.println(
+					t + "--saveNewRoom--actual_cannot_more_than_toal--description--"
+							+ description);
 			throw new OperationException(description);
 		}
 
@@ -62,9 +64,9 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 			String description = ExceptionsEnum.LOCATION_DUPLICATION_ERROR
 					.getDescription();
 			logger.info(description);
-			System.err.println(this.getClass()
-					+ "--saveNewRoom--actual_cannot_more_than_toal--description--"
-					+ description);
+			System.err.println(
+					t + "--saveNewRoom--actual_cannot_more_than_toal--description--"
+							+ description);
 			throw new OperationException(description);
 		}
 
@@ -76,9 +78,9 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 
 		int affect = roomMapper.insert(computerRoom);
 
-		System.err.println(this.getClass() + "--saveNewRoom--affect--" + affect);
-		System.err.println(this.getClass() + "--saveNewRoom--ReTurn--computerRoom--"
-				+ computerRoom);
+		System.err.println(t + "--saveNewRoom--affect--" + affect);
+		System.err
+				.println(t + "--saveNewRoom--ReTurn--computerRoom--" + computerRoom);
 
 		return computerRoom;
 	}
@@ -86,8 +88,8 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 	@Override
 	public TComputerRoom getComputerRoomByOrder(Integer roomNum, Long accountNum)
 			throws OperationException {
-		System.err.println(this.getClass() + "--getComputerRoomByOrder--roomNum="
-				+ roomNum + "--accountNum=" + accountNum);
+		System.err.println(t + "--getComputerRoomByOrder--roomNum=" + roomNum
+				+ "--accountNum=" + accountNum);
 
 		ius.checkUserExist(accountNum);
 
@@ -100,15 +102,15 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 			String description = ExceptionsEnum.COMPUTER_ROOM_NOT_EXIST
 					.getDescription();
 			logger.info(description);
-			System.err.println(this.getClass()
-					+ "--saveNewRoom--COMPUTER_ROOM_NOT_EXIST--description--"
-					+ description);
+			System.err.println(
+					t + "--saveNewRoom--COMPUTER_ROOM_NOT_EXIST--description--"
+							+ description);
 			throw new OperationException(description);
 		}
 
 		TComputerRoom computerRoom = list.get(0);
-		System.err.println(this.getClass()
-				+ "--getComputerRoomByOrder--computerRoom=" + computerRoom);
+		System.err.println(
+				t + "--getComputerRoomByOrder--computerRoom=" + computerRoom);
 
 		return computerRoom;
 	}
@@ -116,8 +118,8 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 	@Override
 	public TComputerRoom getComputerRoomByLocation(String location, Long accountNum)
 			throws OperationException {
-		System.err.println(this.getClass() + "--getComputerRoomByLocation--location="
-				+ location + "--accountNum=" + accountNum);
+		System.err.println(t + "--getComputerRoomByLocation--location=" + location
+				+ "--accountNum=" + accountNum);
 
 		ius.checkUserExist(accountNum);
 
@@ -130,15 +132,15 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 			String description = ExceptionsEnum.COMPUTER_ROOM_NOT_EXIST
 					.getDescription();
 			logger.info(description);
-			System.err.println(this.getClass()
+			System.err.println(t
 					+ "--getComputerRoomByLocation--COMPUTER_ROOM_NOT_EXIST--description--"
 					+ description);
 			throw new OperationException(description);
 		}
 
 		TComputerRoom computerRoom = list.get(0);
-		System.err.println(this.getClass()
-				+ "--getComputerRoomByLocation--computerRoom=" + computerRoom);
+		System.err.println(
+				t + "--getComputerRoomByLocation--computerRoom=" + computerRoom);
 
 		return computerRoom;
 	}
@@ -155,9 +157,9 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 
 		if (!list.isEmpty()) {
 			TComputerRoom computerRoom = list.get(0);
-			System.err.println(this.getClass()
-					+ "--getComputerRoomByOrder-[Override]--computerRoom="
-					+ computerRoom);
+			System.err
+					.println(t + "--getComputerRoomByOrder-[Override]--computerRoom="
+							+ computerRoom);
 			return computerRoom;
 		}
 
@@ -166,8 +168,8 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 
 	@Override
 	public TComputerRoom getComputerRoomByLocation(String location) {
-		System.err.println(this.getClass()
-				+ "--getComputerRoomByLocation-[Override]--location=" + location);
+		System.err.println(
+				t + "--getComputerRoomByLocation-[Override]--location=" + location);
 
 		TComputerRoomExample example = new TComputerRoomExample();
 		Criteria criteria = example.createCriteria();
@@ -176,9 +178,9 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 
 		if (!list.isEmpty()) {
 			TComputerRoom computerRoom = list.get(0);
-			System.err.println(this.getClass()
-					+ "--getComputerRoomByLocation-[Override]--computerRoom="
-					+ computerRoom);
+			System.err.println(
+					t + "--getComputerRoomByLocation-[Override]--computerRoom="
+							+ computerRoom);
 
 			return computerRoom;
 		}
@@ -189,8 +191,8 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 	@Override
 	public TComputerRoom reviseRoomInfoById(TComputerRoom roomNewInfo)
 			throws OperationException {
-		System.err.println(this.getClass() + "--reviseRoomInfoById--roomNewInfo="
-				+ roomNewInfo.toString());
+		System.err.println(
+				t + "--reviseRoomInfoById--roomNewInfo=" + roomNewInfo.toString());
 
 		Long adminNum = roomNewInfo.getAdminNumOperated();
 		ius.checkAdminPrivilege(adminNum);
@@ -213,19 +215,18 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 		criteria.andIdEqualTo(oldRoomInfo.getId());
 
 		int effect = roomMapper.updateByExampleSelective(roomData, example);
-		System.err
-				.println(this.getClass() + "--reviseRoomInfoById--effect=" + effect);
+		System.err.println(t + "--reviseRoomInfoById--effect=" + effect);
 
 		TComputerRoom latestRoom = this.getComputerRoomById(oldRoomInfo.getId());
-		System.err.println(this.getClass() + "--reviseRoomInfoById--latestRoom="
-				+ latestRoom.toString());
+		System.err.println(
+				t + "--reviseRoomInfoById--latestRoom=" + latestRoom.toString());
 
 		return latestRoom;
 	}
 
 	@Override
 	public TComputerRoom getComputerRoomById(Integer id) throws OperationException {
-		System.err.println(this.getClass() + "--getComputerRoomById--id=" + id);
+		System.err.println(t + "--getComputerRoomById--id=" + id);
 
 		TComputerRoomExample example = new TComputerRoomExample();
 		Criteria criteria = example.createCriteria();
@@ -236,15 +237,15 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 			String description = ExceptionsEnum.COMPUTER_ROOM_NOT_EXIST
 					.getDescription();
 			logger.info(description);
-			System.err.println(this.getClass()
+			System.err.println(t
 					+ "--getComputerRoomById--COMPUTER_ROOM_NOT_EXIST--description--"
 					+ description);
 			throw new OperationException(description);
 		}
 
 		TComputerRoom room = list.get(0);
-		System.err.println(this.getClass() + "--getComputerRoomById--return__room="
-				+ room.toString());
+		System.err.println(
+				t + "--getComputerRoomById--return__room=" + room.toString());
 
 		return room;
 	}
@@ -252,15 +253,14 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 	@Override
 	public void comparisonActualAndTotalComputer(Integer actualAvailable,
 			Integer totalQuantity) throws OperationException {
-		System.err.println(this.getClass()
-				+ "__comparisonActualAndTotalComputer__actualAvailable="
+		System.err.println(t + "__comparisonActualAndTotalComputer__actualAvailable="
 				+ actualAvailable + ",totalQuantity=" + totalQuantity);
 
 		if (actualAvailable > totalQuantity) {
 			String description = ExceptionsEnum.ACTUAL_CANNOT_MORE_THAN_TOAL
 					.getDescription();
 			logger.info(description);
-			System.err.println(this.getClass()
+			System.err.println(t
 					+ "--comparisonActualAndTotalComputer--actual_cannot_more_than_toal--description--"
 					+ description);
 			throw new OperationException(description);
@@ -270,9 +270,8 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 	@Override
 	public TComputerRoom getConstructDataForRevise(TComputerRoom oldRoomInfo,
 			TComputerRoom newRoomInfo) {
-		System.err.println(
-				this.getClass() + "--getConstructDataForRevise--oldRoomInfo="
-						+ oldRoomInfo + "\n___newRoomInfo=" + newRoomInfo);
+		System.err.println(t + "--getConstructDataForRevise--oldRoomInfo="
+				+ oldRoomInfo + "\n___newRoomInfo=" + newRoomInfo);
 
 		TComputerRoom roomData = new TComputerRoom();
 
@@ -329,35 +328,34 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 			}
 		}
 
-		System.err.println(this.getClass() + "--getConstructDataForRevise--roomData="
-				+ roomData);
+		System.err.println(t + "--getConstructDataForRevise--roomData=" + roomData);
 		return roomData;
 	}
 
 	@Override
 	public Pagination<List<TComputerRoom>> getRoomListByPagination(Long userNum,
 			Integer pageOrder, Integer rows) throws OperationException {
-		System.err.println(this.getClass() + "--getRoomListByPagination--userNum="
-				+ userNum + "--pageOrder=" + pageOrder + "--rows=" + rows);
+		System.err.println(t + "--getRoomListByPagination--userNum=" + userNum
+				+ "--pageOrder=" + pageOrder + "--rows=" + rows);
 
 		ius.checkUserExist(userNum);
 
 		pageOrder = paginationUtil.getPageNum(pageOrder);
+		int offset = paginationUtil.getOffsetByPage(pageOrder, rows);
 
 		// 房间的数量
 		Integer idCounts = roomMapper.selectCountAllComputerRoomByIDs();
 
 		TComputerRoomExample example = new TComputerRoomExample();
+		example.setOffset(offset);
 		example.setLimit(rows);
-		example.setOffset(pageOrder * rows);
 
 		// 分页数据
 		List<TComputerRoom> pageList = roomMapper.selectByExample(example);
 		if (!pageList.isEmpty()) {
 			for (TComputerRoom tComputerRoom : pageList) {
-				System.err.println(
-						this.getClass() + "--getRoomListByPagination.tComputerRoom="
-								+ tComputerRoom.toString());
+				System.err.println(t + "--getRoomListByPagination.tComputerRoom="
+						+ tComputerRoom.toString());
 			}
 		}
 
@@ -370,8 +368,8 @@ public class ComputerRoomServiceImpl implements IComputerRoomService {
 	@Override
 	public TComputerRoom getComputerRoomById(Integer id, Long userNum)
 			throws OperationException {
-		System.err.println(this.getClass() + "__getComputerRoomById[Override]__id"
-				+ id + "__userNum=" + userNum);
+		System.err.println(t + "__getComputerRoomById[Override]__id" + id
+				+ "__userNum=" + userNum);
 
 		ius.checkUserExist(userNum);
 

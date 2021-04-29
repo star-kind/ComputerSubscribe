@@ -50,6 +50,10 @@ public enum ExceptionsEnum {
 	SUBSCRIBE_NOT_EXIST(913, "预约申请不存在"),
 	/** 你并非此份预约的申请发起者,无法对其进行修改 */
 	NOT_THIS_SUBSCRIBE_APPLIER(914, "你并非此份预约的申请发起者,无法对其进行修改"),
+	/** 无效的审核预约状态 */
+	INVALID_SUBSCRIBE_STATUS(915, "无效的审核预约状态"),
+	/** 预约申请时段超出范围,请在上午,下午,晚上三者之间选择 */
+	SUBSCRIBE_USEINTERVAL_OUT_RANGE(916, "预约申请时段超出范围,请在上午,下午,晚上三者之间选择"),
 	/* user */
 	/** 您尚未登录,请先登录 */
 	HADNOT_LOGINED(1005, "您尚未登录,请先登录"),

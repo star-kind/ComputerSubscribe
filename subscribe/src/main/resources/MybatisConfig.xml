@@ -14,7 +14,7 @@
 		<setting name="mapUnderscoreToCamelCase" value="true" />
 		<!-- log4j打印sql配置 -->
 		<setting name="lazyLoadingEnabled" value="false" />
-		<!-- 如果采用的是slf4j日志框架,此处value=SLF4J -->
+		<!-- 如果采用的是slf4j日志框架,value=SLF4J -->
 		<setting name="logImpl" value="LOG4J" />
 	</settings>
 

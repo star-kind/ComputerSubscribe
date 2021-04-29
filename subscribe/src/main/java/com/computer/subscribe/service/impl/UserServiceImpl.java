@@ -25,6 +25,7 @@ import com.computer.subscribe.util.support.PasswordBusiness;
 
 @Service
 public class UserServiceImpl implements IUserService {
+	String t = this.getClass().getName() + "\n";
 	public static Logger logger = Logger.getLogger(UserServiceImpl.class);
 
 	JwtUtils jwt = JwtUtils.getInstance();
@@ -191,9 +192,10 @@ public class UserServiceImpl implements IUserService {
 				+ pageNum + ", limit== " + limit);
 
 		pageNum = paginationUtil.getPageNum(pageNum);
+		int offset = paginationUtil.getOffsetByPage(pageNum, limit);
 
 		TUserExample userExample = new TUserExample();
-		userExample.setOffset(pageNum * limit);
+		userExample.setOffset(offset);
 		userExample.setLimit(limit);
 
 		List<TUser> list = userMapper.selectByExample(userExample);
@@ -372,10 +374,9 @@ public class UserServiceImpl implements IUserService {
 		if (list.isEmpty()) {
 			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
 
-			logger.error(this.getClass().getName()
-					+ "__查看帐号是否存在__checkAccountIsRight__== " + description);
-			System.err.println(this.getClass().getName()
-					+ "__查看帐号是否存在__checkAccountIsRight__==" + description);
+			logger.error(description);
+			System.err.println(
+					t + "__查看帐号是否存在__checkAccountIsRight__==" + description);
 
 			throw new OperationException(description);
 		}
@@ -387,8 +388,7 @@ public class UserServiceImpl implements IUserService {
 		}
 
 		TUser user = list.get(0);
-		System.err.println(
-				this.getClass() + "__checkAccountIsRight==> " + user.toString());
+		System.err.println(t + "__checkAccountIsRight==> " + user.toString());
 
 		String desc = null;
 		if (roleCode != user.getRole()) {

@@ -149,6 +149,10 @@ public class UsersController extends BasicController {
 	/**
 	 * http://localhost:8080/subscribe/UsersController/getMemberByOrderAction?pageOrder=0&rows=2&id=18
 	 * 
+	 * <p>
+	 * 管理员分页查询用户列表
+	 * </p>
+	 * 
 	 * @param id        Administrator.ID
 	 * @param pageOrder 页数
 	 * @param rows      每页展示行数
@@ -188,7 +192,6 @@ public class UsersController extends BasicController {
 		printMethod(this.getClass(), "revisePasswordAction--newpassword== "
 				+ newPasswd + ", oldpassword== " + oldPasswd);
 
-		// 后期将从令牌中获取关键数据
 		String header = req.getHeader("token");
 		System.out.println(this.getClass()
 				+ ".revisePasswordAction\n.header.token== " + header);
@@ -240,6 +243,9 @@ public class UsersController extends BasicController {
 	public WebResponse<Integer> registerAction(@Valid @NotNull TUser user)
 			throws OperationException {
 		logger.info(user.toString());
+
+		validFieldNPExUtil.centralize(user, "userName", "password", "phone",
+				"mailbox", "role");
 
 		String description = ExceptionsEnum.USER_USERNUM_IS_NULL.getDescription();
 		Optional<TUser> optional = Optional.ofNullable(user);

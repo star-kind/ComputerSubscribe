@@ -7,6 +7,7 @@ import com.computer.subscribe.exception.ExceptionsEnum;
 import com.computer.subscribe.exception.OperationException;
 import com.computer.subscribe.pojo.LoginData;
 import com.computer.subscribe.util.JwtUtils;
+import com.computer.subscribe.util.support.ValidFieldNPExUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,14 +21,15 @@ import javax.servlet.http.HttpServletRequest;
 public class BasicController {
 	public static Logger logger = Logger.getLogger(BasicController.class);
 
-	protected static int bind_ex_code = 777;
-	protected static int method_argument_not_valid_ex_code = 776;
-	protected static int validation_ex_code = 775;
-	protected static int constraint_violation_ex_code = 774;
+//	protected static int bind_ex_code = 777;
+//	protected static int method_argument_not_valid_ex_code = 776;
+//	protected static int validation_ex_code = 775;
+//	protected static int constraint_violation_ex_code = 774;
 
 	public static final Integer SUCCESS = 200;
 
 	JwtUtils jwt = JwtUtils.getInstance();
+	ValidFieldNPExUtil validFieldNPExUtil = ValidFieldNPExUtil.getInstance();
 
 	/**
 	 * 打印程序执行过程中的一些数据/参数
