@@ -27,7 +27,7 @@ import com.computer.subscribe.util.support.PasswordBusiness;
 public class UserServiceImpl implements IUserService {
 	String t = this.getClass().getName() + "\n";
 	public static Logger logger = Logger.getLogger(UserServiceImpl.class);
-
+	
 	JwtUtils jwt = JwtUtils.getInstance();
 
 	@Autowired

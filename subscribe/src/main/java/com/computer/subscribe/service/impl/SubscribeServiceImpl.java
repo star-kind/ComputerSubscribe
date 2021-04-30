@@ -145,7 +145,7 @@ public class SubscribeServiceImpl implements ISubscribeService {
 		int affect = mapper.insert(subscribe);
 
 		System.err.println(ts + "==>addNewScuSubscribe==>affect==" + affect
-				+ ",==>TSubscribe Return== " + subscribe.toString());
+				+ ",==>TSubscribe Return==" + subscribe.toString());
 		return subscribe;
 	}
 

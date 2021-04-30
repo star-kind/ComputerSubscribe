@@ -6,7 +6,6 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 import org.hibernate.validator.constraints.Range;
 
@@ -37,7 +36,6 @@ public class TSubscribe {
 	 *
 	 * @mbggenerated Sun Apr 11 11:21:42 CST 2021
 	 */
-	@Null
 	private Long reviewer;
 
 	/**
@@ -85,7 +83,6 @@ public class TSubscribe {
 	 *
 	 * @mbggenerated Sun Apr 11 13:28:41 CST 2021
 	 */
-	@Null
 	private Date handleTime;
 
 	/**

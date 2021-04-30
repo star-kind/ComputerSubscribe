@@ -284,4 +284,45 @@ public class PaginationUtils {
 		return pagin;
 	}
 
+	/**
+	 * 组装分页 - 泛型
+	 * 
+	 * @param <T>
+	 * @param pageData
+	 * @param idCount
+	 * @param pageRows  limit
+	 * @param pageOrder page
+	 * @return
+	 */
+	public <T> Pagination<List<T>> assemblyGeneric(List<T> pageData, Integer idCount,
+			Integer pageRows, Integer pageOrder) {
+		Pagination<List<T>> pagin = new Pagination<List<T>>();
+
+		// get total pages
+		int totalPages = idCount / pageRows;
+
+		// 余数
+		int remainder = idCount % pageRows;
+
+		if (remainder != 0) {// 如果行数限制不可以被总行数整除,实际页数+1
+			totalPages++;
+		}
+
+		HashMap<String, Boolean> boolMap = getPageBoolMap(idCount, pageRows,
+				totalPages, pageData.size(), pageOrder);
+
+		Boolean hasPrevious = boolMap.get(has_previous_key);
+		Boolean hasNext = boolMap.get(has_next_key);
+
+		pagin.setCurrentPage(pageOrder);
+		pagin.setData(pageData);
+		pagin.setHasNext(hasNext);
+		pagin.setHasPrevious(hasPrevious);
+		pagin.setRows(pageRows);
+		pagin.setTotalPages(totalPages);
+
+		System.err.println(ts + "__assemblyGeneric__\npagin=" + pagin.toString());
+		return pagin;
+	}
+
 }

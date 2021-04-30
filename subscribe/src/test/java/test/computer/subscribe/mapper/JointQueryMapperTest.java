@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.computer.subscribe.mapper.JointQueryMapper;
-import com.computer.subscribe.pojo.TSubscribe;
+import com.computer.subscribe.pojo.vo.SubscribeUserVO;
 
 /**
  * 
@@ -18,19 +18,28 @@ import com.computer.subscribe.pojo.TSubscribe;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring/SpringDAO.xml")
-public class JointQueryMapperTest2 {
+public class JointQueryMapperTest {
 	@Autowired
 	private JointQueryMapper jqMapper;
+
+	@Test
+	public void selectSubscribesSizeTest() {
+		String beginTime = "2021-02-02 00:00:00";
+		String endTime = "2021-05-02 00:00:00";
+
+		Integer rows = jqMapper.selectCountOfSubscribes(1, beginTime, endTime);
+		System.err.println("rows=" + rows);
+	}
 
 	@Test
 	public void retrieveSubscribesListTest() {
 		String beginTime = "2021-02-02 00:00:00";
 		String endTime = "2021-05-02 00:00:00";
 
-		List<TSubscribe> list = jqMapper.retrieveSubscribesList(1, beginTime,
+		List<SubscribeUserVO> list = jqMapper.selectSubscribesList(1, beginTime,
 				endTime, 1, 10);
-		for (TSubscribe tSubscribe : list) {
-			System.err.println(tSubscribe);
+		for (SubscribeUserVO vo : list) {
+			System.err.println(vo);
 		}
 	}
 

@@ -43,10 +43,12 @@ public class DateTimeKits {
 	}
 
 	/**
+	 * <b>0-monday,1-sunday</b><br>
+	 * 
 	 * 将时间类型数据列表中的元素遍历转化为字符串,返回字符串数组
 	 * 
 	 * @param timeList
-	 * @return
+	 * @return 0-monday,1-sunday
 	 */
 	public String[] getStrArrFromTimeList(ArrayList<Date> timeList) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:MM:ss");

@@ -19,6 +19,11 @@ import com.computer.subscribe.pojo.response.Pagination;
 import com.computer.subscribe.pojo.response.WebResponse;
 import com.computer.subscribe.service.IComputerRoomService;
 
+/**
+ * 
+ * @author user
+ *
+ */
 @Controller
 @RequestMapping("/ComputerRoomController")
 public class ComputerRoomController extends BasicController {
@@ -26,9 +31,6 @@ public class ComputerRoomController extends BasicController {
 
 	@Autowired
 	private IComputerRoomService crs;
-
-	// TODO
-	// 联合查询,一间机房本周内,所收到的预约申请列表集合,含(审核状态+审核教师工号+申请者学号+申请使用日+申请使用时段)+(申请者姓名+申请者邮箱+审核人姓名+审核人邮箱)
 
 	/**
 	 * 分页列表,获取全部机房信息,不限制帐号类型<br>

@@ -21,11 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 public class BasicController {
 	public static Logger logger = Logger.getLogger(BasicController.class);
 
-//	protected static int bind_ex_code = 777;
-//	protected static int method_argument_not_valid_ex_code = 776;
-//	protected static int validation_ex_code = 775;
-//	protected static int constraint_violation_ex_code = 774;
-
 	public static final Integer SUCCESS = 200;
 
 	JwtUtils jwt = JwtUtils.getInstance();

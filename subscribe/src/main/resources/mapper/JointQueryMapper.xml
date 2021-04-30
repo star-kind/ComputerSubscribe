@@ -4,8 +4,8 @@
 	namespace="com.computer.subscribe.mapper.JointQueryMapper">
 	<!-- 预约申单与用户列表是多对一的关系 -->
 	<!-- 查询映射 -->
-	<resultMap id="subscribesMap" type="TSubscribe">
-		<id column="id" property="id"></id>
+	<resultMap id="subscribeUserVOMap" type="SubscribeUserVO">
+		<id column="id" property="sid"></id>
 		<result column="applicant" property="applicant"></result>
 		<result column="reviewer" property="reviewer"></result>
 		<result column="subscribe_status" property="subscribeStatus"></result>
@@ -18,7 +18,26 @@
 		<!-- 一对一或多对一,association属性含义自行搜索 -->
 		<association property="u" column="id" javaType="TUser"
 			select="com.computer.subscribe.mapper.JointQueryMapper.getAllUsers">
+			<id column="id" property="uid"></id>
+			<result column="user_num" property="userNum"></result>
+			<result column="user_name" property="userName"></result>
+			<result column="phone" property="phone"></result>
+			<result column="mailbox" property="mailbox"></result>
+			<result column="role" property="role"></result>
 		</association>
+	</resultMap>
+
+	<resultMap id="subscribeMap" type="TSubscribe">
+		<id column="id" property="id"></id>
+		<result column="applicant" property="applicant"></result>
+		<result column="reviewer" property="reviewer"></result>
+		<result column="subscribe_status" property="subscribeStatus"></result>
+		<result column="room_num" property="roomNum"></result>
+		<result column="application_start_time"
+			property="applicationStartTime"></result>
+		<result column="use_interval" property="useInterval"></result>
+		<result column="handle_time" property="handleTime"></result>
+		<result column="apply_use_date" property="applyUseDate"></result>
 	</resultMap>
 
 	<resultMap id="usersMap" type="TUser">
@@ -56,10 +75,18 @@
 		t_user
 	</select>
 
+	<select id="getAllSubscribes" resultMap="subscribeMap">
+		SELECT
+		<include refid="Subscribe_Base_Column_List" />
+		FROM
+		t_user
+	</select>
+
 	<!-- 左连分页查询,一间机房本周内,所收到的预约申请列表集合, -->
 	<!-- 含(申单ID+审核状态+审核教师工号+申请使用日+申请使用时段+机房号)+(申请者姓名+申请者邮箱+申请者学号) -->
-	<select id="retrieveSubscribesList" resultMap="subscribesMap">
+	<select id="selectSubscribesList" resultMap="subscribeUserVOMap">
 		SELECT
+		s.id AS sid,
 		s.applicant,
 		s.reviewer,
 		s.subscribe_status,
@@ -68,26 +95,62 @@
 		s.use_interval,
 		s.apply_use_date,
 		s.room_num,
+		s.handle_time,
 
 		u.user_num,
 		u.user_name,
-		u.mailbox
+		u.mailbox,
+		u.role
+
+		FROM t_subscribe s
+
+		LEFT JOIN
+		t_user AS
+		u
+
+		ON
+		s.applicant=u.user_num
+		WHERE
+		<if test="roomOrder != null "></if>
+		s.room_num=#{roomOrder}
+
+		AND
+		<if test="beginTime != null &amp;&amp; beginTime != ''.toString()"></if>
+		s.application_start_time &gt;= #{beginTime}
+		AND
+		<if test="endTime != null &amp;&amp; endTime != ''.toString()"></if>
+		s.application_start_time &lt;= #{endTime}
+
+		ORDER BY
+		s.application_start_time
+		<if
+			test="offset != null &amp;&amp; limit != null &amp;&amp; limit!=0"></if>
+		ASC limit #{offset},#{limit}
+	</select>
+
+	<select id="selectCountOfSubscribes"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(s.id)
 
 		FROM t_subscribe s
 
 		LEFT JOIN t_user AS
 		u
 
-		ON s.applicant=u.user_num
+		ON
+		s.applicant=u.user_num
+		<if test="roomOrder != null "></if>
 		WHERE s.room_num=#{roomOrder}
 
+		<if
+			test="beginTime != null &amp;&amp; beginTime != ''.toString()
+		&amp;&amp;
+		endTime != null &amp;&amp; endTime != ''.toString()
+		"></if>
 		AND
 		s.application_start_time &gt;= #{beginTime}
 		AND
 		s.application_start_time &lt;= #{endTime}
-
-		ORDER BY
-		s.application_start_time
-		ASC limit #{offset},#{limit}
 	</select>
 </mapper>
