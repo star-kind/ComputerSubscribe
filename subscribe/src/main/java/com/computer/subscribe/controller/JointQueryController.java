@@ -28,7 +28,6 @@ public class JointQueryController extends BasicController {
 	@Autowired
 	private IJointQueryService ijqs;
 
-	// TODO
 	/**
 	 * http://localhost:8080/subscribe/JointQueryController/retrieveSubscribesOnlyTeacher?page=0&limit=6&roomNum=1
 	 * 
