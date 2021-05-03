@@ -12,7 +12,7 @@ import java.util.Date;
  *
  */
 public class TextFileTool {
-	static String ts = "org.apidoc.subscribe.services" + "...\n";
+	static String t = "org.apidoc.subscribe.services.TextFileTool" + "---\n";
 
 	static String file_url = "/home/user/";
 	static String previous_file_name = "PostMan-";
@@ -38,7 +38,7 @@ public class TextFileTool {
 				e.printStackTrace();
 			}
 		}
-		System.out.println(ts + "createFileByUrl--创建成功\n--return=" + completeUrl);
+		System.out.println(t + "createFileByUrl--创建成功\n--return=" + completeUrl);
 		return completeUrl;
 	}
 

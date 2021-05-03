@@ -24,7 +24,7 @@ import net.sf.json.JSONObject;
  *
  */
 public class GetJsonObj {
-	static String ts = "org.apidoc.subscribe.centra.JSON2Doc" + "...\n";
+	static String t = "org.apidoc.subscribe.services.GetJsonObj" + "---\n";
 
 	/**
 	 * 获取json文本字符串
@@ -49,7 +49,7 @@ public class GetJsonObj {
 		try {
 			return new String(fileContent, encoding);
 		} catch (UnsupportedEncodingException e) {
-			System.err.println(ts + "The OS does not support " + encoding);
+			System.err.println(t + "The OS does not support " + encoding);
 			e.printStackTrace();
 			return null;
 		}
