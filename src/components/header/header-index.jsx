@@ -13,7 +13,7 @@ class PublicHeader extends Component {
   //
   state = {
     home_url: '/',
-    login_url: '/#logining',
+    login_url: '/logining',
     register_url: '/registry',
     // other url
     urlArray: [

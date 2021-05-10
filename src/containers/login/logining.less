@@ -1,0 +1,118 @@
+@marginBottomVal: 3em;
+@whiteVar: white;
+@widthSize: 18em;
+@leftValue: 0.4rem;
+@bottomVal: -3rem;
+@font_size_val: 35px;
+@width_size_val: 400px;
+@height_size_val: 350px;
+@left_val: 0.36;
+@left_val2: 0.32;
+@border_val: 13px;
+@background_val: #0f5d27;
+@width_per: 0.96;
+@border_val: 7px;
+@margin_val: 1.8em;
+@margin_per: 0.05;
+@height_val2: 3em;
+@height_val3: 2em;
+@padd_val: 25px;
+@font_size_val: 26px;
+@marginVal2: 10px;
+@top_val: 29em;
+
+.main_container {
+  body {
+    margin: 0;
+    position: relative;
+    height: max-content;
+    font-size: @font_size_val;
+  }
+
+  .mine_regist_div {
+    left: percentage(@left_val);
+    width: @width_size_val;
+    height: @height_size_val;
+    position: relative;
+    margin: percentage(@margin_per) 0 0 0;
+    background: @background_val;
+    padding: @padd_val 0 0 0;
+    border-radius: @border_val;
+  }
+
+  .inputs_item {
+    margin: 3px 0;
+    left: @leftValue;
+    position: relative;
+  }
+
+  .inputs_item > input {
+    width: percentage(@width_per);
+    height: @height_val2;
+    border-radius: @border_val;
+    border-width: 0;
+  }
+
+  .label_role {
+    font-size: 16px;
+    color: @whiteVar;
+  }
+
+  #mine_select_role {
+    width: @widthSize;
+    height: @height_val2;
+    border-width: 0;
+    background: @whiteVar;
+    border-radius: @border_val;
+    margin: 0 0 0 percentage(@margin_per);
+  }
+
+  .mine_input_btns {
+    background: @background_val;
+    width: @width_size_val;
+    left: percentage(@left_val);
+    position: fixed;
+    border-radius: 0 0 @border_val @border_val;
+    top: @top_val;
+  }
+
+  .item_input_btn {
+    float: left;
+    position: relative;
+    left: percentage(@left_val2);
+    width: 2em;
+    bottom: 1rem;
+  }
+
+  .item_input_btn > input {
+    font-size: 16px;
+    cursor: pointer;
+    border-width: 0;
+    width: 4em;
+    height: @height_val3;
+    border-radius: 5px;
+  }
+
+  #reset_item {
+    margin: 0 @margin_val 0 0;
+  }
+
+  #submit_item {
+    margin: 0 0 0 @margin_val;
+  }
+
+  .param_major {
+    bottom: @bottomVal;
+    position: relative;
+  }
+
+  .param_major_item {
+    height: @height_val3;
+    margin: 0 0 @marginBottomVal 0;
+  }
+
+  .tip_of_user {
+    font-size: @font_size_val;
+    text-align: center;
+  }
+}

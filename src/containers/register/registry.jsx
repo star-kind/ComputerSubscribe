@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PublicHeader from '@/components/header/header-index'
 import { Link } from 'react-router-dom'
-// import axio from 'axios';
+import axios from 'axios'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import './registry-index.less'
 import { verifyDataRegex, verifyDataNull } from '@/api/common'
@@ -13,7 +13,7 @@ export default class Registry extends Component {
   }
 
   state = {
-    login_url: '/#logining',
+    login_url: '/logining',
     roleTypeArray: [
       { name: '--请选择帐号类型--', code: -1 },
       { name: '管理员', code: 0 },
@@ -27,7 +27,7 @@ export default class Registry extends Component {
     mailbox: '',
     password: '',
     previousPassword: '',
-    role: null,
+    role: -1,
     //是否展示
     whetherExhibit: true,
     message: '',
@@ -55,6 +55,7 @@ export default class Registry extends Component {
 
   //提交注册资料
   handleSubmit = (event) => {
+    var url = '/api/subscribe/UsersController/registerAction'
     //阻止默认事件
     event.preventDefault()
     //封装对象
@@ -65,7 +66,6 @@ export default class Registry extends Component {
       mailbox: this.state.mailbox,
       previousPassword: this.state.previousPassword,
       password: this.state.password,
-      role: this.state.role,
     }
     //
     var res = verifyDataNull(data)
@@ -78,6 +78,7 @@ export default class Registry extends Component {
       return
     }
     //
+    data.role = this.state.role
     var res2 = verifyDataRegex(data)
     console.log('res2\n', res2)
     if (!res2.isValidate) {
@@ -91,9 +92,42 @@ export default class Registry extends Component {
     //移除previousPassword
     delete data.previousPassword
     console.log('data\n', data)
-  }
 
-  //配置跨域发送请求
+    axios
+      .get(url, {
+        params: {
+          userName: data.userName,
+          userNum: data.userNum,
+          phone: data.phone,
+          mailbox: data.mailbox,
+          password: data.password,
+          role: data.role,
+        },
+      })
+      .then((resp) => {
+        console.info('resp\n', resp)
+        if (resp.data.code === 200) {
+          console.log('resp.data.data\n', resp.data.data)
+          this.setState({
+            whetherExhibit: !this.state.whetherExhibit,
+            message: '注册成功,即将前往登录页',
+          })
+          //
+          setTimeout(() => {
+            this.props.history.push(this.state.login_url)
+          }, 5 * 1000)
+        } else {
+          console.log('resp.data.message\n', resp.data.message)
+          this.setState({
+            whetherExhibit: !this.state.whetherExhibit,
+            message: resp.data.message,
+          })
+        }
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  }
 
   render() {
     var substance = (
@@ -153,7 +187,6 @@ export default class Registry extends Component {
                     maxLength='26'
                   ></input>
                 </div>
-
                 <div className='inputs_item'>
                   <label htmlFor='mine_select_role' className='label_role'>
                     帐号类型:
@@ -199,7 +232,7 @@ export default class Registry extends Component {
               </div>
               <div
                 className='mine_input_btns'
-                style={{ left: '37%', bottom: '32%' }}
+                style={{ left: '37%', bottom: '28%' }}
               >
                 <div className='item_input_btn' id='reset_item'>
                   <input id='reset_id' type='reset' value='复位'></input>

@@ -1,4 +1,36 @@
 /**
+ * 将数据对象存入local storage,同时设置键名
+ * @param {*} key
+ * @param {*} value
+ */
+export function depositLocalStorage(key, value) {
+  // 首先初始化清空localStorage
+  localStorage.clear()
+  //将value转化为json字符串
+  var jsonStr = JSON.stringify(value)
+  console.log('jsonStr\n', jsonStr)
+  localStorage.setItem(key, jsonStr)
+}
+
+/**
+ * 据键名将数据对象从local storage中提取出来
+ * @param {*} key
+ * @returns
+ */
+export function getValueFromLocal(key) {
+  var jsonStr = localStorage.getItem(key)
+  if (jsonStr.trim().toString.length <= 0) {
+    return '值未存入或值已经过期'
+  }
+  console.log('jsonStr\n', jsonStr)
+
+  //将json字符串解析为数据对象
+  var valueObj = JSON.parse(jsonStr)
+  console.log('valueObj\n', valueObj)
+  return valueObj
+}
+
+/**
  * 正则校对注册资料
  * @param {*} data
  * @returns
