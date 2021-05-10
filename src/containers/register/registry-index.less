@@ -7,10 +7,16 @@
 @fontSizeVal: 35px;
 @fontSizeValue2: 16px;
 @borderRadiusVal: 13px;
-@marginVal: 7px;
+@borderRadiusVal2: 5px;
+@marginVal: 1.7em;
 @leftLength: 0.37-0.05;
 @whiteBackground: #fff;
 @tipUserFontSize: 26px;
+@margin_bottom:0.8em;
+@width_val:0.96;
+@width_num:12em;
+@padd_top:25px;
+@select_margin_left:12px;
 
 .main_container {
   .mine_regist_div {
@@ -20,7 +26,7 @@
     position: relative;
     margin: 5% 0 0 0;
     background: @backgroundValue;
-    padding: 25px 0 0 0;
+    padding: @padd_top 0 0 0;
     border-radius: @borderRadiusVal @borderRadiusVal 0 0;
   }
 
@@ -32,15 +38,15 @@
   }
 
   .inputs_item {
-    margin: 3px 0;
     left: 1%;
     position: relative;
+    margin: 3px 0 @margin_bottom 0;
   }
 
   .inputs_item>input {
-    width: 96%;
+    width: percentage(@width_val);
     height: @heightValue2;
-    border-radius: 5px;
+    border-radius: @borderRadiusVal2;
   }
 
   .label_role {
@@ -49,11 +55,12 @@
   }
 
   #mine_select_role {
-    width: 12em;
+    width: @width_num;
     height: @heightValue2;
     border-width: 0;
     background: white;
-    border-radius: 5px;
+    border-radius: @borderRadiusVal2;
+    margin: 0 0 0 @select_margin_left;
   }
 
   .mine_input_btns {

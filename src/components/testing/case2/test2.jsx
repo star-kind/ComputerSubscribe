@@ -16,7 +16,7 @@ export default class Test2 extends Component {
     whetherExhibit: true,
   }
 
-  //动态取值和赋值
+  //绑定on change事件,使input输入框能动态取值和赋值
   handleChange = (event) => {
     console.log('event.target\n', event.target)
     // e.target.name代表当前输入Input框对应的Name,如email,realName
