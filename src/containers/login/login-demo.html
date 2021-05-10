@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sign in</title>
+</head>
+
+<style>
+  .mine_regist_div {
+    left: 36%;
+    width: 400px;
+    height: 350px;
+    position: relative;
+    margin: 5% 0 0 0;
+    background: #0f5d27;
+    padding: 25px 0 0 0;
+    border-radius: 13px 13px 0 0;
+  }
+
+  body {
+    margin: 0;
+    position: relative;
+    height: max-content;
+    font-size: 35px;
+  }
+
+  .inputs_item {
+    margin: 3px 0;
+    left: 0.4rem;
+    position: relative;
+  }
+
+  .inputs_item>input {
+    width: 96%;
+    height: 3em;
+    border-radius: 7px;
+    border-width: 0;
+  }
+
+  .label_role {
+    font-size: 16px;
+    color: white;
+  }
+
+  #mine_select_role {
+    width: 18em;
+    height: 3em;
+    border-width: 0;
+    background: white;
+    border-radius: 7px;
+  }
+
+  .mine_input_btns {
+    background: #0f5d27;
+    width: 400px;
+    left: 36%;
+    position: fixed;
+    border-radius: 0 0 13px 13px;
+    top: 12em;
+  }
+
+  .item_input_btn {
+    float: left;
+    position: relative;
+    left: 32%;
+    width: 2em;
+    bottom: 1rem;
+  }
+
+  .item_input_btn>input {
+    font-size: 16px;
+    cursor: pointer;
+    border-width: 0;
+    width: 4em;
+    height: 2em;
+    border-radius: 5px;
+  }
+
+  #reset_item {
+    margin: 0 7px 0 0;
+  }
+
+  #submit_item {
+    margin: 0 0 0 7px;
+  }
+
+  .param_major {
+    bottom: -3rem;
+    position: relative;
+  }
+
+  .param_major_item {
+    height: 2em;
+    margin: 10px 0;
+  }
+
+  .tip_of_user {
+    font-size: 26px;
+    text-align: center;
+  }
+</style>
+
+<body>
+  <div class="main_container">
+    <div class="regist_container">
+      <div class="mine_regist_div">
+        <form class="mine_regist_form">
+          <div class="form_body">
+
+            <div class="choose_role">
+              <div class="inputs_item choose_role_item">
+                <label for="mine_select_role" class="label_role">帐号类型:</label>
+                <select id="mine_select_role">
+                  <option value="0">管理员</option>
+                  <option value="1">教师</option>
+                  <option value="2">学生</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="param_major">
+              <div class="inputs_item param_major_item"><input type="text" id="mine_usernum" placeholder="请输入工号或者学号"
+                  maxlength="30">
+              </div>
+
+              <div class="inputs_item param_major_item"><input type="password" id="mine_password" placeholder="请输入密码"
+                  maxlength="16">
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+      <div class="mine_input_btns">
+        <div class="item_input_btn" id="reset_item"><input type="reset" value="复位"></div>
+        <div class="item_input_btn" id="submit_item"><input type="submit" value="登录">
+        </div>
+      </div>
+      <div class="tip_of_user">
+        <p>还没有帐号? 前往 <a href="#注册">注册</a> </p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+@leftSize: 0.37;
+@widthValue: 400px;
+@widthValue2: 2em;
+@backgroundValue: #0f5d27;
+@heightValue: 350px;
+@heightValue2: 2em;
+@fontSizeVal: 35px;
+@fontSizeValue2: 16px;
+@borderRadiusVal: 13px;
+@marginVal: 7px;
+@leftLength: 0.37-0.05;
+@whiteBackground: #fff;
+@tipUserFontSize: 26px;
+
+.main_container {
+  .mine_regist_div {
+    left: percentage(@leftSize);
+    width: @widthValue;
+    height: @heightValue;
+    position: relative;
+    margin: 5% 0 0 0;
+    background: @backgroundValue;
+    padding: 25px 0 0 0;
+    border-radius: @borderRadiusVal @borderRadiusVal 0 0;
+  }
+
+  body {
+    margin: 0;
+    position: relative;
+    height: max-content;
+    font-size: @fontSizeVal;
+  }
+
+  .inputs_item {
+    margin: 3px 0;
+    left: 1%;
+    position: relative;
+  }
+
+  .inputs_item>input {
+    width: 96%;
+    height: @heightValue2;
+    border-radius: 5px;
+  }
+
+  .label_role {
+    font-size: @fontSizeValue2;
+    color: @whiteBackground;
+  }
+
+  #mine_select_role {
+    width: 12em;
+    height: @heightValue2;
+    border-width: 0;
+    background: white;
+    border-radius: 5px;
+  }
+
+  .mine_input_btns {
+    background: @backgroundValue;
+    width: @widthValue;
+    left: @leftSize;
+    position: fixed;
+    border-radius: 0 0 @borderRadiusVal @borderRadiusVal;
+  }
+
+  .item_input_btn {
+    float: left;
+    position: relative;
+    left: percentage(@leftLength);
+    width: @widthValue2;
+    bottom: 1rem;
+  }
+
+  .item_input_btn>input {
+    font-size: @fontSizeValue2;
+    cursor: pointer;
+    border-width: 0;
+    width: 4em;
+    height: @heightValue2;
+    border-radius: 5px;
+  }
+
+  #reset_item {
+    margin: 0 @marginVal 0 0;
+  }
+
+  #submit_item {
+    margin: 0 0 0 @marginVal;
+  }
+
+  .tip_of_user {
+    font-size: @tipUserFontSize;
+    text-align: center;
+    bottom: -2rem;
+    position: relative;
+  }
+}

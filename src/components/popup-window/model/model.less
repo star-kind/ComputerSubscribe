@@ -1,0 +1,43 @@
+@length_w_h: 300px;
+@fontColorCode: #ffffff;
+@backgroundVal: #489e68;
+@fontSizeVal: 26px;
+@topLen: 0.86;
+@leftLen: 0.40;
+@rightLen: 3.64;
+@heightLen: 3em;
+@widthLen: 5em;
+@radiusVal: 8px;
+
+.cover {
+  background: @backgroundVal;
+  width: @length_w_h;
+  height: @length_w_h;
+  margin: 0 auto;
+  font-size: @fontSizeVal;
+  border-radius: @radiusVal;
+  position: absolute;
+  right: percentage(@rightLen);
+
+
+  .message_div {
+    color: @fontColorCode;
+    word-wrap: break-word;
+  }
+
+  .close_btn_hint {
+    text-align: center;
+    position: absolute;
+    top: percentage(@topLen);
+    left: percentage(@leftLen);
+  }
+
+  .close_btn_hint>button {
+    border-width: 0;
+    border-radius: @radiusVal;
+    height: @heightLen;
+    width: @widthLen;
+    cursor: pointer;
+  }
+
+}

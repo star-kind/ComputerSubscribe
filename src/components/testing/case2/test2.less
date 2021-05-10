@@ -1,0 +1,48 @@
+@top_val: 0.8em;
+@fontSizeNum: 27px;
+@widthSize: 100px;
+@heightSize: 50px;
+@backgroundsResult: rgb(0, 0, 255);
+@font_color: #fff;
+@margin_top_bottom: 1.2em;
+@inputWidthSize: 15rem;
+@inputHeightSize: 2rem;
+@leftValue: 30rem;
+
+.testing_case_page {
+  position: fixed;
+  left: @leftValue;
+
+  .back_home_page {
+    text-align: center;
+    position: relative;
+    top: @top_val;
+    font-size: @fontSizeNum;
+  }
+
+  .item_div_txt {
+    text-align: center;
+    margin: @margin_top_bottom 0;
+  }
+
+  .inputs_div_item {
+    margin: @margin_top_bottom 0;
+  }
+
+  .inputs_div_item>input {
+    width: @inputWidthSize;
+    height: @inputHeightSize;
+  }
+
+  .back_home_page>a {
+    color: black;
+  }
+
+  .btn_div_item>button {
+    width: @widthSize;
+    height: @heightSize;
+    background: @backgroundsResult;
+    color: @font_color;
+    margin: @margin_top_bottom 0;
+  }
+}

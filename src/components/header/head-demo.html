@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  .complete_header {
+    font-size: 25px;
+  }
+
+  .address_order_list {
+    list-style-type: none;
+  }
+
+  .main_header_area {
+    background: #22201d;
+    position: absolute;
+    left: 0;
+    top: 0px;
+    right: 0;
+    width: 100%;
+    color: white;
+  }
+
+  .outside_item {
+    float: left;
+    margin: 0 15px;
+    cursor: pointer;
+  }
+
+  .select_options_div {
+    float: right;
+    margin: 0 0 0 0px;
+    right: 70px;
+    position: relative;
+  }
+
+  .address_order_list {
+    top: -13px;
+    position: relative;
+  }
+
+  #home_address_id {
+    left: -30px;
+    position: relative;
+  }
+
+  #select_opt_item {
+    width: 13em;
+    height: 2rem;
+    top: -2px;
+    position: relative;
+    border-width: 0;
+    background: #ffffff;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  #select_opt_item>option {
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .label_address_collects {
+    right: 1rem;
+    position: relative;
+  }
+</style>
+
+<body>
+  <div class="complete_header">
+    <div class="main_header_area">
+      <ol class="address_order_list">
+        <div class="out_list_item">
+          <div class="outside_item" id="home_address_id">
+            <li>首页</li>
+          </div>
+          <div class="outside_item">
+            <li>登录</li>
+          </div>
+          <div class="outside_item">
+            <li>注册</li>
+          </div>
+        </div>
+        <div class="select_options_div">
+          <li>
+            <label for="select_opt_item" class="label_address_collects">地址列表</label>
+            <select id="select_opt_item">
+              <option value="">AA</option>
+              <option value="">BB</option>
+              <option value="">CC</option>
+            </select>
+          </li>
+        </div>
+      </ol>
+    </div>
+  </div>
+</body>
+
+</html>

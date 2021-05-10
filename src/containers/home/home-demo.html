@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+</head>
+<style>
+  .home_image {
+    display: block;
+    animation: rotate 6s linear infinite;
+  }
+
+  @keyframes rotate {
+
+    /*从0度开始*/
+    0% {
+      transform: rotateZ(0deg);
+    }
+
+    100% {
+      /*360度结束*/
+      transform: rotateZ(360deg);
+    }
+  }
+
+  .main_area {
+    text-align: center;
+  }
+
+  .image_div {
+    left: 45%;
+    top: 40%;
+    position: absolute;
+
+  }
+
+  .welcome_word_div>h4 {
+    font-weight: 100;
+    color: white;
+  }
+
+  .welcome_word_div {
+    font-size: 33px;
+    text-align: center;
+    position: relative;
+    top: 5rem;
+  }
+
+  html {
+    background: #6e7bbe;
+  }
+</style>
+
+<body>
+  <div class="total_body">
+    <div class="main_area">
+      <div class="welcome_word_div">
+        <h4>欢迎各位师生来到机房预约管理系统</h4>
+      </div>
+      <div class="image_div">
+        <img src="../../../public/logo192.png" alt="null" class="home_image">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

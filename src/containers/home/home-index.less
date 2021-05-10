@@ -1,0 +1,54 @@
+@welcome_word_color: #FFFFFF;
+@total_background: #407962;
+@welcome_txt_size: 34px;
+@image_top: 40%;
+@image_left: 45%;
+
+.total_body {
+  background: @total_background;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+
+  .home_image {
+    display: block;
+    animation: rotate 6s linear infinite;
+  }
+
+  @keyframes rotate {
+
+    /*从0度开始*/
+    0% {
+      transform: rotateZ(0deg);
+    }
+
+    100% {
+      /*360度结束*/
+      transform: rotateZ(360deg);
+    }
+  }
+
+  .main_area {
+    text-align: center;
+  }
+
+  .image_div {
+    left: @image_left;
+    top: @image_top;
+    position: absolute;
+
+  }
+
+  .welcome_word_div>h4 {
+    font-weight: 100;
+    color: @welcome_word_color;
+  }
+
+  .welcome_word_div {
+    font-size: @welcome_txt_size;
+    text-align: center;
+    position: relative;
+    top: 5rem;
+  }
+
+}

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>revamp password</title>
+</head>
+
+<style>
+  .mine_regist_div {
+    left: 36%;
+    width: 400px;
+    height: 350px;
+    position: relative;
+    margin: 5% 0 0 0;
+    background: #0f5d27;
+    padding: 25px 0 0 0;
+    border-radius: 13px 13px 0 0;
+  }
+
+  body {
+    margin: 0;
+    position: relative;
+    height: max-content;
+    font-size: 35px;
+  }
+
+  .inputs_item {
+    margin: 3px 0;
+    left: 1.5%;
+    position: relative;
+  }
+
+  .inputs_item>input {
+    width: 96%;
+    height: 3em;
+    border-radius: 7px;
+    border-width: 0;
+  }
+
+  .label_role {
+    font-size: 16px;
+    color: white;
+  }
+
+  #mine_select_role {
+    width: 18em;
+    height: 3em;
+    border-width: 0;
+    background: white;
+    border-radius: 7px;
+  }
+
+  .mine_input_btns {
+    background: #0f5d27;
+    width: 400px;
+    left: 36%;
+    position: fixed;
+    border-radius: 0 0 13px 13px;
+    top: 12em;
+  }
+
+  .item_input_btn {
+    float: left;
+    position: relative;
+    left: 32%;
+    width: 2em;
+    bottom: 1rem;
+    transform: translate(-0.5px, -20px);
+  }
+
+  .item_input_btn>input {
+    font-size: 16px;
+    cursor: pointer;
+    border-width: 0;
+    width: 4em;
+    height: 2em;
+    border-radius: 5px;
+  }
+
+  #reset_item {
+    margin: 0 7px 0 0;
+  }
+
+  #submit_item {
+    margin: 0 0 0 7px;
+  }
+
+  .param_major {
+    bottom: -3rem;
+    position: relative;
+  }
+
+  .param_major_item {
+    height: 2em;
+    margin: 10px 0;
+  }
+
+  .tip_of_user {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .form_body {
+    transform: translateY(1em);
+  }
+
+  #submit_item>input[type=submit] {
+    width: 5em;
+  }
+</style>
+
+<body>
+  <div class="main_container">
+    <div class="regist_container">
+      <div class="mine_regist_div">
+        <form class="mine_regist_form">
+          <div class="form_body">
+
+            <div class="inputs_item param_major_item"><input type="password" id="old_password" placeholder="请输入旧密码"
+                maxlength="16">
+            </div>
+
+            <div class="inputs_item param_major_item"><input type="password" id="pre_new_password" placeholder="请输入新密码"
+                maxlength="16">
+            </div>
+
+            <div class="inputs_item param_major_item"><input type="password" id="new_password" placeholder="请再次输入确认密码"
+                maxlength="16">
+            </div>
+
+          </div>
+      </div>
+      </form>
+    </div>
+    <div class="mine_input_btns">
+      <div class="item_input_btn" id="reset_item"><input type="reset" value="复位"></div>
+      <div class="item_input_btn" id="submit_item"><input type="submit" value="修改密码">
+      </div>
+    </div>
+  </div>
+  </div>
+</body>
+
+</html>

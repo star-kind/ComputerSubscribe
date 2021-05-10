@@ -1,0 +1,514 @@
+<html>
+
+<head>
+  <title>机房预约系统</title>
+</head>
+
+<body>
+  <main>
+    <h2>机房预约系统</h2>
+    </div>## 机房预约系统 - 接口测试
+
+    + **四大模块**
+    - **用户**
+    - **预约申请单**
+    - **机房管理**
+    - **联合查询**</div>
+    <div><br>
+      <div>
+        <h3>UserModel</h3>
+        <h4>**用户业务模块**
+
+          + 角色:
+          - 0:管理员
+          - 1:教师
+          - 2:学生</h4>
+      </div><br>
+      <table>
+        <tr>
+          <td class="item-action-name">Register</td>
+        <tr>
+          <td>GET</td>
+          <td>[]</td>
+          <td>
+        <tr>
+          <td>["subscribe","UsersController","registerAction"]</td>
+          <td>
+            http://localhost:8080/subscribe/UsersController/registerAction?userName=repositity.moon&password=123&userNum=6678672890&phone=18351676328&mailbox=71835285490@qq.com&role=2
+          </td>
+          <td>[Query(key=userName, description=用户名), Query(key=password, description=密码), Query(key=userNum,
+            description=学号/工号), Query(key=phone, description=电话), Query(key=mailbox, description=邮箱), Query(key=role,
+            description=帐户类型)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">Login</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=contains(id,userNum,mailbox,phone))]</td>
+          <td>
+        <tr>
+          <td>["subscribe","UsersController","loginAction"]</td>
+          <td>http://localhost:8080/subscribe/UsersController/loginAction?role=1&userNum=2894658801&passwd=123</td>
+          <td>[Query(key=role, description=帐号类型), Query(key=userNum, description=工号/学号), Query(key=passwd,
+            description=密码)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">RevisePassword</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=All Role)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","UsersController","revisePasswordAction"]</td>
+          <td>http://localhost:8080/subscribe/UsersController/revisePasswordAction?newPasswd=333&oldPasswd=1234</td>
+          <td>[Query(key=newPasswd, description=新的密码), Query(key=oldPasswd, description=旧的密码)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">AdministatorRetrieveList</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=spec-administrator), Header(key=null, description=null)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","UsersController","getMemberByOrderAction"]</td>
+          <td>http://localhost:8080/subscribe/UsersController/getMemberByOrderAction?pageOrder=8&rows=6&id=46</td>
+          <td>[Query(key=pageOrder, description=页码), Query(key=rows, description=每页数据行数), Query(key=id,
+            description=管理员id)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">ModifyUserByAdmin</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=spec-administrator)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","UsersController","modifyUserAction"]</td>
+          <td>
+            http://localhost:8080/subscribe/UsersController/modifyUserAction?userName=gazila&phone=19703640870&mailbox=506897004@qq.com&role=2&id=15
+          </td>
+          <td>[Query(key=userName, description=新用户名), Query(key=phone, description=新电话), Query(key=mailbox,
+            description=新邮箱), Query(key=role, description=新帐户类型), Query(key=id, description=帐号ID-支点)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">ModifyInfoByUserAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=spec-teacher,student)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","UsersController","modifyInfoByUserAction"]</td>
+          <td>
+            http://localhost:8080/subscribe/UsersController/modifyInfoByUserAction?phone=15346706015&mailbox=416111516@qq.cn&userName=kokoda
+          </td>
+          <td>[Query(key=phone, description=新的用户电话), Query(key=mailbox, description=新的用户邮箱), Query(key=userName,
+            description=新的用户名)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">ModifyByAdminMySelfAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=spec-administrator)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","UsersController","modifyByAdminMySelfAction"]</td>
+          <td>
+            http://localhost:8080/subscribe/UsersController/modifyByAdminMySelfAction?phone=13543047701&mailbox=1654631554@msn.cn&userName=landreid.oxide&role=0
+          </td>
+          <td>[Query(key=phone, description=新的管理员电话), Query(key=mailbox, description=新的管理员邮箱), Query(key=userName,
+            description=新的管理员用户名), Query(key=role, description=新的帐号类型(留任或者卸任))]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">RetrieveProfileByMySelf</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=All Role)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","UsersController","retrieveProfileByMySelf"]</td>
+          <td>http://localhost:8080/subscribe/UsersController/retrieveProfileByMySelf</td>
+          <td>[Query(key=null, description=null)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+      </table><br>
+      <div>
+        <h3>SubscribeModel</h3>
+        <h4>### 预约业务模块
+
+          + 预约状态:
+          - 0:审核中
+          - 1:预约成功
+          - 2:预约失败
+          - 3:取消预约
+
+          + apply for use time of computer room:
+          - 0:morning
+          - 1:afternoon
+          - 2:night</h4>
+      </div><br>
+      <table>
+        <tr>
+          <td class="item-action-name">AddNewApplyAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=only-student)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","addNewApplyAction"]</td>
+          <td>
+            http://localhost:8080/subscribe/SubscribeController/addNewApplyAction?useInterval=2&roomNum=161&applyUseDate=2021-05-3
+          </td>
+          <td>[Query(key=useInterval, description=申请使用的时间段(上午,下午,晚上)), Query(key=roomNum, description=申请使用的机房房号),
+            Query(key=applyUseDate, description=申请使用的时间-年月日)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">QueryByStatusAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=教师或者管理员)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","queryByStatusAction"]</td>
+          <td>http://localhost:8080/subscribe/SubscribeController/queryByStatusAction?status=0</td>
+          <td>[Query(key=status, description=预约申请单的审核状态)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">GetPrevWeekSubscribesListAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=令牌[管理员])]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","getPrevWeekSubscribesListAction"]</td>
+          <td>http://localhost:8080/subscribe/SubscribeController/getPrevWeekSubscribesListAction</td>
+          <td>[Query(key=null, description=null)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">HandleSubscribeStatusAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=only-teacher)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","handleSubscribeStatusAction"]</td>
+          <td>http://localhost:8080/subscribe/SubscribeController/handleSubscribeStatusAction?status=1&subscribeID=108
+          </td>
+          <td>[Query(key=status, description=申请单新的审核状态), Query(key=subscribeID, description=申请单ID)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">GetSubscribeByIdAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=令牌[any-role])]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","getSubscribeByIdAction"]</td>
+          <td>http://localhost:8080/subscribe/SubscribeController/getSubscribeByIdAction?subscribeID=66</td>
+          <td>[Query(key=subscribeID, description=预约单ID)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">QueryWeekListByTeacherAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=only-teacher)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","queryWeekListByTeacherAction"]</td>
+          <td>
+            http://localhost:8080/subscribe/SubscribeController/queryWeekListByTeacherAction?applicant=6678672890&pageOrder=2&rows=4
+          </td>
+          <td>[Query(key=applicant, description=申请者,即学生学号), Query(key=pageOrder, description=页码), Query(key=rows,
+            description=每页行数)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">QueryAllSubscribesByAdminAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=令牌-only-administrator)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","queryAllSubscribesByAdminAction"]</td>
+          <td>
+            http://localhost:8080/subscribe/SubscribeController/queryAllSubscribesByAdminAction?applicant=105170048&pageOrder=4&rows=3
+          </td>
+          <td>[Query(key=applicant, description=学生学号), Query(key=pageOrder, description=页码), Query(key=rows,
+            description=每页行数)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">QueryWeekListByStudentAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=令牌-only-student)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","queryWeekListByStudentAction"]</td>
+          <td>http://localhost:8080/subscribe/SubscribeController/queryWeekListByStudentAction?pageOrder=1&rows=3</td>
+          <td>[Query(key=pageOrder, description=页码), Query(key=rows, description=每页行数)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">GetStudentSubscribeMyAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=specify-student-num)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","getStudentSubscribeMyAction"]</td>
+          <td>http://localhost:8080/subscribe/SubscribeController/getStudentSubscribeMyAction?status=0&pageOrder=1&row=3
+          </td>
+          <td>[Query(key=status, description=指定的状态), Query(key=pageOrder, description=页码), Query(key=row,
+            description=每页行数)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">StudentCancelSubscribeAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=specify-student)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","studentCancelSubscribeAction"]</td>
+          <td>http://localhost:8080/subscribe/SubscribeController/studentCancelSubscribeAction?status=3&subscribeID=86
+          </td>
+          <td>[Query(key=status, description=新的预约状态), Query(key=subscribeID, description=预约申请单ID)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">GetCountByStatusInRoomAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=user-any-role)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","getCountByStatusInRoomAction"]</td>
+          <td>http://localhost:8080/subscribe/SubscribeController/getCountByStatusInRoomAction?status=0&roomNum=161</td>
+          <td>[Query(key=status, description=预约单状态), Query(key=roomNum, description=机房房号)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">RetrieveHandleByTeacherAndStatus</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=specify-teacher)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","retrieveHandleByTeacherAndStatus"]</td>
+          <td>
+            http://localhost:8080/subscribe/SubscribeController/retrieveHandleByTeacherAndStatus?page=3&limit=3&status=1
+          </td>
+          <td>[Query(key=page, description=页码), Query(key=limit, description=每页行数), Query(key=status,
+            description=指定的审核状态)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">RetrieveHandleByTeacher</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=specify-teacher)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","retrieveHandleByTeacher"]</td>
+          <td>http://localhost:8080/subscribe/SubscribeController/retrieveHandleByTeacher?pageOrder=6&rows=3</td>
+          <td>[Query(key=pageOrder, description=页码), Query(key=rows, description=每页行数)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">RetriSubscribeByRoomAndStatusReceiv</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=specify-teacher)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","retriSubscribeByRoomAndStatusReceiv"]</td>
+          <td>
+            http://localhost:8080/subscribe/SubscribeController/retriSubscribeByRoomAndStatusReceiv?roomNum=1&pageOrder=3&limit=2&status=1
+          </td>
+          <td>[Query(key=roomNum, description=机房编号), Query(key=pageOrder, description=页码), Query(key=limit,
+            description=每页行数), Query(key=status, description=指定的状态)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">RetrieveSubscribeByRoomReceived</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=specify-teacher)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","SubscribeController","retrieveSubscribeByRoomReceived"]</td>
+          <td>
+            http://localhost:8080/subscribe/SubscribeController/retrieveSubscribeByRoomReceived?roomNum=1&pageOrder=3&limit=3
+          </td>
+          <td>[Query(key=roomNum, description=机房编号), Query(key=pageOrder, description=页码), Query(key=limit,
+            description=每页行数)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+      </table><br>
+      <div>
+        <h3>ComputerRoomModel</h3>
+        <h4>## 电脑机房业务模块
+          + 机房是否可用
+          - 0:不可用
+          - 1:可用</h4>
+      </div><br>
+      <table>
+        <tr>
+          <td class="item-action-name">SaveNewAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=only-administrator)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","ComputerRoomController","saveNewAction"]</td>
+          <td>
+            http://localhost:8080/subscribe/ComputerRoomController/saveNewAction?roomNum=1&totalSets=190&availableStatus=1&location=铁山峰顶6600&actAvailableQuantity=90
+          </td>
+          <td>[Query(key=roomNum, description=机房编号), Query(key=totalSets, description=座位总数), Query(key=availableStatus,
+            description=是否可用(0-不可用,1-可用)), Query(key=location, description=机房地点), Query(key=actAvailableQuantity,
+            description=实际可用机数)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">ReviseRoomInfoAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=only-administrator)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","ComputerRoomController","reviseRoomInfoAction"]</td>
+          <td>
+            http://localhost:8080/subscribe/ComputerRoomController/reviseRoomInfoAction?roomNum=161&totalSets=200&availableStatus=1&location=铁山大峰顶&actAvailableQuantity=101&id=4
+          </td>
+          <td>[Query(key=roomNum, description=新的机房编号), Query(key=totalSets, description=新的座位总数),
+            Query(key=availableStatus, description=新的可用状态[0不可用,1可用]), Query(key=location, description=新的机房地址),
+            Query(key=actAvailableQuantity, description=新的实际可用机数), Query(key=id, description=机房ID-支点)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+        <tr>
+          <td class="item-action-name">GetRoomListByPaginAction</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=全员)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","ComputerRoomController","getRoomListByPaginAction"]</td>
+          <td>http://localhost:8080/subscribe/ComputerRoomController/getRoomListByPaginAction?pageOrder=2&rows=2</td>
+          <td>[Query(key=pageOrder, description=页码), Query(key=rows, description=每页行数)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+      </table><br>
+      <div>
+        <h3>JointRetrieve</h3>
+        <h4>## 联合查询模块</h4>
+      </div><br>
+      <table>
+        <tr>
+          <td class="item-action-name">RetrieveSubscribesOnlyTeacher</td>
+        <tr>
+          <td>GET</td>
+          <td>[Header(key=token, description=only-teacher)]</td>
+          <td>
+        <tr>
+          <td>["subscribe","JointQueryController","retrieveSubscribesOnlyTeacher"]</td>
+          <td>
+            http://localhost:8080/subscribe/JointQueryController/retrieveSubscribesOnlyTeacher?page=5&limit=6&roomNum=1
+          </td>
+          <td>[Query(key=page, description=页码), Query(key=limit, description=每页行数), Query(key=roomNum,
+            description=机房编号)]</td>
+        </tr>
+        </tr>
+        </td>
+        </tr>
+      </table>
+    </div>
+  </main>
+
+  <body />
+  <html />
+  <style>
+    body {
+      font-size: 28px;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid black;
+    }
+
+    td {
+      font-size: 30px;
+    }
+
+    .item-action-name {
+      background: #b7e8d8;
+    }
+  </style>
