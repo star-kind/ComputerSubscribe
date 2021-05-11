@@ -5,6 +5,7 @@ import axios from 'axios'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import { verifyDataNull, depositLocalStorage } from '@/api/common'
 import './logining.less'
+import { store_key } from '@/api/constant-list'
 
 export default class Logining extends Component {
   componentDidMount() {
@@ -78,7 +79,7 @@ export default class Logining extends Component {
             message: '登录成功,即将前往首页',
           })
           //存入LocalStorage
-          depositLocalStorage('iam', resp.data.data)
+          depositLocalStorage(store_key, resp.data.data)
           //
           setTimeout(() => {
             this.props.history.push('/')

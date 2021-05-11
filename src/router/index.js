@@ -16,6 +16,7 @@ const TestingCase = lazy(() =>
 const Test2 = lazy(() => import('@/components/testing/case2/test2'))
 const Registry = lazy(() => import('@/containers/register/registry'))
 const Logining = lazy(() => import('@/containers/login/logining'))
+const RevampPwd = lazy(() => import('@/containers/revamp-pwd/revamp-pwd'))
 
 /**
  * This class describes my router.
@@ -60,6 +61,7 @@ export default class IRouter extends Component {
                 <Route exact path='/test2' component={Test2} />
                 <Route exact path='/registry' component={Registry} />
                 <Route exact path='/logining' component={Logining} />
+                <Route exact path='/revampPwd' component={RevampPwd} />
                 {/*  */}
                 <Redirect exact from='/' to={Home} />
               </Switch>

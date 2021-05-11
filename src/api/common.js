@@ -18,14 +18,18 @@ export function depositLocalStorage(key, value) {
  * @returns
  */
 export function getValueFromLocal(key) {
+  var valueObj = { code: 1 }
   var jsonStr = localStorage.getItem(key)
-  if (jsonStr.trim().toString.length <= 0) {
-    return '值未存入或值已经过期'
-  }
   console.log('jsonStr\n', jsonStr)
 
+  if (jsonStr.trim().length < 1) {
+    valueObj.text = '您的登录状态已过期,请重新登录'
+    valueObj.code = -1
+    return valueObj
+  }
+
   //将json字符串解析为数据对象
-  var valueObj = JSON.parse(jsonStr)
+  valueObj.text = JSON.parse(jsonStr)
   console.log('valueObj\n', valueObj)
   return valueObj
 }

@@ -1,0 +1,126 @@
+@margin_size: 28px;
+@transX: -0.5px;
+@transY: 20px;
+@transY2: 1em;
+@borderRadiusVarible: 5px;
+@heightValue2: 3em;
+@heightVal3: 2em;
+@leftValue: 32%;
+@relativeVar: relative;
+@fontSizeValue: 16px;
+@color_value: #0f5d27;
+@widthVal: 400px;
+@widthValue2: 96%;
+@heightVal: 350px;
+@left_val: 36%;
+@margin_percent: 5%;
+@margin_val: 26px;
+@border_radius_val: 13px;
+@border_radius_val2: 7px;
+@padd_val: 25px;
+@top_value: 3em;
+
+.main_container {
+  .mine_regist_div {
+    top: @top_value;
+    left: @left_val;
+    width: @widthVal;
+    height: @heightVal;
+    position: @relativeVar;
+    margin: @margin_percent 0 0 0;
+    background: @color_value;
+    padding: @padd_val 0 0 0;
+    border-radius: @border_radius_val;
+  }
+
+  body {
+    margin: 0;
+    position: @relativeVar;
+    height: max-content;
+    font-size: 35px;
+  }
+
+  .inputs_item {
+    margin: 3px 0;
+    left: 1.5%;
+    position: @relativeVar;
+  }
+
+  .inputs_item > input {
+    width: @widthValue2;
+    height: @heightValue2;
+    border-radius: @border_radius_val2;
+    border-width: 0;
+  }
+
+  .label_role {
+    font-size: @fontSizeValue;
+    color: white;
+  }
+
+  #mine_select_role {
+    width: 18em;
+    height: @heightValue2;
+    border-width: 0;
+    background: white;
+    border-radius: @border_radius_val2;
+  }
+
+  .mine_input_btns {
+    background: @color_value;
+    width: @widthVal;
+    left: @left_val;
+    position: fixed;
+    border-radius: 0 0 @border_radius_val @border_radius_val;
+    top: 22em;
+  }
+
+  .item_input_btn {
+    float: left;
+    position: @relativeVar;
+    left: @leftValue;
+    width: 2em;
+    bottom: 1rem;
+    transform: translate(@transX, @transY);
+  }
+
+  .item_input_btn > input {
+    font-size: @fontSizeValue;
+    cursor: pointer;
+    border-width: 0;
+    width: 4em;
+    height: @heightVal3;
+    border-radius: @borderRadiusVarible;
+  }
+
+  #reset_item {
+    margin: 0 @margin_val 0 0;
+  }
+
+  #submit_item {
+    margin: 0 0 0 @margin_val;
+  }
+
+  .param_major {
+    bottom: -3rem;
+    position: @relativeVar;
+  }
+
+  .param_major_item {
+    height: @heightVal3;
+    margin: @margin_size 0;
+  }
+
+  .tip_of_user {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .form_body {
+    transform: translateY(@transY2);
+  }
+
+  #submit_item > input[type='submit'] {
+    width: 5em;
+  }
+}

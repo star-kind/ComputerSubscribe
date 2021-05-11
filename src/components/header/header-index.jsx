@@ -18,9 +18,9 @@ class PublicHeader extends Component {
     // other url
     urlArray: [
       { name: '--请选择地址--', url: '' },
+      { name: '修改密码', url: '/revampPwd' },
       { name: '测试页面1', url: '/testingCase' },
       { name: '测试页面2', url: '/test2' },
-      { name: '虎易山', url: '/#666222' },
       { name: '鹃城山', url: '/#666333' },
     ],
   }
