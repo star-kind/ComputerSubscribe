@@ -5,7 +5,12 @@ import axios from 'axios'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import { verifyDataNull, depositLocalStorage } from '@/api/common'
 import './logining.less'
-import { store_key } from '@/api/constant-list'
+import {
+  store_token_key,
+  store_key,
+  profile_u_ordinary,
+  reg_url,
+} from '@/api/constant-list'
 
 export default class Logining extends Component {
   componentDidMount() {
@@ -28,8 +33,6 @@ export default class Logining extends Component {
       { name: '教师', code: 1 },
       { name: '学生', code: 2 },
     ],
-    //
-    reg_url: '/registry',
   }
 
   //
@@ -76,14 +79,22 @@ export default class Logining extends Component {
           console.log('resp.data.data\n', resp.data.data)
           this.setState({
             whetherExhibit: !this.state.whetherExhibit,
-            message: '登录成功,即将前往首页',
+            message: '登录成功,即将前往个人中心',
           })
           //存入LocalStorage
           depositLocalStorage(store_key, resp.data.data)
-          //
-          setTimeout(() => {
-            this.props.history.push('/')
-          }, 5 * 1000)
+          //专门存入令牌
+          depositLocalStorage(store_token_key, resp.data.data.token)
+          //如果是管理员,前往指定页
+          if (resp.data.data.role === 0) {
+            setTimeout(() => {
+              this.props.history.push('/')
+            }, 5 * 1000)
+          } else {
+            setTimeout(() => {
+              this.props.history.push(profile_u_ordinary)
+            }, 5 * 1000)
+          }
         } else {
           console.log('resp.data.message\n', resp.data.message)
           this.setState({
@@ -190,7 +201,7 @@ export default class Logining extends Component {
           </div>
           <div className='tip_of_user'>
             <p>
-              还没有帐号? 前往 <Link to={this.state.reg_url}>注册</Link>
+              还没有帐号? 前往 <Link to={reg_url}>注册</Link>
             </p>
           </div>
         </div>

@@ -5,6 +5,7 @@ import axios from 'axios'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import './registry-index.less'
 import { verifyDataRegex, verifyDataNull } from '@/api/common'
+import { login_url } from '@/api/constant-list'
 
 export default class Registry extends Component {
   componentDidMount() {
@@ -13,7 +14,6 @@ export default class Registry extends Component {
   }
 
   state = {
-    login_url: '/logining',
     roleTypeArray: [
       { name: '--请选择帐号类型--', code: -1 },
       { name: '管理员', code: 0 },
@@ -114,7 +114,7 @@ export default class Registry extends Component {
           })
           //
           setTimeout(() => {
-            this.props.history.push(this.state.login_url)
+            this.props.history.push(login_url)
           }, 5 * 1000)
         } else {
           console.log('resp.data.message\n', resp.data.message)
@@ -246,7 +246,7 @@ export default class Registry extends Component {
         </div>
         <div className='tip_of_user'>
           <p>
-            已有帐号? 前往 <Link to={this.state.login_url}>登录</Link>
+            已有帐号? 前往 <Link to={login_url}>登录</Link>
           </p>
         </div>
         {/*弹窗提示组件*/}

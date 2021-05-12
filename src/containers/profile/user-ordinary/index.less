@@ -1,0 +1,96 @@
+@widthVal: 24em;
+@heightVal: 2.5em;
+@borderRadiusVal: 6px;
+@marginVal: 1em;
+@leftPercent: 30%;
+@leftVal: -2%;
+@fontSizeVal: 20px;
+@fontSizeVal2: 18px;
+@margin_value: 2em;
+@left_per_val: 3%;
+@topPercent: 14%;
+@backgroundValue: #0f6b4c;
+@width_num: 30em;
+@height_num: 30em;
+@topVal: 4em;
+@borderRadiusNum: 10px;
+@left_var_per: 12%;
+@positionVarible: relative;
+@margin_num_var: 20px;
+@border_radius_style: 7px;
+@height_style: 3em;
+@width_style: 5em;
+@top_style: 1em;
+@left_style: -1em;
+@translateXvalue: 7em;
+@ban_background: #a5f98b;
+
+.pack_wrapper {
+  .ban_edit_input {
+    background: @ban_background;
+  }
+
+  #btn_revamp_item {
+    transform: translate(@translateXvalue, 0px);
+  }
+
+  .inputs_side {
+    left: @leftVal;
+    float: right;
+    clear: both;
+    position: @positionVarible;
+  }
+  .input_element {
+    display: inline-block;
+  }
+
+  .input_element > label {
+    font-size: @fontSizeVal;
+    color: white;
+    font-weight: bolder;
+  }
+
+  .input_tag {
+    width: @widthVal;
+    height: @heightVal;
+    border-radius: @borderRadiusVal;
+    border-width: 0;
+    margin: 0 @marginVal 0 0;
+  }
+  .input_item_div {
+    margin: @margin_value 0;
+  }
+
+  .mine_form {
+    position: @positionVarible;
+    left: @left_per_val;
+    top: @topPercent;
+  }
+  .form_pack {
+    background: @backgroundValue;
+    width: @width_num;
+    height: @height_num;
+    position: @positionVarible;
+    left: @leftPercent;
+    top: @topVal;
+    border-radius: @borderRadiusNum;
+  }
+  .btn_input {
+    float: left;
+    left: @left_var_per;
+    position: @positionVarible;
+    margin: 0 @margin_num_var;
+  }
+  .input_btn_ele {
+    border-width: 0;
+    border-radius: @border_radius_style;
+    height: @height_style;
+    width: @width_style;
+    font-size: @fontSizeVal2;
+  }
+  .btn_div_items {
+    position: @positionVarible;
+    top: @top_style;
+    left: @left_style;
+  }
+}

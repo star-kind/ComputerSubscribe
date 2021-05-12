@@ -1,26 +1,59 @@
 import React, { Component } from 'react'
-import './header-index.less'
+import './header2.less'
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
-import { login_url, reg_url, revamp_passwd_url } from '@/api/constant-list'
+import { reg_url, login_url, store_key } from '@/api/constant-list'
+import { getValueFromLocal } from '@/api/common'
 
-// 公共组件-header
-class PublicHeader extends Component {
-  componentDidMount() {
-    console.log('PublicHeader component did mount')
-    console.log(this)
+//公共组件-header-2
+//对不同类型的用户显示不同的header
+class PublicHeader2 extends Component {
+  constructor(props) {
+    super(props)
+    //
+    var storeObj = getValueFromLocal(store_key)
+    console.log('storeObj\n', storeObj)
+    //
+    var urlArrObj = []
+    switch (storeObj.text.role) {
+      case 0:
+        urlArrObj = [
+          { name: '--请选择地址--', url: '' },
+          { name: '管理员页面', url: '/#super-administrator' },
+        ]
+        break
+
+      case 1:
+        urlArrObj = [
+          { name: '--请选择地址--', url: '' },
+          { name: '教师页面', url: '/#teacher' },
+        ]
+        break
+
+      case 2:
+        urlArrObj = [
+          { name: '--请选择地址--', url: '' },
+          { name: '学生页面', url: '/#student' },
+        ]
+        break
+
+      default:
+        urlArrObj = [
+          { name: '--请选择地址--', url: '' },
+          { name: 'Null页面', url: '/void' },
+        ]
+        break
+    }
+    //
+    console.log('urlArrObj\n', urlArrObj)
+    this.state = {
+      urlArray: urlArrObj,
+    }
   }
 
-  //
-  state = {
-    // other url
-    urlArray: [
-      { name: '--请选择地址--', url: '' },
-      { name: '修改密码', url: revamp_passwd_url },
-      { name: '测试页面1', url: '/testingCase' },
-      { name: '测试页面2', url: '/test2' },
-      { name: '鹃城山', url: '/#666333' },
-    ],
+  componentDidMount() {
+    console.log('PublicHeader2 component did mount')
+    console.log(this)
   }
 
   //事件触发
@@ -94,4 +127,4 @@ class PublicHeader extends Component {
   }
 }
 
-export default withRouter(PublicHeader)
+export default withRouter(PublicHeader2)

@@ -7,6 +7,8 @@ import {
   Redirect,
 } from 'react-router-dom'
 
+import { login_url, reg_url, profile_u_ordinary } from '@/api/constant-list'
+
 // 路由表
 // 首页
 const Home = lazy(() => import('@/containers/home/home-index'))
@@ -17,6 +19,9 @@ const Test2 = lazy(() => import('@/components/testing/case2/test2'))
 const Registry = lazy(() => import('@/containers/register/registry'))
 const Logining = lazy(() => import('@/containers/login/logining'))
 const RevampPwd = lazy(() => import('@/containers/revamp-pwd/revamp-pwd'))
+const ProfileUserOrdinary = lazy(() =>
+  import('@/containers/profile/user-ordinary/')
+)
 
 /**
  * This class describes my router.
@@ -59,9 +64,14 @@ export default class IRouter extends Component {
                 <Route exact path='/' component={Home} />
                 <Route exact path='/testingCase' component={TestingCase} />
                 <Route exact path='/test2' component={Test2} />
-                <Route exact path='/registry' component={Registry} />
-                <Route exact path='/logining' component={Logining} />
+                <Route exact path={reg_url} component={Registry} />
+                <Route exact path={login_url} component={Logining} />
                 <Route exact path='/revampPwd' component={RevampPwd} />
+                <Route
+                  exact
+                  path={profile_u_ordinary}
+                  component={ProfileUserOrdinary}
+                />
                 {/*  */}
                 <Redirect exact from='/' to={Home} />
               </Switch>

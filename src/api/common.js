@@ -1,11 +1,12 @@
 /**
- * 将数据对象存入local storage,同时设置键名
+ * 将用户数据存入local storage,同时设置键名
  * @param {*} key
  * @param {*} value
  */
 export function depositLocalStorage(key, value) {
+  console.log('key:' + key, 'value\n', value)
   // 首先初始化清空localStorage
-  localStorage.clear()
+  // localStorage.clear()
   //将value转化为json字符串
   var jsonStr = JSON.stringify(value)
   console.log('jsonStr\n', jsonStr)
