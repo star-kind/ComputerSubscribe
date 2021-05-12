@@ -76,11 +76,15 @@ public class LoginInterceptor implements HandlerInterceptor {
 	public Boolean judgeHadOnline(String token) {
 		Boolean hadOnline = true;
 		String string = this.getClass().getName() + "\n__judgeHadOnline()__\n";
-		System.err.println(string + "\n__header..token=" + token);
+		System.err.println(string + "__header..token=" + token);
 
 		if (!StringUtils.isNotEmpty(token)) {
 			hadOnline = false;
 			System.err.println(string + "--hadOnline==" + hadOnline);
+
+		} else if ("undefined".equals(token)) {
+			hadOnline = false;
+			System.err.println(string + "--undefined--hadOnline==" + hadOnline);
 
 		} else {
 			LoginData data = jwt.decode(token, LoginData.class);
