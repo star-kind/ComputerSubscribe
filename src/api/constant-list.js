@@ -1,17 +1,16 @@
-/**
- * 键
- */
-export const store_key = 'IAMUSER'
-
-export const store_token_key = 'USERTOKEN'
-
-export const reg_url = '/registry'
-
-export const login_url = '/logining'
-
-export const revamp_passwd_url = '/revampPwd'
+export const store_key = {
+  myself_key: 'USERINFORMATION',
+  token_key: 'USERTOKEN',
+}
 
 /**
- * 普通师生帐号的个人资料页
+ * 用户模块页面链接集合
  */
-export const profile_u_ordinary = '/profileUserOrdinary'
+export const user_urls = {
+  retrieve_list_url: '/retrieveList',
+  reg_url: '/registry',
+  login_url: '/logining',
+  revamp_passwd_url: '/revampPwd',
+  profile_ordinary: '/profileUserOrdinary',
+  profile_administrator: '/profileAdministrator',
+}

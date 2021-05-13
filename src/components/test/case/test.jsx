@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PublicHeader2 from '@/components/header2/header2'
-import './testing-case.less'
+import './test.less'
 
-export default class TestingCase extends Component {
+export default class Test extends Component {
   componentDidMount() {
-    console.log('TestingCase component did mount')
+    console.log('Test component did mount')
     console.log(this)
   }
 

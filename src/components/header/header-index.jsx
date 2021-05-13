@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import './header-index.less'
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
-import { login_url, reg_url, revamp_passwd_url } from '@/api/constant-list'
 
 // 公共组件-header
 class PublicHeader extends Component {
@@ -16,10 +15,10 @@ class PublicHeader extends Component {
     // other url
     urlArray: [
       { name: '--请选择地址--', url: '' },
-      { name: '修改密码', url: revamp_passwd_url },
-      { name: '测试页面1', url: '/testingCase' },
-      { name: '测试页面2', url: '/test2' },
-      { name: '鹃城山', url: '/#666333' },
+      { name: '修改密码', url: this.user_urls.revamp_passwd_url },
+      { name: '测试-1', url: '/test' },
+      { name: '测试-2', url: '/test2' },
+      { name: '测试-3', url: '/test3' },
     ],
   }
 
@@ -55,12 +54,12 @@ class PublicHeader extends Component {
                 </div>
                 <div className='outside_item'>
                   <li>
-                    <Link to={login_url}>登录</Link>
+                    <Link to={this.user_urls.login_url}>登录</Link>
                   </li>
                 </div>
                 <div className='outside_item'>
                   <li>
-                    <Link to={reg_url}>注册</Link>
+                    <Link to={this.user_urls.reg_url}>注册</Link>
                   </li>
                 </div>
               </div>
@@ -73,6 +72,7 @@ class PublicHeader extends Component {
                     地址列表
                   </label>
                   <select id='select_opt_item' onChange={this.changeSel}>
+                    {/*  */}
                     {this.state.urlArray.map((item) => {
                       console.log(item)
                       return (

@@ -5,7 +5,6 @@ import axios from 'axios'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import './registry-index.less'
 import { verifyDataRegex, verifyDataNull } from '@/api/common'
-import { login_url } from '@/api/constant-list'
 
 export default class Registry extends Component {
   componentDidMount() {
@@ -55,7 +54,6 @@ export default class Registry extends Component {
 
   //提交注册资料
   handleSubmit = (event) => {
-    var url = '/api/subscribe/UsersController/registerAction'
     //阻止默认事件
     event.preventDefault()
     //封装对象
@@ -94,7 +92,7 @@ export default class Registry extends Component {
     console.log('data\n', data)
 
     axios
-      .get(url, {
+      .get(this.interfaces.registry, {
         params: {
           userName: data.userName,
           userNum: data.userNum,
@@ -114,7 +112,7 @@ export default class Registry extends Component {
           })
           //
           setTimeout(() => {
-            this.props.history.push(login_url)
+            this.props.history.push(this.user_urls.login_url)
           }, 5 * 1000)
         } else {
           console.log('resp.data.message\n', resp.data.message)
@@ -232,7 +230,7 @@ export default class Registry extends Component {
               </div>
               <div
                 className='mine_input_btns'
-                style={{ left: '37%', bottom: '28%' }}
+                style={{ left: '0%', bottom: '-2em' }}
               >
                 <div className='item_input_btn' id='reset_item'>
                   <input id='reset_id' type='reset' value='复位'></input>
@@ -246,7 +244,7 @@ export default class Registry extends Component {
         </div>
         <div className='tip_of_user'>
           <p>
-            已有帐号? 前往 <Link to={login_url}>登录</Link>
+            已有帐号? 前往 <Link to={this.user_urls.login_url}>登录</Link>
           </p>
         </div>
         {/*弹窗提示组件*/}

@@ -5,12 +5,6 @@ import axios from 'axios'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import { verifyDataNull, depositLocalStorage } from '@/api/common'
 import './logining.less'
-import {
-  store_token_key,
-  store_key,
-  profile_u_ordinary,
-  reg_url,
-} from '@/api/constant-list'
 
 export default class Logining extends Component {
   componentDidMount() {
@@ -37,7 +31,6 @@ export default class Logining extends Component {
 
   //
   handleSubmit = (event) => {
-    var url = '/api/subscribe/UsersController/loginAction'
     //阻止默认事件
     event.preventDefault()
     //封装对象
@@ -66,7 +59,7 @@ export default class Logining extends Component {
     data.role = this.state.role
     //
     axios
-      .get(url, {
+      .get(this.interfaces.login, {
         params: {
           userNum: data.userNum,
           passwd: data.passwd,
@@ -81,18 +74,18 @@ export default class Logining extends Component {
             whetherExhibit: !this.state.whetherExhibit,
             message: '登录成功,即将前往个人中心',
           })
-          //存入LocalStorage
-          depositLocalStorage(store_key, resp.data.data)
+          //id存入LocalStorage
+          depositLocalStorage(this.store_key.myself_key, resp.data.data)
           //专门存入令牌
-          depositLocalStorage(store_token_key, resp.data.data.token)
-          //如果是管理员,前往指定页
+          depositLocalStorage(this.store_key.token_key, resp.data.data.token)
+          //如果是管理员,前往其专属页
           if (resp.data.data.role === 0) {
             setTimeout(() => {
-              this.props.history.push('/')
+              this.props.history.push(this.user_urls.profile_administrator)
             }, 5 * 1000)
           } else {
             setTimeout(() => {
-              this.props.history.push(profile_u_ordinary)
+              this.props.history.push(this.user_urls.profile_ordinary)
             }, 5 * 1000)
           }
         } else {
@@ -107,6 +100,7 @@ export default class Logining extends Component {
         console.error(err)
       })
   }
+
   //绑定on change事件,使input输入框能动态取值和赋值
   handleChange = (event) => {
     console.log('event.target\n', event.target)
@@ -116,7 +110,8 @@ export default class Logining extends Component {
       [event.target.name]: event.target.value,
     })
   }
-  //
+
+  // 绑定 on select 事件
   handleChangeSelect = (e) => {
     console.log(e.target)
     //触发onChange事件时,得到的值
@@ -201,7 +196,7 @@ export default class Logining extends Component {
           </div>
           <div className='tip_of_user'>
             <p>
-              还没有帐号? 前往 <Link to={reg_url}>注册</Link>
+              还没有帐号? 前往 <Link to={this.user_urls.reg_url}>注册</Link>
             </p>
           </div>
         </div>

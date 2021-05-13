@@ -12,7 +12,7 @@ import axios from 'axios'
 /**
  * 普通师生用户个人资料中心
  */
-export default class ProfileUserOrdinary extends Component {
+export default class ProfileAdministrator extends Component {
   constructor(props) {
     super(props)
     //
@@ -30,6 +30,12 @@ export default class ProfileUserOrdinary extends Component {
       switchPrepare: 'block',
       switchRevamp: 'none',
       inputReadOnly: true,
+      //
+      roleTypeArray: [
+        { name: '--请选择帐号类型--', code: -1 },
+        { name: '管理员', code: 0 },
+        { name: '教师', code: 1 },
+      ],
     }
   }
 
@@ -52,7 +58,8 @@ export default class ProfileUserOrdinary extends Component {
         userNum: storeObj.text.userNum,
         phone: storeObj.text.phone,
         mailbox: storeObj.text.mailbox,
-        role: storeObj.text.role === 1 ? '教师' : '学生',
+        role: storeObj.text.role === 0 ? '管理员' : '黑客',
+        roleNum: storeObj.text.role,
         token: tokenObj.text,
       })
     } else {
@@ -67,6 +74,17 @@ export default class ProfileUserOrdinary extends Component {
     // e.target.value代表当前输入的值
     this.setState({
       [event.target.name]: event.target.value,
+    })
+  }
+
+  // 绑定 on select 事件
+  handleChangeSelect = (e) => {
+    console.log(e.target)
+    //触发onChange事件时,得到的值
+    var roleOptVal = e.target.value
+    console.log('RoleOptVal(code)', roleOptVal)
+    this.setState({
+      roleNum: roleOptVal,
     })
   }
 
@@ -109,12 +127,21 @@ export default class ProfileUserOrdinary extends Component {
     }
     console.log('data\n', data)
     //
+    if (this.state.roleNum < 0) {
+      this.setState({
+        whetherExhibit: !this.state.whetherExhibit,
+        message: '请选择帐号类型',
+      })
+      return
+    }
+    //
     axios
-      .get(this.interfaces.modifyInfoByUser, {
+      .get(this.interfaces.modifyByAdminMySelf, {
         params: {
           userName: data.userName,
           phone: data.phone,
           mailbox: data.mailbox,
+          role: this.state.roleNum,
         },
         headers: { token: this.state.token },
       })
@@ -123,12 +150,23 @@ export default class ProfileUserOrdinary extends Component {
         if (resp.data.code === 200) {
           console.info('resp.data.data\n', resp.data.data)
           depositLocalStorage(this.store_key.myself_key, resp.data.data)
-          //
-          this.setState({
-            whetherExhibit: !this.state.whetherExhibit,
-            message: '资料修改成功',
-          })
-          this.cancelRevamp()
+          //如果是卸任管理员的话就前往普通用户中心
+          if (resp.data.data.role !== 0) {
+            this.setState({
+              whetherExhibit: !this.state.whetherExhibit,
+              message: '资料修改成功,您已卸任管理员权限',
+            })
+            //
+            setTimeout(() => {
+              this.props.history.push(this.user_urls.profile_administrator)
+            }, 5 * 1000)
+          } else {
+            this.setState({
+              whetherExhibit: !this.state.whetherExhibit,
+              message: '资料修改成功',
+            })
+            this.cancelRevamp()
+          }
         } else {
           console.info('resp.data.message\n', resp.data.message)
           this.setState({
@@ -224,7 +262,11 @@ export default class ProfileUserOrdinary extends Component {
                   />
                 </div>
               </div>
-              <div className='input_item_div'>
+              {/*  */}
+              <div
+                className='input_item_div'
+                style={{ display: this.state.switchPrepare }}
+              >
                 <div className='input_element'>
                   <label htmlFor='role_id' className='labels_for_tag'>
                     用户类型:
@@ -232,14 +274,44 @@ export default class ProfileUserOrdinary extends Component {
                 </div>
                 <div className='input_element inputs_side'>
                   <input
-                    readOnly={true}
+                    readOnly={this.state.inputReadOnly}
                     id='role_id'
-                    className='input_tag ban_edit_input'
+                    className='input_tag'
                     type='text'
                     value={this.state.role}
                   />
                 </div>
               </div>
+              {/*  */}
+              <div
+                className='input_item_div'
+                style={{ display: this.state.switchRevamp }}
+              >
+                <div className='input_element'>
+                  <label htmlFor='select_role_id' className='labels_for_tag'>
+                    帐号类型:
+                  </label>
+                </div>
+                <div className='input_element inputs_side'>
+                  <select
+                    value={this.state.roleNum}
+                    id='select_role_id'
+                    name='role'
+                    onChange={this.handleChangeSelect}
+                    className='input_tag'
+                  >
+                    {this.state.roleTypeArray.map((item) => {
+                      console.log(item)
+                      return (
+                        <option value={item.code} key={item.name}>
+                          {item.name}
+                        </option>
+                      )
+                    })}
+                  </select>
+                </div>
+              </div>
+              {/*  */}
             </div>
             <div className='btn_div_items'>
               <div

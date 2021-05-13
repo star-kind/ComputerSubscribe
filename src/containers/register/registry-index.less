@@ -1,8 +1,14 @@
+@relativeVarible: relative;
+@leftPerVal: 1%;
+@marginTopLen: 3px;
+@bottom_len: 1rem;
+@top_len_value: @bottom_len;
+@width_varible: 4em;
 @leftSize: 0.37;
 @widthValue: 400px;
 @widthValue2: 2em;
 @backgroundValue: #0f5d27;
-@heightValue: 350px;
+@heightValue: 25em;
 @heightValue2: 2em;
 @fontSizeVal: 35px;
 @fontSizeValue2: 16px;
@@ -12,38 +18,44 @@
 @leftLength: 0.37-0.05;
 @whiteBackground: #fff;
 @tipUserFontSize: 26px;
-@margin_bottom:0.8em;
-@width_val:0.96;
-@width_num:12em;
-@padd_top:25px;
-@select_margin_left:12px;
+@margin_bottom: 0.8em;
+@width_val: 0.96;
+@width_num: 12em;
+@padd_top: 25px;
+@select_margin_left: 12px;
+@margin_percent: 5%;
 
 .main_container {
+  .mine_regist_form {
+    top: @top_len_value;
+    position: @relativeVarible;
+  }
+
   .mine_regist_div {
     left: percentage(@leftSize);
     width: @widthValue;
     height: @heightValue;
-    position: relative;
-    margin: 5% 0 0 0;
+    position: @relativeVarible;
+    margin: @margin_percent 0 0 0;
     background: @backgroundValue;
     padding: @padd_top 0 0 0;
-    border-radius: @borderRadiusVal @borderRadiusVal 0 0;
+    border-radius: @borderRadiusVal;
   }
 
   body {
     margin: 0;
-    position: relative;
+    position: @relativeVarible;
     height: max-content;
     font-size: @fontSizeVal;
   }
 
   .inputs_item {
-    left: 1%;
-    position: relative;
-    margin: 3px 0 @margin_bottom 0;
+    left: @leftPerVal;
+    position: @relativeVarible;
+    margin: @marginTopLen 0 @margin_bottom 0;
   }
 
-  .inputs_item>input {
+  .inputs_item > input {
     width: percentage(@width_val);
     height: @heightValue2;
     border-radius: @borderRadiusVal2;
@@ -67,23 +79,23 @@
     background: @backgroundValue;
     width: @widthValue;
     left: @leftSize;
-    position: fixed;
+    position: @relativeVarible;
     border-radius: 0 0 @borderRadiusVal @borderRadiusVal;
   }
 
   .item_input_btn {
     float: left;
-    position: relative;
+    position: @relativeVarible;
     left: percentage(@leftLength);
     width: @widthValue2;
-    bottom: 1rem;
+    bottom: @bottom_len;
   }
 
-  .item_input_btn>input {
+  .item_input_btn > input {
     font-size: @fontSizeValue2;
     cursor: pointer;
     border-width: 0;
-    width: 4em;
+    width: @width_varible;
     height: @heightValue2;
     border-radius: 5px;
   }
@@ -100,6 +112,6 @@
     font-size: @tipUserFontSize;
     text-align: center;
     bottom: -2rem;
-    position: relative;
+    position: @relativeVarible;
   }
 }

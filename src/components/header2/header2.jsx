@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import './header2.less'
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
-import { reg_url, login_url, store_key } from '@/api/constant-list'
 import { getValueFromLocal } from '@/api/common'
 
 //公共组件-header-2
@@ -11,7 +10,18 @@ class PublicHeader2 extends Component {
   constructor(props) {
     super(props)
     //
-    var storeObj = getValueFromLocal(store_key)
+    this.state = {
+      revampPassword: {
+        name: '修改密码',
+        url: this.user_urls.revamp_passwd_url,
+      },
+      //
+      urlArray: [],
+    }
+  }
+
+  initSelectUrl = () => {
+    var storeObj = getValueFromLocal(this.store_key.myself_key)
     console.log('storeObj\n', storeObj)
     //
     var urlArrObj = []
@@ -19,41 +29,48 @@ class PublicHeader2 extends Component {
       case 0:
         urlArrObj = [
           { name: '--请选择地址--', url: '' },
-          { name: '管理员页面', url: '/#super-administrator' },
+          { name: '管理员页面', url: '#super-administrator' },
+          { name: '用户列表', url: this.user_urls.retrieve_list_url },
+          this.state.revampPassword,
         ]
         break
 
       case 1:
         urlArrObj = [
           { name: '--请选择地址--', url: '' },
-          { name: '教师页面', url: '/#teacher' },
+          { name: '教师页面', url: '#teacher' },
+          this.state.revampPassword,
         ]
         break
 
       case 2:
         urlArrObj = [
           { name: '--请选择地址--', url: '' },
-          { name: '学生页面', url: '/#student' },
+          { name: '学生页面', url: '#student' },
+          this.state.revampPassword,
         ]
         break
 
       default:
         urlArrObj = [
           { name: '--请选择地址--', url: '' },
-          { name: 'Null页面', url: '/void' },
+          { name: 'Null页面', url: '/Void' },
         ]
         break
     }
     //
     console.log('urlArrObj\n', urlArrObj)
-    this.state = {
+    //
+    this.setState({
       urlArray: urlArrObj,
-    }
+    })
   }
 
   componentDidMount() {
-    console.log('PublicHeader2 component did mount')
+    console.log('PublicHeader-2 component did mount')
     console.log(this)
+    //
+    this.initSelectUrl()
   }
 
   //事件触发
@@ -88,12 +105,12 @@ class PublicHeader2 extends Component {
                 </div>
                 <div className='outside_item'>
                   <li>
-                    <Link to={login_url}>登录</Link>
+                    <Link to={this.user_urls.login_url}>登录</Link>
                   </li>
                 </div>
                 <div className='outside_item'>
                   <li>
-                    <Link to={reg_url}>注册</Link>
+                    <Link to={this.user_urls.reg_url}>注册</Link>
                   </li>
                 </div>
               </div>

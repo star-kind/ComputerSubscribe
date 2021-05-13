@@ -6,21 +6,25 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom'
-
-import { login_url, reg_url, profile_u_ordinary } from '@/api/constant-list'
+import { user_urls } from '@/api/constant-list'
 
 // 路由表
 // 首页
 const Home = lazy(() => import('@/containers/home/home-index'))
-const TestingCase = lazy(() =>
-  import('@/components/testing/case1/testing-case')
-)
-const Test2 = lazy(() => import('@/components/testing/case2/test2'))
+const Test = lazy(() => import('@/components/test/case/test'))
+const Test2 = lazy(() => import('@/components/test/case2/test2'))
+const Test3 = lazy(() => import('@/components/test/case3/test3'))
 const Registry = lazy(() => import('@/containers/register/registry'))
 const Logining = lazy(() => import('@/containers/login/logining'))
 const RevampPwd = lazy(() => import('@/containers/revamp-pwd/revamp-pwd'))
 const ProfileUserOrdinary = lazy(() =>
   import('@/containers/profile/user-ordinary/')
+)
+const ProfileAdministrator = lazy(() =>
+  import('@/containers/profile/administrator/')
+)
+const RetrieveList = lazy(() =>
+  import('@/containers/users-model/user-list/retrieve/')
 )
 
 /**
@@ -35,7 +39,7 @@ export default class IRouter extends Component {
   }
 
   componentDidMount() {
-    console.log('IRouter component did mount')
+    console.log('IRouter component did mount\n', user_urls)
   }
 
   /**
@@ -50,8 +54,8 @@ export default class IRouter extends Component {
    */
   render() {
     var loadHint = (
-      <div className='loading_div'>
-        <h3>Loading...</h3>
+      <div className='loading_div' style={{ textAlign: 'center' }}>
+        <h2 style={{ marginTop: '2rem' }}>Loading...</h2>
       </div>
     )
     //
@@ -62,17 +66,39 @@ export default class IRouter extends Component {
             <Suspense fallback={loadHint} maxDuration={1000}>
               <Switch>
                 <Route exact path='/' component={Home} />
-                <Route exact path='/testingCase' component={TestingCase} />
+                <Route exact path='/test' component={Test} />
                 <Route exact path='/test2' component={Test2} />
-                <Route exact path={reg_url} component={Registry} />
-                <Route exact path={login_url} component={Logining} />
-                <Route exact path='/revampPwd' component={RevampPwd} />
+                <Route exact path='/test3' component={Test3} />
+
+                <Route exact path={user_urls.reg_url} component={Registry} />
+
+                <Route exact path={user_urls.login_url} component={Logining} />
+
                 <Route
                   exact
-                  path={profile_u_ordinary}
+                  path={user_urls.revamp_passwd_url}
+                  component={RevampPwd}
+                />
+
+                <Route
+                  exact
+                  path={user_urls.profile_ordinary}
                   component={ProfileUserOrdinary}
                 />
-                {/*  */}
+
+                <Route
+                  exact
+                  path={user_urls.retrieve_list_url}
+                  component={RetrieveList}
+                />
+
+                <Route
+                  exact
+                  path={user_urls.profile_administrator}
+                  component={ProfileAdministrator}
+                />
+
+                {/* 重定向 */}
                 <Redirect exact from='/' to={Home} />
               </Switch>
             </Suspense>

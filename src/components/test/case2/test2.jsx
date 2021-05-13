@@ -47,9 +47,11 @@ export default class Test2 extends Component {
         <div className='back_home_page'>
           <Link to={'/'}>返回首页</Link>
         </div>
-        <div className='item_div_txt'>
+        {/*  */}
+        <div className='item_div_txt' style={{ margin: '3rem 0' }}>
           <p>跳出弹窗</p>
         </div>
+        {/*  */}
         <div className='item_div_txt'>
           <form className='mine_form' onSubmit={this.handleSubmit.bind(this)}>
             <div className='inputs_div_item'>

@@ -3,7 +3,6 @@ import PublicHeader from '@/components/header/header-index'
 import axios from 'axios'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import { verifyDataNull, getValueFromLocal } from '@/api/common'
-import { store_key, login_url } from '@/api/constant-list'
 import './revamp-pwd.less'
 
 export default class RevampPwd extends Component {
@@ -40,9 +39,7 @@ export default class RevampPwd extends Component {
     })
   }
 
-  //
   handleSubmit = (event) => {
-    var url = '/api/subscribe/UsersController/revisePasswordAction'
     //阻止默认事件
     event.preventDefault()
     var data = {
@@ -75,20 +72,20 @@ export default class RevampPwd extends Component {
       return
     }
     //
-    var valueObj = getValueFromLocal(store_key)
-    console.log('valueObj\n', valueObj)
-    if (valueObj.code === -1) {
+    var tokenObj = getValueFromLocal(this.store_key.token_key)
+    console.log('tokenObj\n', tokenObj)
+    if (tokenObj.code === -1) {
       this.setState({
         whetherExhibit: !this.state.whetherExhibit,
-        message: valueObj.text,
+        message: tokenObj.text,
       })
       return
     }
     //
     axios
-      .get(url, {
+      .get(this.interfaces.revisePassword, {
         params: { newPasswd: data.newPasswd, oldPasswd: data.oldPasswd },
-        headers: { token: valueObj.text.token },
+        headers: { token: tokenObj.text },
       })
       .then((resp) => {
         console.info('resp\n', resp)
@@ -101,7 +98,7 @@ export default class RevampPwd extends Component {
           })
           //
           setTimeout(() => {
-            this.props.history.push(login_url)
+            this.props.history.push(this.user_urls.login_url)
           }, 5 * 1000)
         } else {
           console.info('resp.data.message\n', resp.data.message)
