@@ -3,7 +3,7 @@ import PublicHeader2 from '@/components/header2/header2'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import { getValueFromLocal } from '@/api/common'
 import './index.less'
-import Table from '@/components/tables/table/'
+import UserTable from '@/components/tables/users/user-table/table-index'
 
 //管理员查看用户成员列表
 class RetrieveList extends Component {
@@ -61,7 +61,7 @@ class RetrieveList extends Component {
         <div className='master_context'>
           <div>
             {/*  */}
-            <Table pagination={this.state.tblData}></Table>
+            <UserTable pagination={this.state.tblData}></UserTable>
           </div>
           <div>
             <button type='button' onClick={this.handleGetUsersList}>

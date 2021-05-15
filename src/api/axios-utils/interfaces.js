@@ -9,6 +9,8 @@ var interfaces = {
 
   modifyInfoByUser: '/api/subscribe/UsersController/modifyInfoByUserAction',
 
+  modifyUser: '/api/subscribe/UsersController/modifyUserAction',
+
   revisePassword: '/api/subscribe/UsersController/revisePasswordAction',
 
   login: '/api/subscribe/UsersController/loginAction',

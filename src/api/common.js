@@ -5,8 +5,6 @@
  */
 export function depositLocalStorage(key, value) {
   console.log('key:' + key, 'value\n', value)
-  // 首先初始化清空localStorage
-  // localStorage.clear()
   //将value转化为json字符串
   var jsonStr = JSON.stringify(value)
   console.log('jsonStr\n', jsonStr)
@@ -26,12 +24,11 @@ export function getValueFromLocal(key) {
   if (jsonStr.trim().length < 1) {
     valueObj.text = '您的登录状态已过期,请重新登录'
     valueObj.code = -1
-    return valueObj
+  } else {
+    //将json字符串解析为数据对象
+    valueObj.text = JSON.parse(jsonStr)
+    console.log('valueObj\n', valueObj)
   }
-
-  //将json字符串解析为数据对象
-  valueObj.text = JSON.parse(jsonStr)
-  console.log('valueObj\n', valueObj)
   return valueObj
 }
 
@@ -98,18 +95,26 @@ export function verifyDataNull(data) {
   var objArr = []
   //校验各参数是否为空
   objArr = entriesArr.map((item) => {
-    if (
-      (item[1].trim() === '') |
-      (item[1] === null) |
-      (item[1] === undefined)
-    ) {
-      hint += item[0] + ','
-      objArr.push(item[0])
+    if (typeof item[1] === 'string') {
+      if (
+        (item[1].trim() === '') |
+        (item[1] === null) |
+        (item[1] === undefined)
+      ) {
+        hint += item[0] + ','
+        objArr.push(item[0])
+      }
+    } else {
+      if ((item[1] === null) | (item[1] === undefined)) {
+        hint += item[0] + ','
+        objArr.push(item[0])
+      }
     }
+
     return objArr
   })
-  console.log('hint\n', hint)
-  console.log('objArr\n', objArr)
+  console.log('hint==', hint)
+  console.log('objArr==', objArr)
   if (hint.toString().length > 0) {
     result.isValidate = false
     result.alertText = hint.substring(0, hint.length - 1) + '未输入,请填写完毕'

@@ -8,20 +8,26 @@ import {
 } from 'react-router-dom'
 import { user_urls } from '@/api/constant-list'
 
-// 路由表
-// 首页
-const Home = lazy(() => import('@/containers/home/home-index'))
+//路由表
+//测试
 const Test = lazy(() => import('@/components/test/case/test'))
 const Test2 = lazy(() => import('@/components/test/case2/test2'))
 const Test3 = lazy(() => import('@/components/test/case3/test3'))
-const Registry = lazy(() => import('@/containers/register/registry'))
-const Logining = lazy(() => import('@/containers/login/logining'))
-const RevampPwd = lazy(() => import('@/containers/revamp-pwd/revamp-pwd'))
+//首页
+const Home = lazy(() => import('@/containers/home/home-index'))
+//用户模块
+const Registry = lazy(() =>
+  import('@/containers/users-model/register/registry')
+)
+const Logining = lazy(() => import('@/containers/users-model/login/logining'))
+const RevampPwd = lazy(() =>
+  import('@/containers/users-model/revamp-pwd/revamp-pwd')
+)
 const ProfileUserOrdinary = lazy(() =>
-  import('@/containers/profile/user-ordinary/')
+  import('@/containers/users-model/profile/user-ordinary/')
 )
 const ProfileAdministrator = lazy(() =>
-  import('@/containers/profile/administrator/')
+  import('@/containers/users-model/profile/administrator/')
 )
 const RetrieveList = lazy(() =>
   import('@/containers/users-model/user-list/retrieve/')

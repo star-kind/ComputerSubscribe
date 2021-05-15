@@ -1,0 +1,43 @@
+@fontSizeValue: 18px;
+@borderRadiusVal: 5px;
+@divWidthVal: 5rem;
+@spanMargin: 1rem;
+@bottomVal: 0.9rem;
+@inputWidth: 4rem;
+@inputHeight: 2rem;
+@divHeight: 3rem;
+@div_margin: 1.8rem;
+
+.main_co_page {
+  .con_div {
+    float: left;
+    box-sizing: border-box;
+    margin: 0 @div_margin;
+  }
+
+  li {
+    list-style: none;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .pageth_input {
+    width: @inputWidth;
+    height: @inputHeight;
+  }
+
+  #input_div {
+    bottom: @bottomVal;
+    position: relative;
+  }
+
+  .jump_btn {
+    height: @divHeight;
+    width: @divWidthVal;
+    margin: 0 @spanMargin;
+    font-size: @fontSizeValue;
+    border-radius: @borderRadiusVal;
+    border-width: 0;
+    cursor: pointer;
+  }
+}

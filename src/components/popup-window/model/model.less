@@ -1,15 +1,17 @@
 @length_w_h: 300px;
 @fontColorCode: #ffffff;
-@backgroundVal: #489e68;
+@backgroundVal: #3f4d96;
 @fontSizeVal: 26px;
-@topLen: 0.86;
-@leftLen: 0.40;
+@topLen: 0.8;
+@leftLen: 0.4;
 @rightLen: 3.64;
 @heightLen: 3em;
 @widthLen: 5em;
 @radiusVal: 8px;
+@padd_len: 0.8rem;
 
 .cover {
+  padding-top: @padd_len;
   background: @backgroundVal;
   width: @length_w_h;
   height: @length_w_h;
@@ -18,7 +20,6 @@
   border-radius: @radiusVal;
   position: absolute;
   right: percentage(@rightLen);
-
 
   .message_div {
     color: @fontColorCode;
@@ -32,12 +33,11 @@
     left: percentage(@leftLen);
   }
 
-  .close_btn_hint>button {
+  .close_btn_hint > button {
     border-width: 0;
     border-radius: @radiusVal;
     height: @heightLen;
     width: @widthLen;
     cursor: pointer;
   }
-
 }

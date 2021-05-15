@@ -303,7 +303,7 @@ export default class ProfileAdministrator extends Component {
                     {this.state.roleTypeArray.map((item) => {
                       console.log(item)
                       return (
-                        <option value={item.code} key={item.name}>
+                        <option key={item.name} value={item.code}>
                           {item.name}
                         </option>
                       )

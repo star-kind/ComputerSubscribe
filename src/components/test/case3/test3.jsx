@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import './test3.less'
-import Table from '@/components/tables/table/'
+import UserTable from '@/components/tables/users/user-table/table-index'
+import PageInfo from '@/components/tables/page-info/page-info'
 import { Link } from 'react-router-dom'
+import { TopContext } from '@/api/context/contexts'
 
 class Test3 extends Component {
   constructor(props) {
@@ -126,6 +128,18 @@ class Test3 extends Component {
     },
     //
     thArr: ['用户名', '学号/工号', '帐号类型', '邮箱', '电话', '操作'],
+    //
+    showPageArea: 'inherit',
+    targetPage: 15,
+  }
+
+  //子组件调用父函数
+  hidePageScope = (instruct) => {
+    //接收到子组件的值
+    console.log('hidePageScope.instruct== ' + instruct)
+    this.setState({
+      showPageArea: instruct,
+    })
   }
 
   render() {
@@ -134,13 +148,32 @@ class Test3 extends Component {
         <div className='back_home_page'>
           <Link to={'/'}>返回首页</Link>
         </div>
-        {/*  */}
-        <div className='sec_wrapper'>
-          <Table
+        <div
+          className='sec_wrapper'
+          ref={(secondArea) => (this.secondDoc = secondArea)}
+        >
+          <UserTable
+            hidePageArea={this.hidePageScope}
             thArray={this.state.thArr}
             pagination={this.state.pagination}
-          ></Table>
+          ></UserTable>
         </div>
+        <br />
+        <div
+          style={{ display: this.state.showPageArea }}
+          className='surround_pageinfo'
+        >
+          <PageInfo
+            pagination={this.state.pagination}
+            targetPageNum={this.state.targetPage}
+          ></PageInfo>
+        </div>
+        {/*  */}
+        <TopContext.Consumer>
+          {(value) => {
+            console.log('TopContext.Consumer.value==\n', value)
+          }}
+        </TopContext.Consumer>
       </div>
     )
   }
