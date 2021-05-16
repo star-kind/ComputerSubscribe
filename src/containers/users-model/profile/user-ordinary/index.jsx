@@ -163,7 +163,7 @@ export default class ProfileUserOrdinary extends Component {
                     onChange={this.handleChange.bind(this)}
                     name='userName'
                     type='text'
-                    value={this.state.userName}
+                    defaultValue={this.state.userName}
                     placeholder='请输入用户名'
                   />
                 </div>
@@ -182,7 +182,7 @@ export default class ProfileUserOrdinary extends Component {
                     onChange={this.handleChange.bind(this)}
                     name='userNum'
                     type='text'
-                    value={this.state.userNum}
+                    defaultValue={this.state.userNum}
                   />
                 </div>
               </div>
@@ -200,7 +200,7 @@ export default class ProfileUserOrdinary extends Component {
                     onChange={this.handleChange.bind(this)}
                     name='phone'
                     type='text'
-                    value={this.state.phone}
+                    defaultValue={this.state.phone}
                     placeholder='请输入电话'
                   />
                 </div>
@@ -219,7 +219,7 @@ export default class ProfileUserOrdinary extends Component {
                     onChange={this.handleChange.bind(this)}
                     name='mailbox'
                     type='text'
-                    value={this.state.mailbox}
+                    defaultValue={this.state.mailbox}
                     placeholder='请输入邮箱'
                   />
                 </div>
@@ -236,7 +236,7 @@ export default class ProfileUserOrdinary extends Component {
                     id='role_id'
                     className='input_tag ban_edit_input'
                     type='text'
-                    value={this.state.role}
+                    defaultValue={this.state.role}
                   />
                 </div>
               </div>

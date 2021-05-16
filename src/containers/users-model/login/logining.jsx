@@ -164,7 +164,7 @@ export default class Logining extends Component {
                     <input
                       onChange={this.handleChange.bind(this)}
                       name='userNum'
-                      value={this.state.userNum}
+                      defaultValue={this.state.userNum}
                       type='text'
                       id='mine_usernum'
                       placeholder='请输入工号或者学号'
@@ -175,7 +175,7 @@ export default class Logining extends Component {
                     <input
                       onChange={this.handleChange.bind(this)}
                       name='passwd'
-                      value={this.state.passwd}
+                      defaultValue={this.state.passwd}
                       type='password'
                       id='mine_password'
                       placeholder='请输入密码'

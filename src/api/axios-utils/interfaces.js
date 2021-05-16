@@ -1,5 +1,5 @@
 //接口地址集合
-var interfaces = {
+let interfaces = {
   getMember: '/api/subscribe/UsersController/getMemberByOrderAction',
 
   retrieveProfile: '/api/subscribe/UsersController/retrieveProfileByMySelf',

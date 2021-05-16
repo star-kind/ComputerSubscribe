@@ -21,9 +21,10 @@ export default class EditUserRow extends Component {
   //父组件数据实时更新,子组件相应更新
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log(
-      'EditUserRow Component Will Receive Props.nextProps\n',
-      nextProps
+      '%cEditUserRow Component Will Receive Props.nextProps',
+      'color:blue'
     )
+    console.info(nextProps)
     //注:这里更新要用nextProps,否则不生效
     this.setState({
       id: nextProps.row.id,
@@ -41,13 +42,7 @@ export default class EditUserRow extends Component {
     isExhibit: true,
     msg: '',
     //考虑到实际情况,禁止修改帐号角色
-    roleTypeArray: [
-      { name: '--请选择帐号类型--', code: -1 },
-      { name: '教师', code: 1 },
-      { name: '学生', code: 2 },
-    ],
-    //
-    id: -1,
+    id: '',
     userName: '',
     userNum: '',
     phone: '',
@@ -61,6 +56,7 @@ export default class EditUserRow extends Component {
     row: PropTypes.object,
     showWrapper: PropTypes.string,
     showTable: PropTypes.func,
+    sendShowVal: PropTypes.func,
   }
 
   getToken = () => {
@@ -84,27 +80,28 @@ export default class EditUserRow extends Component {
   }
 
   handleSubmit = (event) => {
+    const ts = this
     //阻止默认事件
     event.preventDefault()
     console.log('event\n', event)
-    var data = {
-      id: this.state.id,
-      userName: this.state.userName,
-      phone: this.state.phone,
-      mailbox: this.state.mailbox,
-      role: this.state.role,
+    let data = {
+      id: ts.state.id,
+      userName: ts.state.userName,
+      phone: ts.state.phone,
+      mailbox: ts.state.mailbox,
+      role: ts.state.role,
     }
     //如果帐户类型为管理员,警告,中断
     if (data.role === 0) {
-      this.setState({
-        isExhibit: !this.state.isExhibit,
+      ts.setState({
+        isExhibit: !ts.state.isExhibit,
         msg: '管理员的资料不可被编辑',
       })
     }
     //token
-    if (this.state.token === '') {
-      this.setState({
-        isExhibit: !this.state.isExhibit,
+    if (ts.state.token === '') {
+      ts.setState({
+        isExhibit: !ts.state.isExhibit,
         msg: '您的登录状态业已失效,请请重新登录',
       })
       return
@@ -112,18 +109,39 @@ export default class EditUserRow extends Component {
     // validate params whether or null
     var res = commonUtil.verifyDataNull(data)
     if (!res.isValidate) {
-      this.setState({
-        isExhibit: !this.state.isExhibit,
+      ts.setState({
+        isExhibit: !ts.state.isExhibit,
         msg: res.alertText,
       })
       return
     }
-    console.log('data\n', data)
+    //检验邮箱and电话
+    //验证手机号码,验证规则：11位数字，以1开头
+    let rulePhone = /^1\d{10}$/
+    if (!rulePhone.test(data.phone)) {
+      ts.setState({
+        isExhibit: !ts.state.isExhibit,
+        msg: '电话号码不合规定',
+      })
+      return
+    }
+    //验证邮箱
+    let ruleEmail = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/
+    if (!ruleEmail.test(data.mailbox)) {
+      ts.setState({
+        isExhibit: !ts.state.isExhibit,
+        msg: '邮箱地址不合规定',
+      })
+      return
+    }
+    console.log('%cData\n', 'color:green', data)
   }
 
   exhibitTblHideForm = () => {
     //调用上层组件函数,向上层组件传值
     this.props.showTable('none')
+    //向祖父组件传值,首先向父组件发送
+    this.props.sendShowVal('block')
   }
 
   render() {
@@ -147,7 +165,7 @@ export default class EditUserRow extends Component {
                     onChange={this.handleChange.bind(this)}
                     name='id'
                     type='text'
-                    value={this.state.id}
+                    defaultValue={this.state.id}
                   />
                 </div>
               </div>
@@ -165,7 +183,7 @@ export default class EditUserRow extends Component {
                     onChange={this.handleChange.bind(this)}
                     name='userName'
                     type='text'
-                    value={this.state.userName}
+                    defaultValue={this.state.userName}
                     placeholder='请输入用户名'
                   />
                 </div>
@@ -184,7 +202,7 @@ export default class EditUserRow extends Component {
                     onChange={this.handleChange.bind(this)}
                     name='userNum'
                     type='text'
-                    value={this.state.userNum}
+                    defaultValue={this.state.userNum}
                   />
                 </div>
               </div>
@@ -201,7 +219,7 @@ export default class EditUserRow extends Component {
                     onChange={this.handleChange.bind(this)}
                     name='phone'
                     type='text'
-                    value={this.state.phone}
+                    defaultValue={this.state.phone}
                     placeholder='请输入电话'
                   />
                 </div>
@@ -219,7 +237,7 @@ export default class EditUserRow extends Component {
                     onChange={this.handleChange.bind(this)}
                     name='mailbox'
                     type='text'
-                    value={this.state.mailbox}
+                    defaultValue={this.state.mailbox}
                     placeholder='请输入邮箱'
                   />
                 </div>
@@ -238,7 +256,7 @@ export default class EditUserRow extends Component {
                     className='input_tag ban_edit_input'
                     type='text'
                     name='role'
-                    value={this.state.role === 1 ? '教师' : '学生'}
+                    defaultValue={this.state.role === 1 ? '教师' : '学生'}
                     onChange={this.handleChange.bind(this)}
                   />
                 </div>

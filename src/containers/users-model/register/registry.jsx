@@ -145,7 +145,7 @@ export default class Registry extends Component {
                   <input
                     onChange={this.handleChange.bind(this)}
                     name='userName'
-                    value={this.state.userName}
+                    defaultValue={this.state.userName}
                     type='text'
                     id='mine_username'
                     placeholder='请输入用户名'
@@ -155,7 +155,7 @@ export default class Registry extends Component {
                 <div className='inputs_item'>
                   <input
                     onChange={this.handleChange.bind(this)}
-                    value={this.state.phone}
+                    defaultValue={this.state.phone}
                     name='phone'
                     type='text'
                     id='mine_phone'
@@ -166,7 +166,7 @@ export default class Registry extends Component {
                 <div className='inputs_item'>
                   <input
                     onChange={this.handleChange.bind(this)}
-                    value={this.state.mailbox}
+                    defaultValue={this.state.mailbox}
                     name='mailbox'
                     type='text'
                     id='mine_mailbox'
@@ -177,7 +177,7 @@ export default class Registry extends Component {
                 <div className='inputs_item'>
                   <input
                     onChange={this.handleChange.bind(this)}
-                    value={this.state.userNum}
+                    defaultValue={this.state.userNum}
                     name='userNum'
                     type='text'
                     id='mine_usernum'
@@ -208,7 +208,7 @@ export default class Registry extends Component {
                 <div className='inputs_item'>
                   <input
                     onChange={this.handleChange.bind(this)}
-                    value={this.state.previousPassword}
+                    defaultValue={this.state.previousPassword}
                     name='previousPassword'
                     type='password'
                     id='pre_mine_password'
@@ -219,7 +219,7 @@ export default class Registry extends Component {
                 <div className='inputs_item'>
                   <input
                     onChange={this.handleChange.bind(this)}
-                    value={this.state.password}
+                    defaultValue={this.state.password}
                     name='password'
                     type='password'
                     id='mine_password'

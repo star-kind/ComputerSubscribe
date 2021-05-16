@@ -3,6 +3,7 @@ import './test3.less'
 import UserTable from '@/components/tables/users/user-table/table-index'
 import PageInfo from '@/components/tables/page-info/page-info'
 import { Link } from 'react-router-dom'
+//试验
 import { TopContext } from '@/api/context/contexts'
 
 class Test3 extends Component {
@@ -129,14 +130,21 @@ class Test3 extends Component {
     //
     thArr: ['用户名', '学号/工号', '帐号类型', '邮箱', '电话', '操作'],
     //
-    showPageArea: 'inherit',
+    showPageArea: '',
     targetPage: 15,
   }
 
-  //子组件调用父函数
+  //子组件调用父组件中的函数,接收到子组件的值
   hidePageScope = (instruct) => {
-    //接收到子组件的值
     console.log('hidePageScope.instruct== ' + instruct)
+    this.setState({
+      showPageArea: instruct,
+    })
+  }
+
+  //接收子孙组件发送的值
+  exhibitPageDiv = (instruct) => {
+    console.log('%cexhibitPageDiv.instruct=' + instruct, 'color:red')
     this.setState({
       showPageArea: instruct,
     })
@@ -148,11 +156,9 @@ class Test3 extends Component {
         <div className='back_home_page'>
           <Link to={'/'}>返回首页</Link>
         </div>
-        <div
-          className='sec_wrapper'
-          ref={(secondArea) => (this.secondDoc = secondArea)}
-        >
+        <div className='sec_wrapper' ref={(r) => (this.secondDoc = r)}>
           <UserTable
+            showPageDiv={this.exhibitPageDiv}
             hidePageArea={this.hidePageScope}
             thArray={this.state.thArr}
             pagination={this.state.pagination}

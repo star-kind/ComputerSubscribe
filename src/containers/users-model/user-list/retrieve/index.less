@@ -1,6 +1,24 @@
+@marginDistance: 5rem;
+@leftPercent: 0%;
+@fontSizeVal: 2rem;
+@topVal: 8rem;
+@percentWidth: 65%;
+@posiAbso: absolute;
+@percentLeft: 10%;
+@percentBottom: 42%;
+
 .main_wrapper {
   .master_context {
-    font-size: 2rem;
-    transform: translate(15rem, 20rem);
+    font-size: @fontSizeVal;
+    top: @topVal;
+    left: @leftPercent;
+    position: relative;
+  }
+
+  .surround_pageinfo {
+    margin: @marginDistance 0 0 0;
+    width: @percentWidth;
+    position: @posiAbso;
+    left: @percentLeft;
   }
 }

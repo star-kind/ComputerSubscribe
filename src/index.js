@@ -18,7 +18,7 @@ if (module.hot) {
 ReactDOM.render(<App />, document.getElementById('root'))
 
 // reportWebVitals(console.log);
-// 在react的原型链上,绑定方法或对象
+// 在 Component 的原型链上,绑定方法或对象
 Component.prototype.gets = gets
 Component.prototype.interfaces = interfaces
 Component.prototype.store_key = store_key

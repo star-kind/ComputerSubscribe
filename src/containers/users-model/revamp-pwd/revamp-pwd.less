@@ -1,3 +1,13 @@
+@marginDistance: 3px;
+@width_value: 18em;
+@widthRange: 2em;
+@bottomDistance: 1rem;
+@topDistance: 22em;
+@value_of_width: 4em;
+@bottom_size: -3rem;
+@value_fontsize: 26px;
+@width_len: 5em;
+@value_left: 1.5%;
 @margin_size: 28px;
 @transX: -0.5px;
 @transY: 20px;
@@ -8,6 +18,7 @@
 @leftValue: 32%;
 @relativeVar: relative;
 @fontSizeValue: 16px;
+@fontSizeVal: 35px;
 @color_value: #0f5d27;
 @widthVal: 400px;
 @widthValue2: 96%;
@@ -37,12 +48,12 @@
     margin: 0;
     position: @relativeVar;
     height: max-content;
-    font-size: 35px;
+    font-size: @fontSizeVal;
   }
 
   .inputs_item {
-    margin: 3px 0;
-    left: 1.5%;
+    margin: @marginDistance 0;
+    left: @value_left;
     position: @relativeVar;
   }
 
@@ -59,7 +70,7 @@
   }
 
   #mine_select_role {
-    width: 18em;
+    width: @width_value;
     height: @heightValue2;
     border-width: 0;
     background: white;
@@ -72,15 +83,15 @@
     left: @left_val;
     position: fixed;
     border-radius: 0 0 @border_radius_val @border_radius_val;
-    top: 22em;
+    top: @topDistance;
   }
 
   .item_input_btn {
     float: left;
     position: @relativeVar;
     left: @leftValue;
-    width: 2em;
-    bottom: 1rem;
+    width: @widthRange;
+    bottom: @bottomDistance;
     transform: translate(@transX, @transY);
   }
 
@@ -88,7 +99,7 @@
     font-size: @fontSizeValue;
     cursor: pointer;
     border-width: 0;
-    width: 4em;
+    width: @value_of_width;
     height: @heightVal3;
     border-radius: @borderRadiusVarible;
   }
@@ -102,7 +113,7 @@
   }
 
   .param_major {
-    bottom: -3rem;
+    bottom: @bottom_size;
     position: @relativeVar;
   }
 
@@ -112,7 +123,7 @@
   }
 
   .tip_of_user {
-    font-size: 26px;
+    font-size: @value_fontsize;
     text-align: center;
   }
 
@@ -121,6 +132,6 @@
   }
 
   #submit_item > input[type='submit'] {
-    width: 5em;
+    width: @width_len;
   }
 }

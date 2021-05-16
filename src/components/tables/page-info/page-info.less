@@ -1,14 +1,27 @@
-@fontSizeValue: 18px;
+@bg_val: #3527e0;
+@transformYval: -0.1rem;
+@fontsizeVal: 26px;
+@fontSizeValue: 22px;
 @borderRadiusVal: 5px;
-@divWidthVal: 5rem;
+@divWidthVal: 6rem;
 @spanMargin: 1rem;
-@bottomVal: 0.9rem;
+@bottomVal: 0rem;
 @inputWidth: 4rem;
 @inputHeight: 2rem;
-@divHeight: 3rem;
+@divHeight: 4rem;
 @div_margin: 1.8rem;
+@fontsizeVarible: 26px;
+@widthVarible: 12.6rem;
+@top_distance: 2.2rem;
+@rel: relative;
 
 .main_co_page {
+  .sele_page_order {
+    font-size: @fontsizeVarible;
+    width: @widthVarible;
+    top: @top_distance;
+    position: @rel;
+  }
   .con_div {
     float: left;
     box-sizing: border-box;
@@ -24,6 +37,8 @@
   .pageth_input {
     width: @inputWidth;
     height: @inputHeight;
+    transform: translate(0px, @transformYval);
+    font-size: @fontsizeVal;
   }
 
   #input_div {
@@ -39,5 +54,7 @@
     border-radius: @borderRadiusVal;
     border-width: 0;
     cursor: pointer;
+    background: @bg_val;
+    color: white;
   }
 }
