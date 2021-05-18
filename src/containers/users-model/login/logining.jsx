@@ -34,12 +34,12 @@ export default class Logining extends Component {
     //阻止默认事件
     event.preventDefault()
     //封装对象
-    var data = {
+    let data = {
       userNum: this.state.userNum,
       passwd: this.state.passwd,
     }
     //
-    var res = verifyDataNull(data)
+    let res = verifyDataNull(data)
     console.log('res\n', res)
     if (!res.isValidate) {
       this.setState({
@@ -115,7 +115,7 @@ export default class Logining extends Component {
   handleChangeSelect = (e) => {
     console.log(e.target)
     //触发onChange事件时,得到的值
-    var roleOptVal = e.target.value
+    let roleOptVal = e.target.value
     console.log('RoleOptVal(code)', roleOptVal)
     this.setState({
       role: roleOptVal,
@@ -124,7 +124,7 @@ export default class Logining extends Component {
 
   //
   render() {
-    var content = (
+    let content = (
       <div className='main_container'>
         <PublicHeader></PublicHeader>
         {/*  */}

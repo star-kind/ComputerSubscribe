@@ -155,7 +155,7 @@ class UserTable extends Component {
 
   //管理员不可被点击编辑
   checkPointerEvent = (value) => {
-    console.log('checkPointerEvent--value==', value)
+    // console.log('checkPointerEvent--value==', value)
     let pointer = ''
     if (value === 0) {
       pointer = 'none'
@@ -191,7 +191,7 @@ class UserTable extends Component {
   initialCheckbox = (value) => {
     let status = false
     if (value === null || value === undefined || value === false) {
-      console.log('value==', value)
+      // console.log('value==', value)
     } else {
       status = true
     }

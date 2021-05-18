@@ -10,9 +10,14 @@ import { user_urls } from '@/api/constant-list'
 
 //路由表
 //测试
+const TestCollection = lazy(() =>
+  import('@/components/test/collections/test-collection')
+)
 const Test = lazy(() => import('@/components/test/case/test'))
 const Test2 = lazy(() => import('@/components/test/case2/test2'))
-const Test3 = lazy(() => import('@/components/test/case3/test3'))
+
+const Test4 = lazy(() => import('@/components/test/case4/test4'))
+
 //首页
 const Home = lazy(() => import('@/containers/home/home-index'))
 //用户模块
@@ -72,9 +77,16 @@ export default class IRouter extends Component {
             <Suspense fallback={loadHint} maxDuration={1000}>
               <Switch>
                 <Route exact path='/' component={Home} />
+                {/*  */}
+                <Route
+                  exact
+                  path='/testCollection'
+                  component={TestCollection}
+                />
                 <Route exact path='/test' component={Test} />
                 <Route exact path='/test2' component={Test2} />
-                <Route exact path='/test3' component={Test3} />
+
+                <Route exact path='/test4' component={Test4} />
 
                 <Route exact path={user_urls.reg_url} component={Registry} />
 

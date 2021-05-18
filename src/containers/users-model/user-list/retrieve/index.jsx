@@ -10,7 +10,7 @@ import PageInfo from '@/components/tables/page-info/page-info'
 class RetrieveList extends Component {
   constructor(props) {
     super(props)
-    console.info('%cRetrieveList--Constructor', 'color:red')
+    console.info('%cRetrieveList--Constructor', 'color:red', this)
     this.state = {
       //是否展示
       whetherExhibit: true,
@@ -21,29 +21,27 @@ class RetrieveList extends Component {
       showPageArea: '',
       //页码
       targetPage: 1,
-      tblRow: 10,
+      tblRow: 5,
       //
       pagination: {
         data: [],
         hasPrevious: false,
         hasNext: false,
         totalPages: 0,
-        currentPage: 0,
+        currentPage: 1,
         rows: 0,
       },
     }
-    console.log(this)
   }
 
   componentDidMount() {
+    console.log('%cRetrieveList component did mount', 'color:blue', this)
     this.handleGetUsersList()
-    console.log('%cRetrieveList component did mount', 'color:blue')
-    console.log(this)
   }
 
   //子组件调用父组件中的函数,接收到子组件的值
   hidePageScope = (instruct) => {
-    console.log('hidePageScope.instruct== ' + instruct)
+    console.log('hidePageScope.instruct', instruct)
     this.setState({
       showPageArea: instruct,
     })
@@ -59,7 +57,21 @@ class RetrieveList extends Component {
 
   //接收来自子组件的数据
   receiveInfo = (data) => {
-    console.log('%cdata\n', 'color:#ff5722', data)
+    if (data.targetOrder !== undefined) {
+      console.log('%c data-targetOrder\n', 'color:green', data.targetOrder)
+      this.jumpByPageNum(data)
+    } else if (data.nextOnePage !== undefined) {
+      console.log('%c data-nextOnePage\n', 'color:green', data.nextOnePage)
+      this.jumpNextPage(data)
+    } else if (data.previousOnePage !== undefined) {
+      console.log('%c data-previousPage\n', 'color:green', data.previousOnePage)
+      this.jumpPreviousPage(data)
+    }
+    this.handleGetUsersList()
+  }
+
+  //根据页码+每页行数查看
+  jumpByPageNum = (data) => {
     //若跳转页码目标大于总页,警示,中断
     let { totalPages } = this.state.pagination
     if (data.targetOrder > totalPages) {
@@ -68,6 +80,76 @@ class RetrieveList extends Component {
         message: '跳转页数不得大于总页数',
       })
       return
+    } else if (data.targetOrder <= 0) {
+      this.setState({
+        whetherExhibit: !this.state.whetherExhibit,
+        message: '跳转页数不得小于零或等于零',
+      })
+      return
+    } else {
+      this.setState({
+        targetPage: data.targetOrder,
+        tblRow: data.defineRowNum,
+      })
+    }
+  }
+
+  //前往下页
+  jumpNextPage = (data) => {
+    let { hasNext, totalPages } = this.state.pagination
+    console.log('%chasNext,totalPages', this.getColor(), hasNext, totalPages)
+    //
+    let { pagination } = this.state
+    let { nextOnePage } = data
+    //
+    if (!hasNext) {
+      this.setState({
+        whetherExhibit: !this.state.whetherExhibit,
+        message: '已是尾页',
+      })
+      return
+    } else if (nextOnePage > totalPages) {
+      pagination.hasNext = false
+      this.setState({
+        pagination,
+        whetherExhibit: !this.state.whetherExhibit,
+        message: '没有下一页了',
+      })
+      return
+    } else {
+      pagination.currentPage = nextOnePage
+      this.setState({
+        pagination,
+        targetPage: nextOnePage,
+      })
+    }
+  }
+
+  //前往上页
+  jumpPreviousPage = (data) => {
+    let { hasPrevious } = this.state.pagination
+    let { pagination } = this.state
+    let { previousOnePage } = data
+    console.log(
+      '%c hasPrevious,previousOnePage',
+      this.getColor(),
+      hasPrevious,
+      previousOnePage
+    )
+    if (previousOnePage < 1) {
+      pagination.hasPrevious = false
+      this.setState({
+        pagination,
+        whetherExhibit: !this.state.whetherExhibit,
+        message: '已经是第一页',
+      })
+      return
+    } else {
+      pagination.currentPage = previousOnePage
+      this.setState({
+        pagination,
+        targetPage: previousOnePage,
+      })
     }
   }
 
@@ -134,12 +216,14 @@ class RetrieveList extends Component {
               targetPageNum={this.state.targetPage}
             ></PageInfo>
           </div>
+          {/*  */}
+          <div className='portals02'>
+            <Portals2
+              msg={this.state.message}
+              isExhibit={this.state.whetherExhibit}
+            ></Portals2>
+          </div>
         </div>
-        {/*  */}
-        <Portals2
-          msg={this.state.message}
-          isExhibit={this.state.whetherExhibit}
-        ></Portals2>
       </div>
     )
   }

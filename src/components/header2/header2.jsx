@@ -124,7 +124,7 @@ class PublicHeader2 extends Component {
                   </label>
                   <select id='select_opt_item' onChange={this.changeSel}>
                     {this.state.urlArray.map((item) => {
-                      console.log(item)
+                      // console.log(item)
                       return (
                         <option value={item.url} key={item.name}>
                           {item.name}

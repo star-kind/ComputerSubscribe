@@ -18,7 +18,8 @@ class PublicHeader extends Component {
       { name: '修改密码', url: this.user_urls.revamp_passwd_url },
       { name: '测试-1', url: '/test' },
       { name: '测试-2', url: '/test2' },
-      { name: '测试-3', url: '/test3' },
+      { name: '测试-void', url: '/##void' },
+      { name: '测试-中继集合', url: '/testCollection' },
     ],
   }
 

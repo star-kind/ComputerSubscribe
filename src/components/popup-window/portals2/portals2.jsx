@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Model from '@/components/popup-window/model/model'
+import Modal from '@/components/popup-window/modal/modal'
 import PropTypes from 'prop-types'
 import './portals2.less'
 
@@ -13,7 +13,8 @@ class Portals2 extends Component {
   }
 
   state = {
-    showMsgCont: false,
+    // 是否展示,真-显示,假-隐藏
+    isShowCont: false,
   }
 
   static propTypes = {
@@ -23,7 +24,7 @@ class Portals2 extends Component {
 
   handleMsgWindow() {
     this.setState({
-      showMsgCont: !this.state.showMsgCont,
+      isShowCont: !this.state.isShowCont,
     })
   }
 
@@ -31,15 +32,25 @@ class Portals2 extends Component {
     return (
       <div className='portal_view_lead'>
         <div id='app_root'>
-          {this.state.showMsgCont === this.props.isExhibit ? (
-            <Model
-              isShow={this.state.showMsgCont}
-              closeModel={this.handleMsgWindow.bind(this)}
+          {console.log(
+            '%c Portals2.props.isExhibit',
+            this.getColor(),
+            this.props.isExhibit
+          )}
+          {console.log(
+            '%c Portals2.state.isShowCont',
+            this.getColor(),
+            this.state.isShowCont
+          )}
+          {this.state.isShowCont === this.props.isExhibit ? (
+            <Modal
+              isShow={this.state.isShowCont}
               message={this.props.msg}
+              closeModal={this.handleMsgWindow.bind(this)}
             />
           ) : null}
         </div>
-        <div id='model_root'></div>
+        <div id='modal_root'></div>
       </div>
     )
   }

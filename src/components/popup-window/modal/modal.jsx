@@ -1,45 +1,53 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import './model.less'
+import './modal.less'
 
 /**
  * 插槽组件
  */
-class Model extends Component {
+class Modal extends Component {
   constructor(props) {
     super(props)
+    //
     this.el = document.createElement('div')
-    this.modelRoot = document.getElementById('model_root')
-    console.log('modelRoot', this.modelRoot)
+    this.modalRoot = document.getElementById('modal_root')
+    console.log('%c ModalRoot', this.getColor(), this.modalRoot)
   }
 
   componentDidMount() {
-    console.log('MessageContentModelComponentDidMount')
-    //将插入弹窗的div放入到兄弟节点“model_root”中
-    this.modelRoot.appendChild(this.el)
+    console.log('MessageContentModalComponentDidMount')
+    //将插入弹窗的div放入到兄弟节点“modal_root”中
+    this.modalRoot.appendChild(this.el)
     console.log(this)
+  }
+
+  state = {
+    cssMessage: {
+      paddingLeft: '8px',
+      margin: '0',
+    },
   }
 
   static propTypes = {
     message: PropTypes.string.isRequired,
-    closeModel: PropTypes.func.isRequired,
+    closeModal: PropTypes.func.isRequired,
     isShow: PropTypes.bool.isRequired,
   }
 
   //清理工作
   componentWillUnmount() {
-    this.modelRoot.removeChild(this.el)
+    this.modalRoot.removeChild(this.el)
   }
 
   msgWindowCont = (props) => {
     return (
       <div className='cover'>
         <div className='message_div'>
-          <p style={{ margin: '0' }}>{props.message}</p>
+          <p style={this.state.cssMessage}>{props.message}</p>
         </div>
         <div className='close_btn_hint'>
-          <button onClick={props.closeModel}>关闭</button>
+          <button onClick={props.closeModal}>关闭</button>
         </div>
       </div>
     )
@@ -51,4 +59,4 @@ class Model extends Component {
   }
 }
 
-export default Model
+export default Modal

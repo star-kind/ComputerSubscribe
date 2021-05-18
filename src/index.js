@@ -7,6 +7,7 @@ import IRouter from './router'
 import { gets } from './api/axios-utils/httputil'
 import interfaces from './api/axios-utils/interfaces'
 import { store_key, user_urls } from './api/constant-list'
+import { getColor } from './api/utils/log-color'
 
 if (module.hot) {
   module.hot.accept('./router', () => {
@@ -23,3 +24,4 @@ Component.prototype.gets = gets
 Component.prototype.interfaces = interfaces
 Component.prototype.store_key = store_key
 Component.prototype.user_urls = user_urls
+Component.prototype.getColor = getColor

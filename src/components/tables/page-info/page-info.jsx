@@ -14,9 +14,32 @@ class PageInfo extends Component {
     console.log(this)
   }
 
+  //父子组件数据同步
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log('nextProps', nextProps)
+    console.log('prevState', prevState)
+    let { currentPage } = nextProps.pagination
+    let { targetPageNum } = nextProps
+
+    // 当传入的 props 发生变化的时候，更新state
+    if (currentPage !== prevState.presentPage) {
+      return {
+        presentPage: currentPage,
+      }
+    } else if (targetPageNum === prevState.targetOrder) {
+      return {
+        presentPage: targetPageNum,
+      }
+    }
+    // 否则，对于state不进行任何操作
+    return null
+  }
+
+  // UNSAFE_componentWillReceiveProps(nextProps) {
+  //   this.initializePresent(nextProps.pagination.currentPage)
+  // }
+
   state = {
-    //目标页
-    targetOrder: this.props.targetPageNum,
     //自设定每页展示行数
     rowsDefineArr: [
       { num: '每页展示行数' },
@@ -25,8 +48,12 @@ class PageInfo extends Component {
       { num: 10 },
       { num: 12 },
     ],
+    //目标页
+    targetOrder: this.props.targetPageNum,
     //决定展示的每页行数
     defineRowNum: '',
+    //当前页
+    presentPage: 1,
   }
 
   static propTypes = {
@@ -37,10 +64,13 @@ class PageInfo extends Component {
 
   //绑定on change事件,使input输入框能动态取值和赋值
   handleChange = (event) => {
-    console.log('event\n', event)
+    console.log('page.info.handleChange.event', event)
+    let val = event.target.value
+    console.log('typeof val', typeof val)
     //
+    val = Number(val)
     this.setState({
-      targetOrder: event.target.value,
+      targetOrder: val,
     })
   }
 
@@ -60,20 +90,18 @@ class PageInfo extends Component {
 
   //前往上一页
   toPreviousPage = () => {
-    let { hasPrevious } = this.props.pagination
-    if (!hasPrevious) {
-      console.log('toPreviousPage: 已经是第一页')
-      return
-    }
+    let { presentPage } = this.state
+    console.log('%c presentPage', this.getColor(), presentPage)
+    let data = { previousOnePage: presentPage - 1 }
+    this.props.receiveData(data)
   }
 
   //前往下一页
   toNextPage = () => {
-    let { hasNext } = this.props.pagination
-    if (!hasNext) {
-      console.log('toNextPage: 已经是最后页')
-      return
-    }
+    let { presentPage } = this.state
+    console.log('%c presentPage', this.getColor(), presentPage)
+    let data = { nextOnePage: presentPage + 1 }
+    this.props.receiveData(data)
   }
 
   // 绑定 on select 事件
@@ -84,6 +112,24 @@ class PageInfo extends Component {
     console.log('%cRowValue=', 'color:green', rowValue)
     this.setState({
       defineRowNum: rowValue,
+    })
+  }
+
+  //初始化 state.当前页,currentPage from props
+  initializePresent = (currentPage) => {
+    let present = 1
+    if (currentPage < 1) {
+      console.info('%c current-page<1=', this.getColor(), currentPage)
+    } else if (currentPage === undefined) {
+      console.info('%c undefined.current-page=', this.getColor(), currentPage)
+    } else if (isNaN(currentPage)) {
+      console.info('%c NaN.current-page=', this.getColor(), currentPage)
+    } else {
+      console.info('%c current-ordinary=', this.getColor(), currentPage)
+      present = currentPage
+    }
+    this.setState({
+      presentPage: present,
     })
   }
 
@@ -112,13 +158,7 @@ class PageInfo extends Component {
         </div>
         <div className='con_div'>
           <p className='current_page'>
-            第
-            <strong>
-              {this.props.pagination.currentPage < 1
-                ? 1
-                : this.props.pagination.currentPage}
-            </strong>
-            页
+            第<strong>{this.state.presentPage}</strong>页
           </p>
         </div>
         <div className='con_div'>

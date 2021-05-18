@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Model from '@/components/popup-window/model/model'
+import Modal from '@/components/popup-window/modal/modal'
 import PropTypes from 'prop-types'
 import './portals.less'
 
@@ -7,22 +7,28 @@ import './portals.less'
  * Portals:门户
  */
 class Portals extends Component {
+  constructor(props) {
+    super(props)
+    console.log('%cPortals.constructor', this.getColor(), this)
+  }
+
   componentDidMount() {
-    console.log('PortalsComponentDidMount')
-    console.log(this)
+    console.log('%cPortalsComponentDidMount', this.getColor(), this)
   }
 
   state = {
-    showMsg: false,
+    // 是否展示,真-显示,假-隐藏
+    whetherExhibit: false,
   }
 
   static propTypes = {
+    isExhibit: PropTypes.bool.isRequired,
     msg: PropTypes.string.isRequired,
   }
 
   handleMsgWindow() {
     this.setState({
-      showMsg: !this.state.showMsg,
+      whetherExhibit: !this.state.whetherExhibit,
     })
   }
 
@@ -30,21 +36,20 @@ class Portals extends Component {
     return (
       <div className='portal_view_lead'>
         <div id='app_root'>
-          {this.state.showMsg === true ? (
-            <Model
-              isShow={this.state.showMsg}
-              closeModel={this.handleMsgWindow.bind(this)}
+          {console.log(
+            '%c props.isExhibit=',
+            this.getColor(),
+            this.props.isExhibit
+          )}
+          {this.state.whetherExhibit === this.props.isExhibit ? (
+            <Modal
+              isShow={this.state.whetherExhibit}
               message={this.props.msg}
+              closeModal={this.handleMsgWindow.bind(this)}
             />
           ) : null}
-          <button
-            className='portal_btn_claz'
-            onClick={this.handleMsgWindow.bind(this)}
-          >
-            portals
-          </button>
         </div>
-        <div id='model_root'></div>
+        <div id='modal_root'></div>
       </div>
     )
   }

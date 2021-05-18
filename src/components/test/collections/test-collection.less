@@ -1,0 +1,44 @@
+@re: relative;
+@value_left: 40%;
+@percent_width: 18%;
+@bor_rad: 5px;
+@borderNumber: 3px;
+@topVal: 3rem;
+@margin_var: 1rem;
+@fontSizeVal: 30px;
+@bgColorVal: #2222cc;
+@fontNumer: 28px;
+@marginDistance: 2rem;
+
+.mainTestCollection {
+  .back-home {
+    text-align: center;
+    font-size: @fontNumer;
+    margin: @marginDistance 0;
+  }
+
+  .order-list-div {
+    text-align: center;
+    font-size: @fontNumer;
+    position: relative;
+    top: @topVal;
+  }
+
+  .links-ol {
+    list-style: none;
+  }
+
+  .links-ol > li {
+    background: @bgColorVal;
+    display: flex;
+    font-family: system-ui;
+    margin: @margin_var 0;
+    border: @borderNumber solid @bgColorVal;
+    border-radius: @bor_rad;
+    color: white;
+    font-size: @fontSizeVal;
+    width: @percent_width;
+    position: @re;
+    left: @value_left;
+  }
+}

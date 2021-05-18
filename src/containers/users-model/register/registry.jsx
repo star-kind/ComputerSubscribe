@@ -35,7 +35,7 @@ export default class Registry extends Component {
   getRoleByChangeSel = (e) => {
     console.log(e.target)
     //触发onChange事件时,得到的值
-    var roleOptVal = e.target.value
+    let roleOptVal = e.target.value
     console.log('RoleOptVal(code)', roleOptVal)
     this.setState({
       role: roleOptVal,
@@ -57,7 +57,7 @@ export default class Registry extends Component {
     //阻止默认事件
     event.preventDefault()
     //封装对象
-    var data = {
+    let data = {
       userName: this.state.userName,
       userNum: this.state.userNum,
       phone: this.state.phone,
@@ -66,7 +66,7 @@ export default class Registry extends Component {
       password: this.state.password,
     }
     //
-    var res = verifyDataNull(data)
+    let res = verifyDataNull(data)
     console.log('res\n', res)
     if (!res.isValidate) {
       this.setState({
@@ -77,7 +77,7 @@ export default class Registry extends Component {
     }
     //
     data.role = this.state.role
-    var res2 = verifyDataRegex(data)
+    let res2 = verifyDataRegex(data)
     console.log('res2\n', res2)
     if (!res2.isValidate) {
       this.setState({
@@ -128,7 +128,7 @@ export default class Registry extends Component {
   }
 
   render() {
-    var substance = (
+    let substance = (
       <div className='main_container'>
         <PublicHeader></PublicHeader>
         {/*  */}
