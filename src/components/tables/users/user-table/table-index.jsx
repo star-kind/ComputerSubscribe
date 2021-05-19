@@ -15,11 +15,7 @@ class UserTable extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log(
-      '%cUserTable Component Will Receive Props.nextProps',
-      'color:brown'
-    )
-    console.info(nextProps)
+    console.log('%c UserTable.NextProps', 'color:teal', nextProps)
     this.setState({
       pagination: nextProps.pagination,
     })
@@ -39,8 +35,10 @@ class UserTable extends Component {
     rowCheckItems: [],
     //展示或隐藏表单
     checkoutExhibitFrom: 'none',
-    //被编辑的目标
+    //被编辑的目标用户数据行
     editTargetRow: {},
+    //被编辑的目标用户数据行之下标
+    editTargetRowIndex: null,
     //
     cssTblClass: {
       width: '80%',
@@ -127,13 +125,15 @@ class UserTable extends Component {
   }
 
   //展示表单,并隐匿表格
-  showForm = (item, e) => {
-    console.log('showForm--item\n', item)
-    console.log('showForm--event\n', e)
+  showForm = (index, item, e) => {
+    console.log('showForm--item', item)
+    console.log('showForm--index', index)
+    console.log('showForm--event', e)
     //
     this.setState({
       checkoutExhibitFrom: 'block',
       editTargetRow: item,
+      editTargetRowIndex: index,
     })
     //调用(上层组件)函数
     this.props.hidePageArea('none')
@@ -145,6 +145,20 @@ class UserTable extends Component {
     this.setState({
       checkoutExhibitFrom: instrtuction,
     })
+  }
+
+  //接收来自子组件,修改后的新用户数据
+  receivedData = (newData) => {
+    let { editTargetRowIndex } = this.state
+    console.log('%c newData', this.getColor(), newData)
+    console.log('%c editTargetRowIndex', this.getColor(), editTargetRowIndex)
+    if (editTargetRowIndex !== null) {
+      let { pagination } = this.state
+      pagination.data[editTargetRowIndex] = newData
+      this.setState({
+        pagination,
+      })
+    }
   }
 
   //接收子组件指令,充当中继,继续向上层传值
@@ -204,6 +218,7 @@ class UserTable extends Component {
         <EditUserRow
           sendShowVal={this.showInfoArea}
           showTable={this.showTbl}
+          receivedData={this.receivedData}
           showWrapper={this.state.checkoutExhibitFrom}
           row={this.state.editTargetRow}
           style={{ display: this.state.checkoutExhibitFrom }}
@@ -271,7 +286,7 @@ class UserTable extends Component {
                           style={{
                             pointerEvents: this.checkPointerEvent(row.role),
                           }}
-                          onClick={this.showForm.bind(this, row)}
+                          onClick={this.showForm.bind(this, index, row)}
                         >
                           {row.role === 0 ? '不可编辑' : '编辑'}
                         </li>

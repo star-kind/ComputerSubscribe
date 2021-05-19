@@ -21,7 +21,7 @@ class RetrieveList extends Component {
       showPageArea: '',
       //页码
       targetPage: 1,
-      tblRow: 5,
+      tblRow: 3,
       //
       pagination: {
         data: [],
@@ -75,16 +75,18 @@ class RetrieveList extends Component {
     //若跳转页码目标大于总页,警示,中断
     let { totalPages } = this.state.pagination
     if (data.targetOrder > totalPages) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        message: '跳转页数不得大于总页数',
-      })
+      alert('跳转页数不得大于总页数')
+      // this.setState({
+      //   whetherExhibit: !this.state.whetherExhibit,
+      //   message: '跳转页数不得大于总页数',
+      // })
       return
     } else if (data.targetOrder <= 0) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        message: '跳转页数不得小于零或等于零',
-      })
+      alert('跳转页数不得小于零或等于零')
+      // this.setState({
+      //   whetherExhibit: !this.state.whetherExhibit,
+      //   message: '跳转页数不得小于零或等于零',
+      // })
       return
     } else {
       this.setState({
@@ -103,18 +105,20 @@ class RetrieveList extends Component {
     let { nextOnePage } = data
     //
     if (!hasNext) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        message: '已是尾页',
-      })
+      alert('已是尾页')
+      // this.setState({
+      //   whetherExhibit: !this.state.whetherExhibit,
+      //   message: '已是尾页',
+      // })
       return
     } else if (nextOnePage > totalPages) {
       pagination.hasNext = false
       this.setState({
         pagination,
-        whetherExhibit: !this.state.whetherExhibit,
-        message: '没有下一页了',
+        // whetherExhibit: !this.state.whetherExhibit,
+        // message: '没有下一页了',
       })
+      alert('没有下一页了')
       return
     } else {
       pagination.currentPage = nextOnePage
@@ -140,9 +144,10 @@ class RetrieveList extends Component {
       pagination.hasPrevious = false
       this.setState({
         pagination,
-        whetherExhibit: !this.state.whetherExhibit,
-        message: '已经是第一页',
+        // whetherExhibit: !this.state.whetherExhibit,
+        // message: '已经是第一页',
       })
+      alert('已经是第一页')
       return
     } else {
       pagination.currentPage = previousOnePage
@@ -182,11 +187,12 @@ class RetrieveList extends Component {
           pagination: res.data.data,
         })
       } else {
-        console.log('res.data.message\n', res.data.message)
-        ts.setState({
-          message: res.data.message,
-          whetherExhibit: !ts.state.whetherExhibit,
-        })
+        console.log('res.data.message', res.data.message)
+        // ts.setState({
+        // message: res.data.message,
+        // whetherExhibit: !ts.state.whetherExhibit,
+        // })
+        alert(res.data.message)
       }
     })
   }

@@ -20,11 +20,7 @@ export default class EditUserRow extends Component {
 
   //父组件数据实时更新,子组件相应更新
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log(
-      '%cEditUserRow Component Will Receive Props.nextProps',
-      'color:blue'
-    )
-    console.info(nextProps)
+    console.log('%cEditUserRowNextProps', 'color:blue', nextProps)
     //注:这里更新要用nextProps,否则不生效
     this.setState({
       id: nextProps.row.id,
@@ -57,6 +53,7 @@ export default class EditUserRow extends Component {
     showWrapper: PropTypes.string,
     showTable: PropTypes.func,
     sendShowVal: PropTypes.func,
+    receivedData: PropTypes.func,
   }
 
   getToken = () => {
@@ -79,6 +76,52 @@ export default class EditUserRow extends Component {
     })
   }
 
+  validation = (data) => {
+    //如果帐户类型为管理员,警告,中断
+    if (data.role === 0) {
+      this.setState({
+        isExhibit: !this.state.isExhibit,
+        msg: '管理员的资料不可被编辑',
+      })
+    }
+    //token
+    if (this.state.token === '') {
+      this.setState({
+        isExhibit: !this.state.isExhibit,
+        msg: '您的登录状态业已失效,请请重新登录',
+      })
+      return
+    }
+    // validate params whether or null
+    var res = commonUtil.verifyDataNull(data)
+    if (!res.isValidate) {
+      this.setState({
+        isExhibit: !this.state.isExhibit,
+        msg: res.alertText,
+      })
+      return
+    }
+    //检验邮箱and电话
+    //验证手机号码,验证规则：11位数字，以1开头
+    let rulePhone = /^1\d{10}$/
+    if (!rulePhone.test(data.phone)) {
+      this.setState({
+        isExhibit: !this.state.isExhibit,
+        msg: '电话号码不合规定',
+      })
+      return
+    }
+    //验证邮箱
+    let ruleEmail = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/
+    if (!ruleEmail.test(data.mailbox)) {
+      this.setState({
+        isExhibit: !this.state.isExhibit,
+        msg: '邮箱地址不合规定',
+      })
+      return
+    }
+  }
+
   handleSubmit = (event) => {
     const ts = this
     //阻止默认事件
@@ -91,50 +134,41 @@ export default class EditUserRow extends Component {
       mailbox: ts.state.mailbox,
       role: ts.state.role,
     }
-    //如果帐户类型为管理员,警告,中断
-    if (data.role === 0) {
-      ts.setState({
-        isExhibit: !ts.state.isExhibit,
-        msg: '管理员的资料不可被编辑',
-      })
-    }
-    //token
-    if (ts.state.token === '') {
-      ts.setState({
-        isExhibit: !ts.state.isExhibit,
-        msg: '您的登录状态业已失效,请请重新登录',
-      })
-      return
-    }
-    // validate params whether or null
-    var res = commonUtil.verifyDataNull(data)
-    if (!res.isValidate) {
-      ts.setState({
-        isExhibit: !ts.state.isExhibit,
-        msg: res.alertText,
-      })
-      return
-    }
-    //检验邮箱and电话
-    //验证手机号码,验证规则：11位数字，以1开头
-    let rulePhone = /^1\d{10}$/
-    if (!rulePhone.test(data.phone)) {
-      ts.setState({
-        isExhibit: !ts.state.isExhibit,
-        msg: '电话号码不合规定',
-      })
-      return
-    }
-    //验证邮箱
-    let ruleEmail = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/
-    if (!ruleEmail.test(data.mailbox)) {
-      ts.setState({
-        isExhibit: !ts.state.isExhibit,
-        msg: '邮箱地址不合规定',
-      })
-      return
-    }
+    ts.validation(data)
     console.log('%cData\n', 'color:green', data)
+    //
+    ts.gets(
+      ts.interfaces.modifyUser,
+      {
+        userName: data.userName,
+        phone: data.phone,
+        mailbox: data.mailbox,
+        role: data.role,
+        id: data.id,
+      },
+      { token: this.state.token }
+    ).then((res) => {
+      console.info('EditUserRow.response', res)
+      if (res.data.code === 200) {
+        alert(res.data.message)
+        ts.setState({
+          userName: res.data.data.userName,
+          phone: res.data.data.phone,
+          mailbox: res.data.data.mailbox,
+          role: res.data.data.role,
+        })
+        //将新数据发给上层组件
+        ts.deliverToUp(res.data.data)
+        ts.exhibitTblHideForm()
+      } else {
+        console.info('EditUserRow.res.message', res.data.message)
+        alert(res.data.message)
+        // ts.setState({
+        //   isExhibit: !ts.state.isExhibit,
+        //   msg: res.data.message,
+        // })
+      }
+    })
   }
 
   exhibitTblHideForm = () => {
@@ -142,6 +176,11 @@ export default class EditUserRow extends Component {
     this.props.showTable('none')
     //向祖父组件传值,首先向父组件发送
     this.props.sendShowVal('block')
+  }
+
+  //把数据发送给上层组件
+  deliverToUp = (data) => {
+    this.props.receivedData(data)
   }
 
   render() {

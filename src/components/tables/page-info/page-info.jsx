@@ -14,26 +14,37 @@ class PageInfo extends Component {
     console.log(this)
   }
 
-  //父子组件数据同步
-  static getDerivedStateFromProps(nextProps, prevState) {
-    console.log('nextProps', nextProps)
-    console.log('prevState', prevState)
-    let { currentPage } = nextProps.pagination
-    let { targetPageNum } = nextProps
-
-    // 当传入的 props 发生变化的时候，更新state
-    if (currentPage !== prevState.presentPage) {
-      return {
+  //这个钩子可进行父子组件之间更新数据，进行渲染
+  componentDidUpdate(prevProps) {
+    console.log('%c prevProps', this.getColor(), prevProps)
+    let { currentPage } = prevProps.pagination
+    //
+    if (this.state.presentPage !== currentPage) {
+      this.setState({
         presentPage: currentPage,
-      }
-    } else if (targetPageNum === prevState.targetOrder) {
-      return {
-        presentPage: targetPageNum,
-      }
+      })
     }
-    // 否则，对于state不进行任何操作
-    return null
   }
+
+  //父子组件数据同步
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   console.log('nextProps', nextProps)
+  //   console.log('prevState', prevState)
+  //   let { currentPage } = nextProps.pagination
+  //   let { targetPageNum } = nextProps
+  //   // 当传入的 props 发生变化的时候，更新state
+  //   if (currentPage !== prevState.presentPage) {
+  //     return {
+  //       presentPage: currentPage,
+  //     }
+  //   } else if (targetPageNum === prevState.targetOrder) {
+  //     return {
+  //       presentPage: targetPageNum,
+  //     }
+  //   }
+  //   // 否则，对于state不进行任何操作
+  //   return null
+  // }
 
   // UNSAFE_componentWillReceiveProps(nextProps) {
   //   this.initializePresent(nextProps.pagination.currentPage)
@@ -43,10 +54,10 @@ class PageInfo extends Component {
     //自设定每页展示行数
     rowsDefineArr: [
       { num: '每页展示行数' },
+      { num: 3 },
       { num: 5 },
       { num: 8 },
       { num: 10 },
-      { num: 12 },
     ],
     //目标页
     targetOrder: this.props.targetPageNum,
@@ -75,15 +86,14 @@ class PageInfo extends Component {
   }
 
   deliverData = () => {
+    let { rowsDefineArr, defineRowNum } = this.state
+    defineRowNum =
+      typeof defineRowNum === 'string' ? rowsDefineArr[2].num : defineRowNum
     //发送跳转页码+每页展示行数给父组件
     let data = {
       targetOrder: this.state.targetOrder,
       //默认每页展示10行
-      defineRowNum:
-        this.state.defineRowNum === this.state.rowsDefineArr[0].num ||
-        this.state.defineRowNum === ''
-          ? this.state.rowsDefineArr[3].num
-          : this.state.defineRowNum,
+      defineRowNum: defineRowNum,
     }
     this.props.receiveData(data)
   }
