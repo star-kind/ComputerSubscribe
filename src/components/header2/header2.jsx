@@ -7,22 +7,22 @@ import { getValueFromLocal } from '@/api/common'
 //公共组件-header-2
 //对不同类型的用户显示不同的header
 class PublicHeader2 extends Component {
-  constructor(props) {
-    super(props)
+  // constructor(props) {
+  //   super(props)
+  // }
+
+  state = {
+    revampPassword: {
+      name: '修改密码',
+      url: this.user_urls.revamp_passwd_url,
+    },
     //
-    this.state = {
-      revampPassword: {
-        name: '修改密码',
-        url: this.user_urls.revamp_passwd_url,
-      },
-      //
-      urlArray: [],
-    }
+    urlArray: [],
   }
 
   initSelectUrl = () => {
     var storeObj = getValueFromLocal(this.store_key.myself_key)
-    console.log('storeObj\n', storeObj)
+    console.log('%c storeObj', this.getColor(), storeObj)
     //
     var urlArrObj = []
     switch (storeObj.text.role) {
@@ -47,6 +47,7 @@ class PublicHeader2 extends Component {
         urlArrObj = [
           { name: '--请选择地址--', url: '' },
           { name: '学生页面', url: '#student' },
+          { name: '申请机房预约', url: this.user_urls.add_new_apply },
           this.state.revampPassword,
         ]
         break

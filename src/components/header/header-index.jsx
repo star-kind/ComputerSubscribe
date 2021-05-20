@@ -18,7 +18,6 @@ class PublicHeader extends Component {
       { name: '修改密码', url: this.user_urls.revamp_passwd_url },
       { name: '测试-1', url: '/test' },
       { name: '测试-2', url: '/test2' },
-      { name: '测试-void', url: '/##void' },
       { name: '测试-中继集合', url: '/testCollection' },
     ],
   }
@@ -73,11 +72,10 @@ class PublicHeader extends Component {
                     地址列表
                   </label>
                   <select id='select_opt_item' onChange={this.changeSel}>
-                    {/*  */}
                     {this.state.urlArray.map((item) => {
-                      console.log(item)
+                      // console.log(item)
                       return (
-                        <option value={item.url} key={item.name}>
+                        <option key={item.name} value={item.url}>
                           {item.name}
                         </option>
                       )

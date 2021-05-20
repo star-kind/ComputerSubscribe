@@ -58,7 +58,7 @@ export default class EditUserRow extends Component {
 
   getToken = () => {
     var valObj = commonUtil.getValueFromLocal(this.store_key.token_key)
-    console.log('getToken--valObj\n', valObj)
+    console.log('%c valObj\n', valObj)
     if (valObj.code !== -1) {
       this.setState({
         token: valObj.text,

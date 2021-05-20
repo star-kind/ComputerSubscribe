@@ -37,6 +37,10 @@ const ProfileAdministrator = lazy(() =>
 const RetrieveList = lazy(() =>
   import('@/containers/users-model/user-list/retrieve/')
 )
+//
+const AddNewApply = lazy(() =>
+  import('@/containers/subscribe-model/create/add-new-apply/add-new-apply')
+)
 
 /**
  * This class describes my router.
@@ -114,6 +118,12 @@ export default class IRouter extends Component {
                   exact
                   path={user_urls.profile_administrator}
                   component={ProfileAdministrator}
+                />
+
+                <Route
+                  exact
+                  path={user_urls.add_new_apply}
+                  component={AddNewApply}
                 />
 
                 {/* 重定向 */}
