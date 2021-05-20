@@ -1,6 +1,7 @@
 package com.computer.subscribe.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -31,6 +32,108 @@ public class ComputerRoomController extends BasicController {
 
 	@Autowired
 	private IComputerRoomService crs;
+
+	/**
+	 * http://localhost:8080/subscribe/ComputerRoomController/retrieveComputerRoomByRoomNum?roomNum=2
+	 * 
+	 * @param req
+	 * @param roomNum
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retrieveComputerRoomByRoomNum", method = RequestMethod.GET)
+	public WebResponse<TComputerRoom> retrieveComputerRoomByRoomNum(
+			HttpServletRequest req, @RequestParam("roomNum") Integer roomNum) {
+		getLoginDataByToken(req);
+		System.err.println(t + "roomNum=" + roomNum);
+
+		TComputerRoom computerRoom = crs.getComputerRoomByRoomNum(roomNum);
+		WebResponse<TComputerRoom> response = new WebResponse<TComputerRoom>(SUCCESS,
+				computerRoom);
+		return response;
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/ComputerRoomController/retrieveComputerRoomById?roomID=2
+	 * 
+	 * 根据机房id获取某间机房信息
+	 * 
+	 * @param req    不限角色
+	 * @param roomID
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retrieveComputerRoomById", method = RequestMethod.GET)
+	public WebResponse<TComputerRoom> retrieveComputerRoomById(
+			HttpServletRequest req, @RequestParam("roomID") Integer roomID) {
+		getLoginDataByToken(req);
+		System.err.println(t + "roomID=" + roomID);
+
+		TComputerRoom computerRoom = crs.getComputerRoomById(roomID);
+		WebResponse<TComputerRoom> response = new WebResponse<TComputerRoom>(SUCCESS,
+				computerRoom);
+		return response;
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/ComputerRoomController/deleteRoomByRoomId?roomID=1
+	 * 
+	 * @param req
+	 * @param roomID
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/deleteRoomByRoomId", method = RequestMethod.GET)
+	public WebResponse<Integer> deleteRoomByRoomId(HttpServletRequest req,
+			@RequestParam("roomID") Integer roomID) {
+		LoginData loginData = getLoginDataByToken(req);
+		Long operatorNum = loginData.getUserNum();
+		System.err.println(t + "deleteRoomByRoomId..roomID=" + roomID
+				+ ",operatorNum" + operatorNum);
+
+		Integer effect = crs.deleteComputerRoomByID(roomID, operatorNum);
+		WebResponse<Integer> response = new WebResponse<Integer>(SUCCESS,
+				"成功删除" + effect + "间机房数据", effect);
+		return response;
+	}
+
+	/**
+	 * 
+	 * 获取机房编号之数组,不限角色
+	 * 
+	 * http://localhost:8080/subscribe/ComputerRoomController/retrieveRoomNumArr
+	 * 
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retrieveRoomNumArr", method = RequestMethod.GET)
+	public WebResponse<Integer[]> retrieveRoomNumArr(HttpServletRequest req) {
+		getLoginDataByToken(req);
+		Integer[] numArray = crs.getRoomNumArray();
+
+		WebResponse<Integer[]> response = new WebResponse<Integer[]>(SUCCESS,
+				numArray);
+		return response;
+	}
+
+	/**
+	 * http://localhost:8080/subscribe/ComputerRoomController/retrieveIdAndRoomMapList
+	 * 
+	 * @param req
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retrieveIdAndRoomMapList", method = RequestMethod.GET)
+	public WebResponse<List<Map<Integer, Integer>>> retrieveIdAndRoomMapList(
+			HttpServletRequest req) {
+		getLoginDataByToken(req);
+		List<Map<Integer, Integer>> mapList = crs.getIdAndRoomNumMapList();
+
+		WebResponse<List<Map<Integer, Integer>>> response = new WebResponse<List<Map<Integer, Integer>>>(
+				SUCCESS, mapList);
+		return response;
+	}
 
 	/**
 	 * 分页列表,获取全部机房信息,不限制帐号类型<br>

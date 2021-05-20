@@ -147,13 +147,12 @@ public class UsersController extends BasicController {
 	}
 
 	/**
-	 * http://localhost:8080/subscribe/UsersController/getMemberByOrderAction?pageOrder=0&rows=2&id=18
+	 * http://localhost:8080/subscribe/UsersController/getMemberByOrderAction?pageOrder=0&rows=2
 	 * 
 	 * <p>
 	 * 管理员分页查询用户列表
 	 * </p>
 	 * 
-	 * @param id        Administrator.ID
 	 * @param pageOrder 页数
 	 * @param rows      每页展示行数
 	 * @return

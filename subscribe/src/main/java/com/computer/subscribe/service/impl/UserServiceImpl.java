@@ -27,7 +27,7 @@ import com.computer.subscribe.util.support.PasswordBusiness;
 public class UserServiceImpl implements IUserService {
 	String t = this.getClass().getName() + "\n";
 	public static Logger logger = Logger.getLogger(UserServiceImpl.class);
-	
+
 	JwtUtils jwt = JwtUtils.getInstance();
 
 	@Autowired
@@ -290,10 +290,8 @@ public class UserServiceImpl implements IUserService {
 		if (list.isEmpty()) {
 			String description = ExceptionsEnum.ACCOUNT_NO_EXIST.getDescription();
 
-			logger.error(this.getClass().getName()
-					+ "__查看用户是否存在__checkUserExist__== " + description);
-			System.err.println(this.getClass().getName()
-					+ "__查看用户是否存在__checkUserExist__==" + description);
+			logger.error(t + "__查看用户是否存在__checkUserExist__== " + description);
+			System.err.println(t + "__查看用户是否存在__checkUserExist__==" + description);
 
 			throw new OperationException(description);
 		}

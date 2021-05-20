@@ -293,13 +293,22 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		TSubscribe subscribe = this.getSubscribeByID(subscribeID);
 
+		// 检验此机房是否存在
+		TComputerRoom computerRoom = icrs
+				.getComputerRoomByOrder(subscribe.getRoomNum());
+		if (computerRoom == null) {
+			String description = ExceptionsEnum.COMPUTER_ROOM_NOT_EXIST
+					.getDescription();
+			System.err.println(ts + "..handleSubscribeStatus=" + description);
+			throw new OperationException(description);
+		}
+
 		// 校验:预约申请发起日期是否属于本周的周一至七;
 		Date startTime = subscribe.getApplicationStartTime();
 		Boolean isInThisWeek = dateTimeKits.judgeDayIsInThisWeek(startTime);
 		if (!isInThisWeek) {
 			String description = ExceptionsEnum.SUBSCRIBE_NOT_IN_THIS_WEEK
 					.getDescription();
-
 			System.err.println(
 					ts + "__handleSubscribeStatus__description=" + description);
 			logger.error(ts + "__handleSubscribeStatus__description=" + description);

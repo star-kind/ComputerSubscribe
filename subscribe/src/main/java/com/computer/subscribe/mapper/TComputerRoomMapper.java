@@ -3,9 +3,25 @@ package com.computer.subscribe.mapper;
 import com.computer.subscribe.pojo.TComputerRoom;
 import com.computer.subscribe.pojo.TComputerRoomExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface TComputerRoomMapper {
+	/**
+	 * 获取所有{id,roomNum}的 Map List
+	 * 
+	 * @return
+	 */
+	List<Map<Integer, Integer>> selectIdAndRoomNumMap();
+
+	/**
+	 * 获取全部的机房编号,返回integer数组
+	 * 
+	 * @return
+	 */
+	Integer[] getRoomNumCollection();
+
 	/**
 	 * 计算id的总数
 	 * 

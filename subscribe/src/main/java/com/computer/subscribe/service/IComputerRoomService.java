@@ -1,6 +1,7 @@
 package com.computer.subscribe.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -17,6 +18,40 @@ import lombok.NonNull;
  *
  */
 public interface IComputerRoomService {
+	/**
+	 * 删除机房之接口,权限-管理员,据机房id
+	 * 
+	 * @param roomID
+	 * @param operatorNum
+	 * @return
+	 * @throws OperationException
+	 */
+	Integer deleteComputerRoomByID(Integer roomID, Long operatorNum)
+			throws OperationException;
+
+	/**
+	 * 限制机房数量,超出抛异常
+	 * 
+	 * @throws OperationException
+	 */
+	void limitsRoomQuantity() throws OperationException;
+
+	/**
+	 * 获取机房编号之集合(或者数组),不限角色
+	 * 
+	 * @return
+	 * @throws OperationException
+	 */
+	Integer[] getRoomNumArray() throws OperationException;
+
+	/**
+	 * 获取机房id+机房房号的集合列表,不限角色
+	 * 
+	 * @return
+	 * @throws OperationException
+	 */
+	List<Map<Integer, Integer>> getIdAndRoomNumMapList() throws OperationException;
+
 	/**
 	 * 分页列表,获取全部机房信息
 	 * 
@@ -98,6 +133,16 @@ public interface IComputerRoomService {
 	 * @return
 	 */
 	TComputerRoom getComputerRoomByOrder(@NonNull Integer roomNum);
+
+	/**
+	 * 获取机房信息,据机房房号,不限角色
+	 * 
+	 * @param roomNum
+	 * @return
+	 * @throws OperationException
+	 */
+	TComputerRoom getComputerRoomByRoomNum(Integer roomNum)
+			throws OperationException;
 
 	/**
 	 * 根据id获取机房数据

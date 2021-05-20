@@ -1,7 +1,7 @@
 package com.computer.subscribe.exception;
 
 /**
- * 枚举，将自我操作异常类型汇集于此
+ * 枚举，将业务操作异常汇集于此
  * 
  * @author user
  *
@@ -31,6 +31,8 @@ public enum ExceptionsEnum {
 	LOCATION_DUPLICATION_ERROR(810, "机房地点位置早已重复"),
 	/** 本间机房现在无法使用 */
 	COMPUTER_ROOM_UNAVAILABLE(811, "本间机房现在无法使用"),
+	/**机房数量不得超出限制*/
+	ROOM_QUANTITY_CANNOT_EXCEED(812,"机房数量不得超出限制"),
 	/* SUBSCRIBE */
 	/** 系统在周末不接受学生预约申请,教师也不能进行任何批复 */
 	INVALID_DATE_WEEKEND(906, "系统在周末不接受学生预约申请,教师也不能进行任何批复"),

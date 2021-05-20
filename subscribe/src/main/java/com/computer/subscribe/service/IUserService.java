@@ -98,7 +98,7 @@ public interface IUserService {
 	 * 检查某个用户是否存在,若是存在则返回对象[据学号/工号]
 	 * 
 	 * @param userNum
-	 * @return
+	 * @return 密文密钥设空
 	 */
 	TUser checkUserExist(@NotNull Long userNum) throws OperationException;
 

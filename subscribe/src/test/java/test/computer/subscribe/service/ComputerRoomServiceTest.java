@@ -20,13 +20,48 @@ public class ComputerRoomServiceTest {
 	}
 
 	@Test
+	public void getMapListTest() {
+		crs = (IComputerRoomService) applicationContext
+				.getBean("computerRoomServiceImpl");
+
+		try {
+			crs.getIdAndRoomNumMapList();
+		} catch (OperationException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
+	public void deleRoomTest() {
+		crs = (IComputerRoomService) applicationContext
+				.getBean("computerRoomServiceImpl");
+
+		try {
+			crs.deleteComputerRoomByID(5, 2465944154L);
+		} catch (OperationException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
+	public void getRoomsArrayArrTest() {
+		crs = (IComputerRoomService) applicationContext
+				.getBean("computerRoomServiceImpl");
+
+		try {
+			crs.getRoomNumArray();
+		} catch (OperationException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	@Test
 	public void getRoomsListTest() {
 		crs = (IComputerRoomService) applicationContext
 				.getBean("computerRoomServiceImpl");
 
 		try {
-			crs.getRoomListByPagination(2465944154L, 0, 2);
-
+			crs.getRoomListByPagination(2465944154L, 0, 4);
 		} catch (OperationException e) {
 			System.err.println(e.getMessage());
 		}

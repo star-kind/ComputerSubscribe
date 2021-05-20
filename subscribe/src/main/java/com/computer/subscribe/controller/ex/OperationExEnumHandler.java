@@ -195,6 +195,9 @@ public class OperationExEnumHandler {
 			res.setCode(ExceptionsEnum.SUBSCRIBE_USEINTERVAL_OUT_RANGE.getCode());
 			break;
 
+		case "机房数量不得超出限制":
+			res.setCode(ExceptionsEnum.ROOM_QUANTITY_CANNOT_EXCEED.getCode());
+			break;
 		}
 
 		return res;

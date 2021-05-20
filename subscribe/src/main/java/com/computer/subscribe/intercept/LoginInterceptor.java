@@ -24,6 +24,8 @@ import com.computer.subscribe.util.JwtUtils;
 public class LoginInterceptor implements HandlerInterceptor {
 	public static Logger logger = Logger.getLogger(LoginInterceptor.class);
 
+	String str = this.getClass().getName() + "____\n";
+
 	JwtUtils jwt = JwtUtils.getInstance();
 
 	@Override
@@ -39,7 +41,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object obj) throws Exception {
-		String string = this.getClass().getName() + "\n__拦截器:preHandle()__\n";
+		String string = str + "__拦截器:preHandle()__\n";
 
 		/*
 		 * 给指定请求路径,或若已在线,也可放行
@@ -75,23 +77,22 @@ public class LoginInterceptor implements HandlerInterceptor {
 	 */
 	public Boolean judgeHadOnline(String token) {
 		Boolean hadOnline = true;
-		String string = this.getClass().getName() + "\n__judgeHadOnline()__\n";
-		System.err.println(string + "__header..token=" + token);
+		System.err.println(str + "__header..token=" + token);
 
 		if (!StringUtils.isNotEmpty(token)) {
 			hadOnline = false;
-			System.err.println(string + "--hadOnline==" + hadOnline);
+			System.err.println(str + "--hadOnline==" + hadOnline);
 
 		} else if ("undefined".equals(token)) {
 			hadOnline = false;
-			System.err.println(string + "--undefined--hadOnline==" + hadOnline);
+			System.err.println(str + "--undefined--hadOnline==" + hadOnline);
 
 		} else {
 			LoginData data = jwt.decode(token, LoginData.class);
-			System.out.println(string + "__decode=" + data.toString());
+			System.out.println(str + "__decode=" + data.toString());
 
 			LoginData data2 = jwt.updateDecode(token, LoginData.class);
-			System.err.println(string + "__updateDecode=" + data2.toString());
+			System.err.println(str + "__updateDecode=" + data2.toString());
 		}
 
 		return hadOnline;
@@ -104,16 +105,14 @@ public class LoginInterceptor implements HandlerInterceptor {
 	 * @return
 	 */
 	public String getActionURL(StringBuffer requestURL) {
-		System.err.println(this.getClass() + "--getActionURL..strbuf..requestURL="
-				+ requestURL);
+		System.err.println(str + "--getActionURL..strbuf..requestURL=" + requestURL);
 
 		int i = requestURL.lastIndexOf("/");
-		System.out
-				.println(this.getClass() + "--getActionURL..requestURL..index=" + i);
+		System.out.println(str + "--getActionURL..requestURL..index=" + i);
 
 		String actionName = requestURL.substring(i + 1);
-		System.err.println(this.getClass()
-				+ "--getActionURL..requestURL..actionName=" + actionName);
+		System.err.println(
+				str + "--getActionURL..requestURL..actionName=" + actionName);
 
 		return actionName;
 	}
@@ -125,7 +124,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 	 * @return
 	 */
 	public Boolean ruleOutURL(String reqUrl) {
-		System.err.println(this.getClass() + "--ruleOutURL..reqUrl=" + reqUrl);
+		System.err.println(str + "--ruleOutURL..reqUrl=" + reqUrl);
 		Boolean ruleOutBool = false;
 
 		switch (reqUrl) {
@@ -138,13 +137,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 			break;
 
 		default:
-			System.err.println(this.getClass()
-					+ "--ruleOutURL..switch..default..ruleOutBool=" + ruleOutBool);
+			System.err.println(str + "--ruleOutURL..switch..default..ruleOutBool="
+					+ ruleOutBool);
 			break;
 		}
 
-		System.out.println(this.getClass() + "--ruleOutURL..return..ruleOutBool="
-				+ ruleOutBool);
+		System.out.println(str + "--ruleOutURL..return..ruleOutBool=" + ruleOutBool);
 		return ruleOutBool;
 	}
 
