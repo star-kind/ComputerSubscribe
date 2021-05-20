@@ -20,7 +20,7 @@ import net.sf.json.JSONArray;
  *
  */
 public class DocumentHandler {
-	static String json_file_url = "/home/user/beforehandler/postman_collection2.json";
+	static String json_file_url = "/home/user/beforehandler/postman_collection.json";
 
 	/**
 	 * 
