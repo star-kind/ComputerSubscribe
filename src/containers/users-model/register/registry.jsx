@@ -132,6 +132,8 @@ export default class Registry extends Component {
       <div className='main_container'>
         <PublicHeader></PublicHeader>
         {/*  */}
+        <br />
+        <br />
         <div className='regist_container'>
           <br />
           <br />
@@ -252,6 +254,10 @@ export default class Registry extends Component {
           isExhibit={this.state.whetherExhibit}
           msg={this.state.message}
         ></Portals2>
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     )
     return substance

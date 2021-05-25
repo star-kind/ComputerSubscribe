@@ -1,14 +1,16 @@
+@marginVarible: 0.5rem;
+@val_bord_radius: 5px;
 @relativeVarible: relative;
-@leftPerVal: 1%;
+@leftPerVal: 4%;
 @marginTopLen: 3px;
 @bottom_len: 1rem;
-@top_len_value: @bottom_len;
+@top_len_value: 0;
 @width_varible: 4em;
 @leftSize: 0.37;
 @widthValue: 400px;
 @widthValue2: 2em;
-@backgroundValue: #0f5d27;
-@heightValue: 25em;
+@backgroundValue: #08adb8;
+@heightValue: 30em;
 @heightValue2: 2em;
 @fontSizeVal: 35px;
 @fontSizeValue2: 16px;
@@ -19,8 +21,8 @@
 @whiteBackground: #fff;
 @tipUserFontSize: 26px;
 @margin_bottom: 0.8em;
-@width_val: 0.96;
-@width_num: 12em;
+@width_val: 0.9;
+@width_num: 18rem;
 @padd_top: 25px;
 @select_margin_left: 12px;
 @margin_percent: 5%;
@@ -59,6 +61,7 @@
     width: percentage(@width_val);
     height: @heightValue2;
     border-radius: @borderRadiusVal2;
+    margin: @marginVarible 0;
   }
 
   .label_role {
@@ -97,7 +100,7 @@
     border-width: 0;
     width: @width_varible;
     height: @heightValue2;
-    border-radius: 5px;
+    border-radius: @val_bord_radius;
   }
 
   #reset_item {

@@ -5,8 +5,8 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
 
-import IRouter from '@/router'
-import store from '@/redux/test-redux/store'
+import MineRouter from './router/MineRouter'
+import store from './redux/store'
 
 console.log(store)
 
@@ -15,11 +15,11 @@ console.log(store)
  * @returns
  */
 function App() {
-  var content = (
+  const content = (
     <div className='app'>
       <Provider store={store}>
         <AppContainer>
-          <IRouter />
+          <MineRouter />
         </AppContainer>
       </Provider>
     </div>

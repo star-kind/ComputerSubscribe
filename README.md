@@ -56,7 +56,10 @@ babel-loader 7.x 对应 babel-core 6.x
 
 - 跨组件(祖先=>(...后代))之间通信推荐使用 context,取代 props
 - 子孙组件向祖先组件传值,暂时只能逐层向上递传
-- console 打印出有颜色的文字`console.log("%cTXT", "color:red")`
 - react 中 input 标签使用属性 value 的话，一直改会一直循环触发 onChange 事件,应该用 defaultValue
 
 ---
+
+**小结**
+
+- 用户表格相关组件合计 4 个,可复用性/可读性较差,嵌套凌乱,属于难以再复制的手工制品,不建议后续借鉴

@@ -7,10 +7,6 @@ import { getValueFromLocal } from '@/api/common'
 //公共组件-header-2
 //对不同类型的用户显示不同的header
 class PublicHeader2 extends Component {
-  // constructor(props) {
-  //   super(props)
-  // }
-
   state = {
     revampPassword: {
       name: '修改密码',
@@ -40,6 +36,10 @@ class PublicHeader2 extends Component {
           { name: '--请选择地址--', url: '' },
           { name: '教师页面', url: '#teacher' },
           this.state.revampPassword,
+          {
+            name: '查看预约申请单列表',
+            url: this.user_urls.query_by_room_major,
+          },
         ]
         break
 
@@ -47,8 +47,8 @@ class PublicHeader2 extends Component {
         urlArrObj = [
           { name: '--请选择地址--', url: '' },
           { name: '学生页面', url: '#student' },
-          { name: '申请机房预约', url: this.user_urls.add_new_apply },
           this.state.revampPassword,
+          { name: '申请机房预约', url: this.user_urls.add_new_apply },
         ]
         break
 

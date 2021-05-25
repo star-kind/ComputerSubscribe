@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import PublicHeader2 from '@/components/header2/header2'
-import Portals2 from '@/components/popup-window/portals2/portals2'
 import { getValueFromLocal } from '@/api/common'
 import './index.less'
 import UserTable from '@/components/tables/users/user-table/table-index'
-import PageInfo from '@/components/tables/page-info/page-info'
+import PageInfo from '@/components/tables/users/page-info/page-info'
 
 //管理员查看用户成员列表
 class RetrieveList extends Component {
@@ -12,10 +11,7 @@ class RetrieveList extends Component {
     super(props)
     console.info('%cRetrieveList--Constructor', 'color:red', this)
     this.state = {
-      //是否展示
-      whetherExhibit: true,
-      message: '',
-      //
+      //表首数组
       thArr: ['用户名', '学号/工号', '帐号类型', '邮箱', '电话', '操作'],
       //是否隐藏/展示页码区域
       showPageArea: '',
@@ -58,16 +54,15 @@ class RetrieveList extends Component {
   //接收来自子组件的数据
   receiveInfo = (data) => {
     if (data.targetOrder !== undefined) {
-      console.log('%c data-targetOrder\n', 'color:green', data.targetOrder)
+      console.log('%c jumpByPageNum-data\n', 'color:red', data.targetOrder)
       this.jumpByPageNum(data)
     } else if (data.nextOnePage !== undefined) {
-      console.log('%c data-nextOnePage\n', 'color:green', data.nextOnePage)
+      console.log('%c jumpNextPage-data\n', 'color:teal', data)
       this.jumpNextPage(data)
     } else if (data.previousOnePage !== undefined) {
-      console.log('%c data-previousPage\n', 'color:green', data.previousOnePage)
+      console.log('%c jumpPreviousPage-data\n', 'color:green', data)
       this.jumpPreviousPage(data)
     }
-    this.handleGetUsersList()
   }
 
   //根据页码+每页行数查看
@@ -76,23 +71,16 @@ class RetrieveList extends Component {
     let { totalPages } = this.state.pagination
     if (data.targetOrder > totalPages) {
       alert('跳转页数不得大于总页数')
-      // this.setState({
-      //   whetherExhibit: !this.state.whetherExhibit,
-      //   message: '跳转页数不得大于总页数',
-      // })
       return
     } else if (data.targetOrder <= 0) {
       alert('跳转页数不得小于零或等于零')
-      // this.setState({
-      //   whetherExhibit: !this.state.whetherExhibit,
-      //   message: '跳转页数不得小于零或等于零',
-      // })
       return
     } else {
       this.setState({
         targetPage: data.targetOrder,
         tblRow: data.defineRowNum,
       })
+      this.handleGetUsersList2(data.targetOrder, data.defineRowNum)
     }
   }
 
@@ -102,21 +90,15 @@ class RetrieveList extends Component {
     console.log('%chasNext,totalPages', this.getColor(), hasNext, totalPages)
     //
     let { pagination } = this.state
-    let { nextOnePage } = data
+    let { nextOnePage, defineRowNum } = data
     //
     if (!hasNext) {
       alert('已是尾页')
-      // this.setState({
-      //   whetherExhibit: !this.state.whetherExhibit,
-      //   message: '已是尾页',
-      // })
       return
     } else if (nextOnePage > totalPages) {
       pagination.hasNext = false
       this.setState({
         pagination,
-        // whetherExhibit: !this.state.whetherExhibit,
-        // message: '没有下一页了',
       })
       alert('没有下一页了')
       return
@@ -126,6 +108,7 @@ class RetrieveList extends Component {
         pagination,
         targetPage: nextOnePage,
       })
+      this.handleGetUsersList2(nextOnePage, defineRowNum)
     }
   }
 
@@ -133,7 +116,7 @@ class RetrieveList extends Component {
   jumpPreviousPage = (data) => {
     let { hasPrevious } = this.state.pagination
     let { pagination } = this.state
-    let { previousOnePage } = data
+    let { previousOnePage, defineRowNum } = data
     console.log(
       '%c hasPrevious,previousOnePage',
       this.getColor(),
@@ -144,8 +127,6 @@ class RetrieveList extends Component {
       pagination.hasPrevious = false
       this.setState({
         pagination,
-        // whetherExhibit: !this.state.whetherExhibit,
-        // message: '已经是第一页',
       })
       alert('已经是第一页')
       return
@@ -155,7 +136,46 @@ class RetrieveList extends Component {
         pagination,
         targetPage: previousOnePage,
       })
+      this.handleGetUsersList2(previousOnePage, defineRowNum)
     }
+  }
+
+  /**
+   *
+   * @param {*} targetPage
+   * @param {*} tblRow
+   * @returns
+   */
+  handleGetUsersList2 = (targetPage, tblRow) => {
+    //先存一下this,以防使用箭头函数this会指向我们不希望它所指向的对象
+    const ts = this
+    let tokenObj = getValueFromLocal(ts.store_key.token_key)
+    console.log('tokenObj\n', tokenObj)
+    //token
+    if (tokenObj.code === -1) {
+      alert(tokenObj.text)
+      return
+    }
+    //
+    ts.gets(
+      ts.interfaces.getMember,
+      {
+        pageOrder: targetPage,
+        rows: tblRow,
+      },
+      { token: tokenObj.text }
+    ).then((res) => {
+      console.log('RESPONSE\n', res)
+      if (res.data.code === 200) {
+        console.info('res.data.data\n', res.data.data)
+        ts.setState({
+          pagination: res.data.data,
+        })
+      } else {
+        console.log('res.data.message', res.data.message)
+        alert(res.data.message)
+      }
+    })
   }
 
   handleGetUsersList = () => {
@@ -165,10 +185,7 @@ class RetrieveList extends Component {
     console.log('tokenObj\n', tokenObj)
     //token
     if (tokenObj.code === -1) {
-      ts.setState({
-        isExhibit: !ts.state.isExhibit,
-        msg: tokenObj.text,
-      })
+      alert(tokenObj.text)
       return
     }
     //
@@ -188,10 +205,6 @@ class RetrieveList extends Component {
         })
       } else {
         console.log('res.data.message', res.data.message)
-        // ts.setState({
-        // message: res.data.message,
-        // whetherExhibit: !ts.state.whetherExhibit,
-        // })
         alert(res.data.message)
       }
     })
@@ -221,13 +234,6 @@ class RetrieveList extends Component {
               pagination={this.state.pagination}
               targetPageNum={this.state.targetPage}
             ></PageInfo>
-          </div>
-          {/*  */}
-          <div className='portals02'>
-            <Portals2
-              msg={this.state.message}
-              isExhibit={this.state.whetherExhibit}
-            ></Portals2>
           </div>
         </div>
       </div>

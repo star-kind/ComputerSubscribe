@@ -16,6 +16,14 @@ let interfaces = {
   login: '/api/subscribe/UsersController/loginAction',
 
   registry: '/api/subscribe/UsersController/registerAction',
+
+  retrieveRoomNumArr:
+    '/api/subscribe/ComputerRoomController/retrieveRoomNumArr',
+
+  addNewApply: '/api/subscribe/SubscribeController/addNewApplyAction',
+
+  retrieveAllSubscirbeOnWeek:
+    '/api/subscribe/SubscribeController/retrieveAllSubscirbeOnWeek',
 }
 
 export default interfaces

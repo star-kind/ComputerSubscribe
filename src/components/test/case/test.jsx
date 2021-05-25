@@ -12,8 +12,9 @@ export default class Test extends Component {
   render() {
     return (
       <div className='testing_case_page'>
-        <PublicHeader2></PublicHeader2>
-        {/*  */}
+        <div>
+          <PublicHeader2></PublicHeader2>
+        </div>
         <div className='back_home_page'>
           <Link to={'/'}>返回首页</Link>
         </div>

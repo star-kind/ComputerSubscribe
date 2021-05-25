@@ -2,22 +2,21 @@ import React, { Component } from 'react'
 import './add-new-apply.less'
 import { commonUtil } from '@/api/common2'
 import PublicHeader2 from '@/components/header2/header2'
+import Portals2 from '@/components/popup-window/portals2/portals2'
 
 class AddNewApply extends Component {
   constructor(props) {
     super(props)
     console.info('%cAddNewApply--Constructor\n', 'color:brown', this)
-    //获取机房列表信息,初始化机房选择列表
-    //this.handleGetRoomList()
   }
 
   componentDidMount() {
     console.log('%cAddNewApply component did mount\n', 'color:red', this)
-    this.getToken()
+    //获取机房列表信息,初始化机房选择列表
+    this.handleGetRoomList()
   }
 
   state = {
-    token: '',
     useIntervalArr: [
       { name: '--请选择时间段--', num: '' },
       { name: '上午', num: 0 },
@@ -28,16 +27,45 @@ class AddNewApply extends Component {
     applyUseDate: null,
     roomNum: null,
     useInterval: null,
+    //
+    whetherExhibit: true,
+    message: '',
+    //
+    roomNumArr: [],
+  }
+
+  //获取机房编号数组
+  handleGetRoomList = () => {
+    let _this = this
+    let token = _this.getToken()
+    //
+    _this
+      .gets(_this.interfaces.retrieveRoomNumArr, {}, { token: token })
+      .then((result) => {
+        console.log('%c result=', _this.getColor(), result)
+        if (result.data.code === 200) {
+          _this.setState({
+            roomNumArr: result.data.data,
+          })
+        } else {
+          _this.setState({
+            message: result.data.message,
+            whetherExhibit: !_this.state.whetherExhibit,
+          })
+        }
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
 
   getToken = () => {
     var valObj = commonUtil.getValueFromLocal(this.store_key.token_key)
-    console.log('%c valObj\n', valObj)
+    console.log('%c valObj', this.getColor(), valObj)
     if (valObj.code !== -1) {
-      this.setState({
-        token: valObj.text,
-      })
+      return valObj.text
     }
+    return null
   }
 
   // 绑定 on select 事件
@@ -61,8 +89,28 @@ class AddNewApply extends Component {
     })
   }
 
+  validateParams = (params) => {
+    console.info('%c validateParams.params', this.getColor(), params)
+    let { applyUseDate, useInterval, roomNum } = params
+    let result = { warnTip: '', whether: false }
+    //
+    if (useInterval === null) {
+      result.warnTip = '请选择时间段'
+    } else if (applyUseDate === null) {
+      result.warnTip = '请选择日期'
+    } else if (roomNum === null || roomNum === '--请选择机房房号--') {
+      result.warnTip = '请选择机房'
+    } else {
+      result.whether = true
+    }
+    //
+    console.info('%c validateParams.result', this.getColor(), result)
+    return result
+  }
+
   handleSubmit = (event) => {
     let ts = this
+    let token = ts.getToken()
     //阻止默认事件
     event.preventDefault()
     //
@@ -71,7 +119,43 @@ class AddNewApply extends Component {
       roomNum: ts.state.roomNum,
       useInterval: ts.state.useInterval,
     }
+    //
+    let result = this.validateParams(params)
+    if (!result.whether) {
+      this.setState({
+        whetherExhibit: !this.state.whetherExhibit,
+        message: result.warnTip,
+      })
+      return
+    }
     console.info('%c params', this.getColor(), params)
+    //
+    ts.gets(
+      ts.interfaces.addNewApply,
+      {
+        useInterval: params.useInterval,
+        roomNum: params.roomNum,
+        applyUseDate: params.applyUseDate,
+      },
+      { token: token }
+    ).then((res) => {
+      console.info('handlesubmit response', res)
+      if (res.data.code === 200) {
+        ts.setState({
+          whetherExhibit: !ts.state.whetherExhibit,
+          message: '已提交预约申请',
+          applyUseDate: null,
+          roomNum: null,
+          useInterval: null,
+        })
+      } else {
+        console.info('handlesubmit res.data.message', res.data.message)
+        ts.setState({
+          whetherExhibit: !ts.state.whetherExhibit,
+          message: res.data.message,
+        })
+      }
+    })
   }
 
   render() {
@@ -145,9 +229,14 @@ class AddNewApply extends Component {
                         id='id_roomNum'
                         className='selects-tag'
                       >
-                        <option defaultValue='10'>10号机房</option>
-                        <option defaultValue='12'>12号机房</option>
-                        <option defaultValue='22'>22号机房</option>
+                        <option>--请选择机房房号--</option>
+                        {this.state.roomNumArr.map((item, index) => {
+                          return (
+                            <option key={index} value={item}>
+                              {item}号机房
+                            </option>
+                          )
+                        })}
                       </select>
                     </div>
                   </div>
@@ -172,6 +261,10 @@ class AddNewApply extends Component {
                 </div>
               </form>
             </div>
+            <Portals2
+              isExhibit={this.state.whetherExhibit}
+              msg={this.state.message}
+            ></Portals2>
             <br />
             <br />
             <br />

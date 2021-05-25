@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 // import reportWebVitals from './reportWebVitals';
-import IRouter from './router'
+import MineRouter from './router/MineRouter'
 import { gets } from './api/axios-utils/httputil'
 import interfaces from './api/axios-utils/interfaces'
 import { store_key, user_urls } from './api/constant-list'
 import { getColor } from './api/utils/log-color'
 
 if (module.hot) {
-  module.hot.accept('./router', () => {
+  module.hot.accept('./router/MineRouter', () => {
     console.log(this)
-    ReactDOM.render(IRouter)
+    ReactDOM.render(MineRouter)
   })
 }
 

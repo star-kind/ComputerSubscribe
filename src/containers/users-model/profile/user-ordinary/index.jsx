@@ -42,8 +42,8 @@ export default class ProfileUserOrdinary extends Component {
 
   //更新资料
   updateProfile = () => {
-    var storeObj = getValueFromLocal(this.store_key.myself_key)
-    var tokenObj = getValueFromLocal(this.store_key.token_key)
+    let storeObj = getValueFromLocal(this.store_key.myself_key)
+    let tokenObj = getValueFromLocal(this.store_key.token_key)
     console.log('storeObj\n', storeObj, 'tokenObj\n', tokenObj)
     //
     if (storeObj.code !== -1) {
@@ -93,12 +93,12 @@ export default class ProfileUserOrdinary extends Component {
     //阻止默认事件
     event.preventDefault()
     //
-    var data = {
+    let data = {
       userName: this.state.userName,
       mailbox: this.state.mailbox,
       phone: this.state.phone,
     }
-    var resObj = verifyDataNull(data)
+    let resObj = verifyDataNull(data)
     console.log('resObj\n', resObj)
     if (!resObj.isValidate) {
       this.setState({

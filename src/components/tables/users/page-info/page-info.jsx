@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './page-info.less'
-import Portals from '@/components/popup-window/portals/portals'
 
 //展示表分页信息
 class PageInfo extends Component {
@@ -17,24 +16,18 @@ class PageInfo extends Component {
 
   //这个钩子可进行父子组件之间更新数据，进行渲染
   componentDidUpdate(prevProps, prevState) {
-    console.log(
-      '%c PageInfo.componentDidUpdate.prevProps',
-      this.getColor(),
-      prevProps
-    )
-    console.log(
-      '%c PageInfo.componentDidUpdate.prevState',
-      this.getColor(),
-      prevState
-    )
-    let { currentPage } = this.props.pagination
+    console.log('%c PageInfo-prevProps', this.getColor(), prevProps)
+    console.log('%c PageInfo-prevState', this.getColor(), prevState)
+    console.log('%c PageInfo-This', this.getColor(), this)
     //
-    if (prevState.presentPage !== currentPage) {
+    let { targetPageNum } = this.props
+    let { presentPage } = this.state
+    //
+    if (presentPage !== targetPageNum) {
       this.setState({
-        presentPage: currentPage,
+        presentPage: targetPageNum,
       })
     }
-    console.log('%c PageInfo.componentDidUpdate.This', this.getColor(), this)
   }
 
   state = {
@@ -52,9 +45,6 @@ class PageInfo extends Component {
     defineRowNum: '',
     //当前页
     presentPage: 1,
-    //
-    msg: '',
-    whetherExhibit: true,
   }
 
   static propTypes = {
@@ -75,117 +65,51 @@ class PageInfo extends Component {
     })
   }
 
-  //设置默认显示行数
-  getDefaultDefineRow = () => {
+  /**
+   *
+   * @returns
+   */
+  getDefineRow = () => {
     let { rowsDefineArr, defineRowNum } = this.state
-    console.log('setDefaultDefineRow.defineRowNum', defineRowNum)
+    let defineRow = ''
+    console.log('defineRowNum===>', defineRowNum)
     //
     if (defineRowNum === '') {
-      defineRowNum = rowsDefineArr[2].num
+      defineRow = rowsDefineArr[2].num
+    } else {
+      defineRow = defineRowNum
     }
-    return defineRowNum
+    return defineRow
   }
 
-  jumpSpecifyPage = () => {
-    let { targetOrder } = this.state
-    let { totalPages, currentPage } = this.props.pagination
-    //默认展示行数
-    let row = this.getDefaultDefineRow()
-    //
-    if (targetOrder < 1) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        msg: '跳转页码不得小于第一页',
-      })
-      return
-    } else if (targetOrder > totalPages) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        msg: '跳转页数不得大于总页数',
-      })
-      return
-    } else if (targetOrder === currentPage) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        msg: '跳转页业已在当前页了',
-      })
-      return
-    } else if (targetOrder === 0) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        msg: '跳转页不得为空',
-      })
-      return
-    }
+  /**
+   *
+   */
+  deliverData = () => {
+    let defineRow = this.getDefineRow()
     //发送跳转页码+每页展示行数给父组件
     let data = {
-      targetOrder: targetOrder,
-      //默认每页展示行数
-      defineRowNum: row,
-      method: 'jumpSpecifyPage',
+      targetOrder: this.state.targetOrder,
+      defineRowNum: defineRow,
     }
     this.props.receiveData(data)
   }
 
   //前往上一页
-  jumpToPreviousPage = () => {
-    //默认展示行数
-    let rows = this.getDefaultDefineRow()
+  toPreviousPage = () => {
+    let { presentPage, defineRowNum } = this.state
+    let data = { previousOnePage: presentPage - 1, defineRowNum: defineRowNum }
     //
-    let { presentPage } = this.state
-    let { hasPrevious } = this.props.pagination
-    console.log(
-      '%c jumpToPreviousPage-presentPage',
-      this.getColor(),
-      presentPage
-    )
-    //
-    if (!hasPrevious) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        msg: '已无上一页了',
-      })
-      return
-    }
-    //
-    let data = {
-      defineRowNum: rows,
-      previousOnePage: presentPage - 1,
-      method: 'jumpToPreviousPage',
-    }
+    console.log('%c toPreviousPage-data', this.getColor(), data)
     this.props.receiveData(data)
   }
 
   //前往下一页
-  jumpToNextPage = () => {
-    //默认展示行数
-    let rows = this.getDefaultDefineRow()
+  toNextPage = () => {
+    let { presentPage, defineRowNum } = this.state
+    let data = { nextOnePage: presentPage + 1, defineRowNum: defineRowNum }
     //
-    let { presentPage } = this.state
-    let { hasNext } = this.props.pagination
-    console.log(
-      '%c presentPage',
-      this.getColor(),
-      presentPage,
-      'hasNext',
-      hasNext,
-      'rows',
-      rows
-    )
-    //
-    if (!hasNext) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        msg: '业已是尾页了',
-      })
-      return
-    }
-    //
-    let data = {
-      defineRowNum: rows,
-      nextOnePage: presentPage + 1,
-      method: 'jumpToNextPage',
-    }
+    console.log('%c toNextPage-data', this.getColor(), data)
     this.props.receiveData(data)
   }
 
@@ -248,12 +172,12 @@ class PageInfo extends Component {
         </div>
         <div className='con_div'>
           <p className='previous_page'>
-            <li onClick={this.jumpToPreviousPage}>上一页</li>
+            <li onClick={this.toPreviousPage}>上一页</li>
           </p>
         </div>
         <div className='con_div'>
           <p className='next_page'>
-            <li onClick={this.jumpToNextPage}>下一页</li>
+            <li onClick={this.toNextPage}>下一页</li>
           </p>
         </div>
         <div className='con_div' id='input_div'>
@@ -269,19 +193,14 @@ class PageInfo extends Component {
               页
             </span>
             <span>
-              <button onClick={this.jumpSpecifyPage} className='jump_btn'>
+              <button onClick={this.deliverData} className='jump_btn'>
                 前往
               </button>
             </span>
           </p>
         </div>
-        <Portals
-          isExhibit={this.state.whetherExhibit}
-          msg={this.state.msg}
-        ></Portals>
       </div>
     )
   }
 }
-
 export default PageInfo

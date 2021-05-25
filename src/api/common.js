@@ -7,7 +7,7 @@ export function depositLocalStorage(key, value) {
   console.log('key:' + key, 'value\n', value)
   //将value转化为json字符串
   let jsonStr = JSON.stringify(value)
-  console.log('jsonStr\n', jsonStr)
+  // console.log('jsonStr\n', jsonStr)
   localStorage.setItem(key, jsonStr)
 }
 
@@ -19,15 +19,15 @@ export function depositLocalStorage(key, value) {
 export function getValueFromLocal(key) {
   let valueObj = { code: 1 }
   let jsonStr = localStorage.getItem(key)
-  console.log('jsonStr\n', jsonStr)
-
+  // console.log('jsonStr\n', jsonStr)
+  // TODO try-catch
   if (jsonStr.trim().length < 1) {
     valueObj.text = '您的登录状态已过期,请重新登录'
     valueObj.code = -1
   } else {
     //将json字符串解析为数据对象
     valueObj.text = JSON.parse(jsonStr)
-    console.log('valueObj\n', valueObj)
+    // console.log('valueObj\n', valueObj)
   }
   return valueObj
 }

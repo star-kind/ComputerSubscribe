@@ -14,4 +14,5 @@ export const user_urls = {
   profile_ordinary: '/profileUserOrdinary',
   profile_administrator: '/profileAdministrator',
   add_new_apply: '/addNewApply',
+  query_by_room_major: '/queryByRoomMajor',
 }

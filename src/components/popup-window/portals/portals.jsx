@@ -16,6 +16,20 @@ class Portals extends Component {
     console.log('%cPortalsComponentDidMount', this.getColor(), this)
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log(
+      '%c Portals.componentDidUpdate.prevProps',
+      this.getColor(),
+      prevProps
+    )
+    console.log(
+      '%c Portals.componentDidUpdate.prevState',
+      this.getColor(),
+      prevState
+    )
+    console.log('%c Portals.componentDidUpdate.this', this.getColor(), this)
+  }
+
   state = {
     // 是否展示,真-显示,假-隐藏
     whetherExhibit: false,

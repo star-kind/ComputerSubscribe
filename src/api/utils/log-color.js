@@ -35,6 +35,6 @@ export function getColor() {
   //可均衡获取 0 到 length 的随机整数
   let index = Math.floor(Math.random() * length)
   let colorVal = logFontColorArr[index]
-  console.log('%cConsoleColor', colorVal, colorVal)
+  // console.log('%cConsoleColor', colorVal, colorVal)
   return colorVal
 }

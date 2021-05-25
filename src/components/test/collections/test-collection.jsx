@@ -14,7 +14,11 @@ class TestCollection extends Component {
   }
 
   state = {
-    pagesArr: [{ name: '测试弹窗组件', url: '/test4' }],
+    pagesArr: [
+      { name: '测试弹窗组件', url: '/test4' },
+      { name: '测试组件-1', url: '/case1' },
+      { name: '测试组件-5', url: '/case5/ancestor' },
+    ],
     //
     cssLink: {
       textDecoration: 'none',

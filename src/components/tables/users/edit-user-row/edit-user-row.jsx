@@ -163,10 +163,6 @@ export default class EditUserRow extends Component {
       } else {
         console.info('EditUserRow.res.message', res.data.message)
         alert(res.data.message)
-        // ts.setState({
-        //   isExhibit: !ts.state.isExhibit,
-        //   msg: res.data.message,
-        // })
       }
     })
   }
