@@ -151,7 +151,7 @@ public class OperationExEnumHandler {
 			res.setCode(ExceptionsEnum.NEWKEYWD_SAME_AS_OLDKEYWDTEXT.getCode());
 			break;
 
-		case "您尚未登录,请先登录":
+		case "您尚未登录或登录状态已过期,请登录帐号":
 			res.setCode(ExceptionsEnum.HADNOT_LOGINED.getCode());
 			break;
 

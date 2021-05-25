@@ -24,6 +24,8 @@ import com.computer.subscribe.service.IUserService;
 import com.computer.subscribe.util.PaginationUtils;
 import com.computer.subscribe.util.support.DateTimeKits;
 
+import lombok.NonNull;
+
 @Service
 public class SubscribeServiceImpl implements ISubscribeService {
 	String ts = this.getClass().getCanonicalName() + "------\n";
@@ -948,6 +950,48 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
 		Pagination<List<TSubscribe>> pagination = paginationUtil
 				.assemblySubscribe(pageData, totalSize, limit, pageOrder);
+		return pagination;
+	}
+
+	@Override
+	public Pagination<List<TSubscribe>> getAllSubscirbeOnWeek(Integer pageOrder,
+			Integer limit, Long teacherNum) throws OperationException {
+		System.err.println(ts + "--getAllSubscirbeOnWeek--pageOrder=" + pageOrder
+				+ ",limit=" + limit + ",teacherNum=" + teacherNum);
+
+		// 校验教师工号
+		ius.checkAccountIsRight(teacherNum, 1);
+
+		pageOrder = paginationUtil.getPageNum(pageOrder);
+		int offset = paginationUtil.getOffsetByPage(pageOrder, limit);
+
+		// 获取本周首尾
+		ArrayList<Date> monSunList = dateTimeKits.getMonAndSunList();
+
+		// 获取本周全部数据,进而得到总行数
+		TSubscribeExample example = new TSubscribeExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andApplicationStartTimeBetween(monSunList.get(0),
+				monSunList.get(1));
+
+		// 总行数
+		int totalSize = mapper.selectByExample(example).size();
+		System.err.println(ts + "getAllSubscirbeOnWeek..totalSize=" + totalSize);
+
+		// 获取分页数据
+		TSubscribeExample limitExample = new TSubscribeExample();
+		Criteria limitCriteria = limitExample.createCriteria();
+		limitCriteria.andApplicationStartTimeBetween(monSunList.get(0),
+				monSunList.get(1));
+
+		limitExample.setLimit(limit);
+		limitExample.setOffset(offset);
+		List<TSubscribe> pageData = mapper.selectByExample(limitExample);
+
+		Pagination<List<TSubscribe>> pagination = paginationUtil
+				.assemblySubscribe(pageData, totalSize, limit, pageOrder);
+
+		System.err.println(ts + "getAllSubscirbeOnWeek..pagination=" + pagination);
 		return pagination;
 	}
 

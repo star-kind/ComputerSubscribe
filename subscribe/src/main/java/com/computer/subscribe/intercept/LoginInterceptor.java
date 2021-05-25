@@ -89,10 +89,16 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 		} else {
 			LoginData data = jwt.decode(token, LoginData.class);
-			System.out.println(str + "__decode=" + data.toString());
 
-			LoginData data2 = jwt.updateDecode(token, LoginData.class);
-			System.err.println(str + "__updateDecode=" + data2.toString());
+			if (data == null) {
+				System.out.println(str + "__登录状态过期了");
+				hadOnline = false;
+
+			} else {
+				System.out.println(str + "__decode=" + data.toString());
+				// LoginData crackdata = jwt.crackDecode(token, LoginData.class);
+				// System.err.println(str + "__crackDecode=" + crackdata.toString());
+			}
 		}
 
 		return hadOnline;
@@ -108,7 +114,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 		System.err.println(str + "--getActionURL..strbuf..requestURL=" + requestURL);
 
 		int i = requestURL.lastIndexOf("/");
-		System.out.println(str + "--getActionURL..requestURL..index=" + i);
 
 		String actionName = requestURL.substring(i + 1);
 		System.err.println(

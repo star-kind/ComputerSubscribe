@@ -31,8 +31,8 @@ public enum ExceptionsEnum {
 	LOCATION_DUPLICATION_ERROR(810, "机房地点位置早已重复"),
 	/** 本间机房现在无法使用 */
 	COMPUTER_ROOM_UNAVAILABLE(811, "本间机房现在无法使用"),
-	/**机房数量不得超出限制*/
-	ROOM_QUANTITY_CANNOT_EXCEED(812,"机房数量不得超出限制"),
+	/** 机房数量不得超出限制 */
+	ROOM_QUANTITY_CANNOT_EXCEED(812, "机房数量不得超出限制"),
 	/* SUBSCRIBE */
 	/** 系统在周末不接受学生预约申请,教师也不能进行任何批复 */
 	INVALID_DATE_WEEKEND(906, "系统在周末不接受学生预约申请,教师也不能进行任何批复"),
@@ -57,8 +57,8 @@ public enum ExceptionsEnum {
 	/** 预约申请时段超出范围,请在上午,下午,晚上三者之间选择 */
 	SUBSCRIBE_USEINTERVAL_OUT_RANGE(916, "预约申请时段超出范围,请在上午,下午,晚上三者之间选择"),
 	/* user */
-	/** 您尚未登录,请先登录 */
-	HADNOT_LOGINED(1005, "您尚未登录,请先登录"),
+	/** 您尚未登录或登录状态已过期,请登录帐号 */
+	HADNOT_LOGINED(1005, "您尚未登录或登录状态已过期,请登录帐号"),
 	/** 此电话号码已注册，请更换另一个号码 */
 	PHONE_DUPLICATE_CONFLICT(1006, "此电话号码已注册,请更换另一个号码"),
 	/** 账号不存在 */

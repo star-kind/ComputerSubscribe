@@ -34,6 +34,7 @@ public class ComputerRoomController extends BasicController {
 	private IComputerRoomService crs;
 
 	/**
+	 * 获取机房信息,据机房房号,不限角色
 	 * http://localhost:8080/subscribe/ComputerRoomController/retrieveComputerRoomByRoomNum?roomNum=2
 	 * 
 	 * @param req
@@ -76,6 +77,7 @@ public class ComputerRoomController extends BasicController {
 	}
 
 	/**
+	 * 删除机房之接口,权限-管理员,据机房id
 	 * http://localhost:8080/subscribe/ComputerRoomController/deleteRoomByRoomId?roomID=1
 	 * 
 	 * @param req
@@ -118,6 +120,7 @@ public class ComputerRoomController extends BasicController {
 	}
 
 	/**
+	 * 获取机房id+机房房号的集合列表,不限角色
 	 * http://localhost:8080/subscribe/ComputerRoomController/retrieveIdAndRoomMapList
 	 * 
 	 * @param req

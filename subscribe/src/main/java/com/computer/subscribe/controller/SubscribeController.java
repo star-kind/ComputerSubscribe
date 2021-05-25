@@ -31,6 +31,32 @@ public class SubscribeController extends BasicController {
 	private ISubscribeService iss;
 
 	/**
+	 * 教师分页获取本周全部预约单,不限申请者,不限状态和机房
+	 * http://localhost:8080/subscribe/SubscribeController/retrieveAllSubscirbeOnWeek?pageOrder=1&rows=10
+	 * 
+	 * @param req
+	 * @param pageOrder
+	 * @param rows
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/retrieveAllSubscirbeOnWeek", method = RequestMethod.GET)
+	public WebResponse<Pagination<List<TSubscribe>>> retrieveAllSubscirbeOnWeek(
+			HttpServletRequest req, @RequestParam("pageOrder") Integer pageOrder,
+			@RequestParam("rows") Integer rows) {
+		LoginData loginData = getLoginDataByToken(req);
+		Long teacherNum = loginData.getUserNum();
+
+		printMethod(t, "--getCountByStatusInRoomAction--teacherNum=" + teacherNum,
+				",pageOrder=" + pageOrder, ",rows=" + rows);
+
+		Pagination<List<TSubscribe>> pagination = iss
+				.getAllSubscirbeOnWeek(pageOrder, rows, teacherNum);
+
+		return new WebResponse<Pagination<List<TSubscribe>>>(SUCCESS, pagination);
+	}
+
+	/**
 	 * 获取某间机房,其所收到的某种预约状态的申请单统计数量<br>
 	 * 
 	 * http://localhost:8080/subscribe/SubscribeController/getCountByStatusInRoomAction?status=0&roomNum=3

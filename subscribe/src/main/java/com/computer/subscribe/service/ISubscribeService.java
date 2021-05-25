@@ -23,6 +23,19 @@ import lombok.NonNull;
  */
 public interface ISubscribeService {
 	/**
+	 * 教师分页获取本周全部预约单,不限申请者,不限状态和机房
+	 * 
+	 * @param pageOrder  限教师
+	 * @param limit      行数
+	 * @param teacherNum 页码
+	 * @return
+	 * @throws OperationException
+	 */
+	Pagination<List<TSubscribe>> getAllSubscirbeOnWeek(@NonNull Integer pageOrder,
+			@NonNull Integer limit, @NonNull Long teacherNum)
+			throws OperationException;
+
+	/**
 	 * 教师分页获取,某间机房在本周内,收到的预约申请列表(指定审核状态)
 	 * 
 	 * @param teacherNum

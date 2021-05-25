@@ -17,6 +17,8 @@ import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class JwtUtils {
+	String t = this.getClass() + "____\n";
+
 	public static Logger logger = Logger.getLogger(JwtUtils.class);
 
 	private static JwtUtils jwtUtils;
@@ -24,7 +26,7 @@ public class JwtUtils {
 	private static final Object LOCK = new Object();
 
 	private JwtUtils() {
-		System.err.println(this.getClass() + "__JwtUtils_私有化构造器,防止被实例化");
+		System.err.println(t + "__JwtUtils_私有化构造器,防止被实例化");
 	}
 
 	/**
@@ -77,7 +79,7 @@ public class JwtUtils {
 			data.put(EXP, System.currentTimeMillis() + maxTime);
 
 			String sign = signer.sign(data);
-			System.out.println(this.getClass() + "__encode.sign=" + sign);
+			System.out.println(t + "__encode.sign=" + sign);
 
 			return sign;
 		} catch (IOException e) {
@@ -111,8 +113,7 @@ public class JwtUtils {
 					ObjectMapper objectMapper = new ObjectMapper();
 
 					T value = objectMapper.readValue(json, tClass);
-					System.err
-							.println(this.getClass() + "__decode().value=" + value);
+					System.err.println(t + "__decode().value=" + value);
 
 					return value;
 				}
@@ -133,7 +134,7 @@ public class JwtUtils {
 	 * @param tClass
 	 * @return
 	 */
-	public <T> T updateDecode(String jwt, Class<T> tClass) {
+	public <T> T crackDecode(String jwt, Class<T> tClass) {
 		final JWTVerifier jwtVerifier = new JWTVerifier(SECRET);
 
 		try {
@@ -143,9 +144,9 @@ public class JwtUtils {
 			ObjectMapper objectMapper = new ObjectMapper();
 
 			T value = objectMapper.readValue(json, tClass);
-			System.err.println(this.getClass() + "..updateDecode().value=" + value);
-
+			System.err.println(t + "..crackDecode().value=" + value);
 			return value;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -166,9 +167,9 @@ public class JwtUtils {
 //		System.out.println("decode=== " + decode);
 //		System.out.println("decode.GET-userNum=== " + decode.get("userNum"));
 //		// 揭密
-//		HashMap updateCode = util.updateDecode(token, HashMap.class);
-//		System.out.println("updateCode=== " + updateCode);
-//		System.out.println("updateCode.getValueByKey=== " + updateCode.get("living"));
+//		HashMap crackcode = util.crackDecode(token, HashMap.class);
+//		System.out.println("crackcode=== " + crackcode);
+//		System.out.println("crackcode.getValueByKey=== " + crackcode.get("living"));
 //	}
 
 }

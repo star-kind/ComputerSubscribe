@@ -65,7 +65,7 @@ public class SubscribeServiceTest {
 
 		try {
 			int pageNum = 1;
-			int row = 5;
+			int row = 8;
 
 			subscribeService.getApplicantSubscribesByAdmin(pageNum, row, 1889970l,
 					393606924700L);
@@ -81,7 +81,7 @@ public class SubscribeServiceTest {
 
 		try {
 			int pageNum = 1;
-			int row = 3;
+			int row = 10;
 			subscribeService.getThisWeekSubscribeListByTeacher(1889970l,
 					3999706924700L, row, pageNum);
 		} catch (Exception e) {
@@ -161,4 +161,18 @@ public class SubscribeServiceTest {
 
 	}
 
+	@Test
+	public void getWeekAllSubscribeListTest() {
+		subscribeService = (ISubscribeService) applicationContext
+				.getBean("subscribeServiceImpl");
+
+		try {
+			int pageNum = 1;
+			int row = 8;
+
+			subscribeService.getAllSubscirbeOnWeek(pageNum, row, 13541944130L);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
 }
