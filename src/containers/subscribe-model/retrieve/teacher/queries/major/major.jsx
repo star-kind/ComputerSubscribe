@@ -34,6 +34,8 @@ class Major extends Component {
       prevState
     )
     console.log('%c Major.componentDidUpdate.this', this.getColor(), this)
+    //
+    this.storeCurrentPage()
   }
 
   state = {
@@ -79,6 +81,17 @@ class Major extends Component {
     //是否展示
     whetherExhibit: true,
     message: '',
+    //被审核预约当前的数组下标
+    arrIndex: '',
+  }
+
+  /**
+   * 保留刷新前页码到localStorage
+   * 弃用本方法
+   */
+  storeCurrentPage = () => {
+    let { currentPage } = this.state.pagination
+    localStorage.setItem(this.store_key.curr_page_key, currentPage)
   }
 
   /**
@@ -180,7 +193,7 @@ class Major extends Component {
     console.info('%c childData', this.getColor(), childData)
     switch (childData.method) {
       case 'showFormHideTable':
-        this.showFormHideTable(childData.value)
+        this.showFormHideTable(childData)
         break
 
       case 'hideFormExhibitTbl':
@@ -199,8 +212,25 @@ class Major extends Component {
         this.handleGetList2(childData.targetOrder, childData.defineRowNum)
         break
 
+      case 'updatedTblRowData':
+        this.updatedPaginByIndex(childData.data)
+        break
+
       default:
         break
+    }
+  }
+
+  //审批完预约后,根据索引更新pagination中的数据
+  updatedPaginByIndex = (newRowData) => {
+    let { pagination, arrIndex } = this.state
+    if (arrIndex !== '') {
+      pagination.data[arrIndex] = newRowData
+      this.setState({
+        pagination,
+      })
+    } else {
+      console.info('%c updatedPaginByIndex.arrIndex', this.color(), arrIndex)
     }
   }
 
@@ -213,9 +243,10 @@ class Major extends Component {
   }
 
   //传送预约单数据给表单审核,显示表单,隐匿表格
-  showFormHideTable = (value) => {
+  showFormHideTable = (data) => {
     this.setState({
-      tagetSubscibe: value,
+      arrIndex: data.index,
+      tagetSubscibe: data.value,
       tblAndPageInfoDisplay: 'none',
       formDisplay: 'block',
     })

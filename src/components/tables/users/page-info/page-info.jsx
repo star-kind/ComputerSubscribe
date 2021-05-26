@@ -97,8 +97,10 @@ class PageInfo extends Component {
 
   //前往上一页
   toPreviousPage = () => {
-    let { presentPage, defineRowNum } = this.state
-    let data = { previousOnePage: presentPage - 1, defineRowNum: defineRowNum }
+    let defineRow = this.getDefineRow()
+    let { presentPage } = this.state
+    //
+    let data = { previousOnePage: presentPage - 1, defineRowNum: defineRow }
     //
     console.log('%c toPreviousPage-data', this.getColor(), data)
     this.props.receiveData(data)
@@ -106,8 +108,10 @@ class PageInfo extends Component {
 
   //前往下一页
   toNextPage = () => {
-    let { presentPage, defineRowNum } = this.state
-    let data = { nextOnePage: presentPage + 1, defineRowNum: defineRowNum }
+    let defineRow = this.getDefineRow()
+    let { presentPage } = this.state
+    //
+    let data = { nextOnePage: presentPage + 1, defineRowNum: defineRow }
     //
     console.log('%c toNextPage-data', this.getColor(), data)
     this.props.receiveData(data)

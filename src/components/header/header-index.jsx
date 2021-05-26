@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './header-index.less'
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
+import LoginOut from '@/components/login-out/login-out'
 
 // 公共组件-header
 class PublicHeader extends Component {
@@ -10,9 +11,22 @@ class PublicHeader extends Component {
     console.log(this)
   }
 
-  //
+  componentDidUpdate(prevProps, prevState) {
+    console.log(
+      '%c PublicHeader componentDidUpdate.prevProps',
+      'color:blue',
+      prevProps
+    )
+    console.log(
+      '%c PublicHeader componentDidUpdate.prevState',
+      'color:green',
+      prevState
+    )
+    console.log('%c PublicHeader componentDidUpdate.this', 'color:red', this)
+  }
+
   state = {
-    // other url
+    // url collection
     urlArray: [
       { name: '--请选择地址--', url: '' },
       { name: '修改密码', url: this.user_urls.revamp_passwd_url },
@@ -26,7 +40,7 @@ class PublicHeader extends Component {
   changeSel = (e) => {
     console.log(e.target)
     //触发onChange事件时,得到的值
-    var optVal = e.target.value
+    let optVal = e.target.value
     console.log('optVal(url)', optVal)
     this.jumpByUrl(optVal)
   }
@@ -34,14 +48,14 @@ class PublicHeader extends Component {
   //根据地址跳转
   jumpByUrl = (urlParam) => {
     if ((urlParam === null) | '') {
-      console.log('地址参数为空')
+      console.log('地址为空')
       return
     }
     this.props.history.push(urlParam)
   }
 
   render() {
-    var content = (
+    let content = (
       <div className='total_header'>
         <div className='complete_header'>
           <div className='main_header_area'>
@@ -62,6 +76,10 @@ class PublicHeader extends Component {
                     <Link to={this.user_urls.reg_url}>注册</Link>
                   </li>
                 </div>
+                {/* LoginOut */}
+                <div className='outside_item' id='id_LoginOut'>
+                  <LoginOut></LoginOut>
+                </div>
               </div>
               <div className='select_options_div'>
                 <li>
@@ -73,7 +91,6 @@ class PublicHeader extends Component {
                   </label>
                   <select id='select_opt_item' onChange={this.changeSel}>
                     {this.state.urlArray.map((item) => {
-                      // console.log(item)
                       return (
                         <option key={item.name} value={item.url}>
                           {item.name}
@@ -88,7 +105,7 @@ class PublicHeader extends Component {
         </div>
       </div>
     )
-    /** */
+    //
     return content
   }
 }

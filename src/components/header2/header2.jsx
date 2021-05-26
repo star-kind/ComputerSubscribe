@@ -3,10 +3,30 @@ import './header2.less'
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
 import { getValueFromLocal } from '@/api/common'
+import LoginOut from '@/components/login-out/login-out'
 
 //公共组件-header-2
 //对不同类型的用户显示不同的header
 class PublicHeader2 extends Component {
+  componentDidMount() {
+    console.log('PublicHeader-2 component did mount')
+    console.log(this)
+    //
+    this.initSelectUrl()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(
+      '%cPublicHeader2 component did mount\n',
+      this.color(),
+      prevProps,
+      'prevState\n',
+      prevState,
+      'This\n',
+      this
+    )
+  }
+
   state = {
     revampPassword: {
       name: '修改密码',
@@ -20,12 +40,12 @@ class PublicHeader2 extends Component {
     var storeObj = getValueFromLocal(this.store_key.myself_key)
     console.log('%c storeObj', this.getColor(), storeObj)
     //
-    var urlArrObj = []
+    let urlArrObj = []
     switch (storeObj.text.role) {
       case 0:
         urlArrObj = [
           { name: '--请选择地址--', url: '' },
-          { name: '管理员页面', url: '#super-administrator' },
+          { name: '管理员页面', url: '#administrator' },
           { name: '用户列表', url: this.user_urls.retrieve_list_url },
           this.state.revampPassword,
         ]
@@ -60,25 +80,18 @@ class PublicHeader2 extends Component {
         break
     }
     //
-    console.log('urlArrObj\n', urlArrObj)
-    //
     this.setState({
       urlArray: urlArrObj,
     })
   }
 
-  componentDidMount() {
-    console.log('PublicHeader-2 component did mount')
-    console.log(this)
-    //
-    this.initSelectUrl()
-  }
+  // loginingOut = () => {}
 
   //事件触发
   changeSel = (e) => {
     console.log(e.target)
     //触发onChange事件时,得到的值
-    var optVal = e.target.value
+    let optVal = e.target.value
     console.log('optVal(url)', optVal)
     this.jumpByUrl(optVal)
   }
@@ -93,7 +106,7 @@ class PublicHeader2 extends Component {
   }
 
   render() {
-    var content = (
+    let content = (
       <div className='total_header'>
         <div className='complete_header'>
           <div className='main_header_area'>
@@ -114,6 +127,10 @@ class PublicHeader2 extends Component {
                     <Link to={this.user_urls.reg_url}>注册</Link>
                   </li>
                 </div>
+                {/* LoginOut */}
+                <div className='outside_item' id='id_LoginOut'>
+                  <LoginOut></LoginOut>
+                </div>
               </div>
               <div className='select_options_div'>
                 <li>
@@ -125,7 +142,6 @@ class PublicHeader2 extends Component {
                   </label>
                   <select id='select_opt_item' onChange={this.changeSel}>
                     {this.state.urlArray.map((item) => {
-                      // console.log(item)
                       return (
                         <option value={item.url} key={item.name}>
                           {item.name}

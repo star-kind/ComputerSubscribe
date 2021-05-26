@@ -3,6 +3,7 @@ import './edit-form.less'
 import PropTypes from 'prop-types'
 import { getValueFromLocal } from '@/api/common'
 import Portals2 from '@/components/popup-window/portals2/portals2'
+import { commonUtil } from '@/api/common2.js'
 
 class EditForm extends Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class EditForm extends Component {
     //
     radioItemArr: [
       { name: '审核中', value: 0 },
-      { name: '批准预约', value: 0 },
+      { name: '批准预约', value: 1 },
       { name: '驳回预约', value: 2 },
     ],
     //
@@ -108,7 +109,7 @@ class EditForm extends Component {
   }
 
   handleChangeRadioValue = (e) => {
-    console.log('%c handleChangeRadioValue.event', this.getColor(), e)
+    // console.log('%c handleChangeRadioValue.event', this.getColor(), e)
     this.setState({
       subscribeStatus: e.target.value,
     })
@@ -159,16 +160,21 @@ class EditForm extends Component {
     }
   }
 
+  updatedTblRowData = (newdata) => {
+    //传送新数据给上层组件
+    this.props.receivedChildData({
+      data: newdata,
+      method: 'updatedTblRowData',
+    })
+  }
+
   handleSubmit = (event) => {
     let ts = this
     //阻止默认事件
     event.preventDefault()
     // console.log('event-target\n', event.target)
-    /*
-    [Query(key=status, description=申请单新的审核状态), Query(key=subscribeID, description=申请单ID)]
-    */
     let params = {
-      id: ts.state.id,
+      subscribeID: ts.state.id,
       status: ts.state.subscribeStatus,
     }
     //
@@ -180,7 +186,7 @@ class EditForm extends Component {
       return
     }
     //
-    let tokenObject = this.validatedToken()
+    let tokenObject = ts.validatedToken()
     console.log(
       '%c params\n',
       ts.getColor(),
@@ -188,6 +194,31 @@ class EditForm extends Component {
       'tokenObject',
       tokenObject
     )
+    //handleSubscribeStatus
+    ts.gets(
+      ts.interfaces.handleSubscribeStatus,
+      {
+        subscribeID: params.subscribeID,
+        status: params.status,
+      },
+      { token: tokenObject.text }
+    ).then((res) => {
+      console.info('%c response', ts.color(), res)
+      if (res.data.code === 200) {
+        // ts.setState({
+        //   message: '预约申请处理成功',
+        //   whetherExhibit: !ts.state.whetherExhibit,
+        // })
+        //更新父组件的数据
+        ts.updatedTblRowData(res.data.data)
+        ts.hideFormExhibitTbl()
+      } else {
+        ts.setState({
+          message: res.data.message,
+          whetherExhibit: !ts.state.whetherExhibit,
+        })
+      }
+    })
   }
 
   render() {
@@ -197,6 +228,24 @@ class EditForm extends Component {
           <div className='form_pack'>
             <form className='mine_form' onSubmit={this.handleSubmit.bind(this)}>
               <div className='input_wrap_div'>
+                <div className='input_item_div'>
+                  <div className='input_element'>
+                    <label htmlFor='id_subscribe' className='labels_for_tag'>
+                      预约单ID:
+                    </label>
+                  </div>
+                  <div className='input_element inputs_side'>
+                    <input
+                      readOnly={true}
+                      id='id_subscribe'
+                      className='input_tag'
+                      onChange={this.handleChange.bind(this)}
+                      name='id'
+                      type='text'
+                      defaultValue={this.state.id}
+                    />
+                  </div>
+                </div>
                 <div className='input_item_div'>
                   <div className='input_element'>
                     <label htmlFor='id_applicant' className='labels_for_tag'>
@@ -225,7 +274,13 @@ class EditForm extends Component {
                     </label>
                   </div>
                   <div className='input_element inputs_side'>
+                    <p className='time_stamp_txt'>
+                      {commonUtil.dateTimeFormat(
+                        this.state.applicationStartTime
+                      )}
+                    </p>
                     <input
+                      style={{ display: 'none' }}
                       readOnly={true}
                       id='id_applicationStartTime'
                       className='input_tag'
@@ -279,7 +334,11 @@ class EditForm extends Component {
                     </label>
                   </div>
                   <div className='input_element inputs_side'>
+                    <p className='time_stamp_txt'>
+                      {commonUtil.getTimeYearMonthDay(this.state.applyUseDate)}
+                    </p>
                     <input
+                      style={{ display: 'none' }}
                       readOnly={true}
                       id='id_applyUseDate'
                       className='input_tag'
@@ -350,6 +409,8 @@ class EditForm extends Component {
               </div>
             </form>
           </div>
+          <br />
+          <br />
           <br />
           <br />
           <br />

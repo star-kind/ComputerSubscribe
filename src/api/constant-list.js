@@ -1,6 +1,7 @@
 export const store_key = {
   myself_key: 'USERINFORMATION',
   token_key: 'USERTOKEN',
+  curr_page_key: 'Major_storeCurrentPage_currentPage',
 }
 
 /**

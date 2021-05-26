@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Portals2 from '@/components/popup-window/portals2/portals2'
+import PublicHeader from '@/components/header/header-index'
 import './test2.less'
 
 export default class Test2 extends Component {
@@ -44,45 +45,57 @@ export default class Test2 extends Component {
   render() {
     return (
       <div className='testing_case_page'>
-        <div className='back_home_page'>
-          <Link to={'/'}>返回首页</Link>
+        <div>
+          <PublicHeader></PublicHeader>
         </div>
-        {/*  */}
-        <div className='item_div_txt' style={{ margin: '3rem 0' }}>
-          <p>跳出弹窗</p>
+        <div>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
         </div>
-        {/*  */}
-        <div className='item_div_txt'>
-          <form className='mine_form' onSubmit={this.handleSubmit.bind(this)}>
-            <div className='inputs_div_item'>
-              <input
-                name='email'
-                type='text'
-                placeholder='input email please'
-                value={this.state.email}
-                onChange={this.handleChange.bind(this)}
-              />
-            </div>
-            <div className='inputs_div_item'>
-              <input
-                name='realName'
-                type='text'
-                placeholder='input real name please'
-                value={this.state.realName}
-                onChange={this.handleChange.bind(this)}
-              />
-            </div>
-            {/*  */}
-            <div className='btn_div_item'>
-              <input id='sub_id' type='submit' value='提交'></input>
-            </div>
-          </form>
+        <div>
+          <div className='back_home_page'>
+            <Link to={'/'}>返回首页</Link>
+          </div>
+          {/*  */}
+          <div className='item_div_txt' style={{ margin: '3rem 0' }}>
+            <p>跳出弹窗</p>
+          </div>
+          {/*  */}
+          <div className='item_div_txt'>
+            <form className='mine_form' onSubmit={this.handleSubmit.bind(this)}>
+              <div className='inputs_div_item'>
+                <input
+                  name='email'
+                  type='text'
+                  placeholder='input email please'
+                  value={this.state.email}
+                  onChange={this.handleChange.bind(this)}
+                />
+              </div>
+              <div className='inputs_div_item'>
+                <input
+                  name='realName'
+                  type='text'
+                  placeholder='input real name please'
+                  value={this.state.realName}
+                  onChange={this.handleChange.bind(this)}
+                />
+              </div>
+              {/*  */}
+              <div className='btn_div_item'>
+                <input id='sub_id' type='submit' value='提交'></input>
+              </div>
+            </form>
+          </div>
+
+          <Portals2
+            isExhibit={this.state.whetherExhibit}
+            msg={'电邮:' + this.state.email + ', 名字:' + this.state.realName}
+          ></Portals2>
         </div>
-        {/*  */}
-        <Portals2
-          isExhibit={this.state.whetherExhibit}
-          msg={'电邮:' + this.state.email + ', 名字:' + this.state.realName}
-        ></Portals2>
       </div>
     )
   }

@@ -24,6 +24,9 @@ let interfaces = {
 
   retrieveAllSubscirbeOnWeek:
     '/api/subscribe/SubscribeController/retrieveAllSubscirbeOnWeek',
+
+  handleSubscribeStatus:
+    '/api/subscribe/SubscribeController/handleSubscribeStatusAction',
 }
 
 export default interfaces

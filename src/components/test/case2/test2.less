@@ -10,7 +10,7 @@
 @leftValue: 30rem;
 
 .testing_case_page {
-  position: fixed;
+  position: inherit;
   left: @leftValue;
 
   .back_home_page {
@@ -29,20 +29,24 @@
     margin: @margin_top_bottom 0;
   }
 
-  .inputs_div_item>input {
+  .inputs_div_item > input {
     width: @inputWidthSize;
     height: @inputHeightSize;
   }
 
-  .back_home_page>a {
+  .back_home_page > a {
     color: black;
   }
 
-  .btn_div_item>button {
+  .btn_div_item > button {
     width: @widthSize;
     height: @heightSize;
     background: @backgroundsResult;
     color: @font_color;
     margin: @margin_top_bottom 0;
+  }
+
+  #sub_id {
+    font-size: 25px;
   }
 }

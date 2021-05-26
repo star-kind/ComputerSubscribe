@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './table-list.less'
 import PropTypes from 'prop-types'
+import { commonUtil } from '@/api/common2.js'
 
 class TableList extends Component {
   constructor(props) {
@@ -130,8 +131,8 @@ class TableList extends Component {
   showFormHideTable = (index, item, e) => {
     console.log('showFormHideTbl.index', index)
     console.log('showFormHideTbl.item', item)
-    console.log('showFormHideTbl.event', e)
-    let data = { method: 'showFormHideTable', value: item }
+    // console.log('showFormHideTbl.event', e)
+    let data = { method: 'showFormHideTable', value: item, index: index }
     //调用(上层组件)函数,传送数据
     this.props.receivedChildData(data)
   }
@@ -242,10 +243,18 @@ class TableList extends Component {
                       <td>{row.reviewer}</td>
                       <td>{this.getStatus(row.subscribeStatus)}</td>
                       <td>{row.roomNum}</td>
-                      <td>{row.applicationStartTime}</td>
+                      <td>
+                        {commonUtil.dateTimeFormat(row.applicationStartTime)}
+                      </td>
                       <td>{this.getInterval(row.useInterval)}</td>
-                      <td>{row.handleTime}</td>
-                      <td>{row.applyUseDate}</td>
+                      <td>
+                        {row.handleTime === null
+                          ? ''
+                          : commonUtil.dateTimeFormat(row.handleTime)}
+                      </td>
+                      <td>
+                        {commonUtil.getTimeYearMonthDay(row.applyUseDate)}
+                      </td>
                       <td>
                         <span className='sp_a'>
                           <li

@@ -51,13 +51,11 @@ export default class EditUserRow extends Component {
   static propTypes = {
     row: PropTypes.object,
     showWrapper: PropTypes.string,
-    showTable: PropTypes.func,
-    sendShowVal: PropTypes.func,
-    receivedData: PropTypes.func,
+    pipeline: PropTypes.func,
   }
 
   getToken = () => {
-    var valObj = commonUtil.getValueFromLocal(this.store_key.token_key)
+    let valObj = commonUtil.getValueFromLocal(this.store_key.token_key)
     console.log('%c valObj\n', valObj)
     if (valObj.code !== -1) {
       this.setState({
@@ -93,7 +91,7 @@ export default class EditUserRow extends Component {
       return
     }
     // validate params whether or null
-    var res = commonUtil.verifyDataNull(data)
+    let res = commonUtil.verifyDataNull(data)
     if (!res.isValidate) {
       this.setState({
         isExhibit: !this.state.isExhibit,
@@ -158,7 +156,7 @@ export default class EditUserRow extends Component {
           role: res.data.data.role,
         })
         //将新数据发给上层组件
-        ts.deliverToUp(res.data.data)
+        ts.updateSynchronizeRow(res.data.data)
         ts.exhibitTblHideForm()
       } else {
         console.info('EditUserRow.res.message', res.data.message)
@@ -168,15 +166,21 @@ export default class EditUserRow extends Component {
   }
 
   exhibitTblHideForm = () => {
-    //调用上层组件函数,向上层组件传值
-    this.props.showTable('none')
-    //向祖父组件传值,首先向父组件发送
-    this.props.sendShowVal('block')
+    let data = {
+      method: 'exhibitTblHideForm',
+      decideShowForm: 'none',
+      decideShowTbl: 'block',
+    }
+    this.props.pipeline(data)
   }
 
-  //把数据发送给上层组件
-  deliverToUp = (data) => {
-    this.props.receivedData(data)
+  //把数据发送给上层组件,同步更新表格行数据
+  updateSynchronizeRow = (data) => {
+    this.props.pipeline({
+      data: data,
+      method: 'updateSynchronizeRow',
+      comment: '同步更新表格行数据',
+    })
   }
 
   render() {

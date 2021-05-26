@@ -50,8 +50,7 @@ class UserTable extends Component {
   static propTypes = {
     pagination: PropTypes.object,
     thArray: PropTypes.array,
-    hidePageArea: PropTypes.func,
-    showPageDiv: PropTypes.func,
+    bridge: PropTypes.func,
   }
 
   /**
@@ -98,8 +97,7 @@ class UserTable extends Component {
     let { rowCheck, rowCheckItems } = this.state
     console.log('aloneChecked-item\n', item)
     console.log('aloneChecked-index\n', index)
-    console.log('aloneChecked-event\n', event)
-    //
+    // console.log('aloneChecked-event\n', event)
     if (event.target.checked) {
       //被勾选栏状态
       rowCheck[index] = true
@@ -128,27 +126,38 @@ class UserTable extends Component {
   showForm = (index, item, e) => {
     console.log('showForm--item', item)
     console.log('showForm--index', index)
-    console.log('showForm--event', e)
-    //
+    // console.log('showForm--event', e)
     this.setState({
       checkoutExhibitFrom: 'block',
       editTargetRow: item,
       editTargetRowIndex: index,
     })
-    //调用(上层组件)函数
-    this.props.hidePageArea('none')
+    //
+    this.props.bridge({
+      instruct: 'none',
+      method: 'showForm',
+      comment: '展示表单,并隐匿表格',
+    })
   }
 
   //收到子组件指令,显示表格,隐匿表单
-  showTbl = (instrtuction) => {
-    console.log('showTbl.instrtuction=' + instrtuction)
+  showTbl = (instruct) => {
+    console.log('showTbl.instruct=' + instruct)
     this.setState({
-      checkoutExhibitFrom: instrtuction,
+      checkoutExhibitFrom: instruct,
+    })
+  }
+
+  //收到子组件指令,显示表格,隐匿表单
+  exhibitTblHideForm = (data) => {
+    console.log('%cexhibitTblHideForm-data', data)
+    this.setState({
+      checkoutExhibitFrom: data.decideShowForm,
     })
   }
 
   //接收来自子组件,修改后的新用户数据
-  receivedData = (newData) => {
+  updateSynchronizeRow = (newData) => {
     let { editTargetRowIndex } = this.state
     console.log('%c newData', this.getColor(), newData)
     console.log('%c editTargetRowIndex', this.getColor(), editTargetRowIndex)
@@ -162,9 +171,12 @@ class UserTable extends Component {
   }
 
   //接收子组件指令,充当中继,继续向上层传值
-  showInfoArea = (instrtuction) => {
-    console.log('showInfoArea.instrtuction=' + instrtuction)
-    this.props.showPageDiv(instrtuction)
+  showInfoArea = (data) => {
+    console.log('showInfoArea.data=' + data)
+    this.props.bridge({
+      instruct: data.decideShowTbl,
+      method: 'showInfoArea',
+    })
   }
 
   //管理员不可被点击编辑
@@ -205,20 +217,37 @@ class UserTable extends Component {
   initialCheckbox = (value) => {
     let status = false
     if (value === null || value === undefined || value === false) {
-      // console.log('value==', value)
+      // console.log('value=', value)
     } else {
       status = true
     }
     return status
   }
 
+  //本组件通往EditUserRow的"管道"
+  pipeline = (data) => {
+    console.log('%cpipeline-data', this.color(), data)
+    //
+    switch (data.method) {
+      case 'exhibitTblHideForm':
+        this.exhibitTblHideForm(data)
+        this.showInfoArea(data)
+        break
+
+      case 'updateSynchronizeRow':
+        this.updateSynchronizeRow(data.data)
+        break
+
+      default:
+        break
+    }
+  }
+
   render() {
     return (
       <div className='table_area'>
         <EditUserRow
-          sendShowVal={this.showInfoArea}
-          showTable={this.showTbl}
-          receivedData={this.receivedData}
+          pipeline={this.pipeline}
           showWrapper={this.state.checkoutExhibitFrom}
           row={this.state.editTargetRow}
           style={{ display: this.state.checkoutExhibitFrom }}
@@ -260,7 +289,7 @@ class UserTable extends Component {
                 this.props.pagination
               )}
               {this.props.pagination.data.map((row, index) => {
-                var tr = (
+                let tr = (
                   <tr key={row.id} className='trs'>
                     <td>
                       <span>{index + 1}</span>

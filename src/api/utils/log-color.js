@@ -23,6 +23,7 @@ const logFontColorArr = [
   'color:darkmagenta',
   'color:darkorange',
   'color:darkorchid',
+  'color:chartreuse',
   'color:yellowgreen',
 ]
 
@@ -37,4 +38,12 @@ export function getColor() {
   let colorVal = logFontColorArr[index]
   // console.log('%cConsoleColor', colorVal, colorVal)
   return colorVal
+}
+
+/**
+ *
+ * @returns
+ */
+export function color() {
+  return getColor()
 }

@@ -5,6 +5,10 @@ import { user_urls } from '@/api/constant-list'
 const routesArr = [
   /*test*/
   {
+    path: '/case6',
+    component: lazy(() => import('@/components/test/case6/case6')),
+  },
+  {
     path: '/case5/ancestor',
     component: lazy(() => import('@/components/test/case5/ancestor/ancestor')),
   },

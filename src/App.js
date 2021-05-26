@@ -8,8 +8,6 @@ import { AppContainer } from 'react-hot-loader'
 import MineRouter from './router/MineRouter'
 import store from './redux/store'
 
-console.log(store)
-
 /**
  *
  * @returns

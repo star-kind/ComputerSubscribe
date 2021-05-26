@@ -35,15 +35,33 @@ class RetrieveList extends Component {
     this.handleGetUsersList()
   }
 
-  //子组件调用父组件中的函数,接收到子组件的值
+  //联结子组件之桥梁,供数据物流之途
+  bridge = (data) => {
+    console.log('%cbridge.data', this.color(), data)
+    //
+    switch (data.method) {
+      case 'showInfoArea':
+        this.exhibitPageDiv(data.instruct)
+        break
+
+      case 'showForm':
+        this.hidePageScope(data.instruct)
+        break
+
+      default:
+        break
+    }
+  }
+
+  //隐藏PageScope
   hidePageScope = (instruct) => {
-    console.log('hidePageScope.instruct', instruct)
+    console.log('%chidePageScope.instruct', this.color(), instruct)
     this.setState({
       showPageArea: instruct,
     })
   }
 
-  //接收子孙组件发送的值
+  //展示PageDiv
   exhibitPageDiv = (instruct) => {
     console.log('%cexhibitPageDiv.instruct=' + instruct, 'color:red')
     this.setState({
@@ -219,8 +237,7 @@ class RetrieveList extends Component {
         <div className='master_context'>
           <div className='user_tabl'>
             <UserTable
-              showPageDiv={this.exhibitPageDiv}
-              hidePageArea={this.hidePageScope}
+              bridge={this.bridge}
               thArray={this.state.thArr}
               pagination={this.state.pagination}
             ></UserTable>

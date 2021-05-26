@@ -8,7 +8,7 @@ export const commonUtil = {
     console.log('key:' + key, 'value\n', value)
     //将value转化为json字符串
     let jsonStr = JSON.stringify(value)
-    console.log('jsonStr\n', jsonStr)
+    // console.log('jsonStr\n', jsonStr)
     localStorage.setItem(key, jsonStr)
   },
 
@@ -20,15 +20,14 @@ export const commonUtil = {
   getValueFromLocal: function (key) {
     let valueObj = { code: 1 }
     let jsonStr = localStorage.getItem(key)
-    console.log('jsonStr\n', jsonStr)
-
+    // console.log('jsonStr\n', jsonStr)
     if (jsonStr.trim().length < 1) {
       valueObj.text = '您的登录状态已过期,请重新登录'
       valueObj.code = -1
     } else {
       //将json字符串解析为数据对象
       valueObj.text = JSON.parse(jsonStr)
-      console.log('valueObj\n', valueObj)
+      // console.log('valueObj\n', valueObj)
     }
     return valueObj
   },
@@ -113,14 +112,41 @@ export const commonUtil = {
 
       return objArr
     })
-    console.log('hint==', hint)
-    console.log('objArr==', objArr)
+    console.log('hint', hint, 'objArr', objArr)
+    //
     if (hint.toString().length > 0) {
       result.isValidate = false
       result.alertText =
         hint.substring(0, hint.length - 1) + '未输入,请填写完毕'
     }
-    //
     return result
+  },
+
+  /**
+   * 将时间戳毫秒转化为本地格式时间,包括年月日时分秒
+   * @param {*} time
+   * @returns
+   */
+  dateTimeFormat: function (timeStamp) {
+    let time = new Date(timeStamp)
+    let standardTime = time.toLocaleString()
+    console.log('standardTime=' + standardTime)
+    return standardTime
+  },
+
+  /**
+   * 将时间戳毫秒转化为年月日
+   * @param {*} time
+   * @returns
+   */
+  getTimeYearMonthDay: function (timeStamp) {
+    let time = new Date(timeStamp)
+    let timeYearMonthDay = time.getFullYear()
+    timeYearMonthDay += '-'
+    timeYearMonthDay += time.getMonth() + 1
+    timeYearMonthDay += '-'
+    timeYearMonthDay += time.getDate()
+    console.log('timeYearMonthDay=' + timeYearMonthDay)
+    return timeYearMonthDay
   },
 }
