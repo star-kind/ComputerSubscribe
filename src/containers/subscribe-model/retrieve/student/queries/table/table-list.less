@@ -1,0 +1,39 @@
+@value_fontsize: 20px;
+@val_of_width: 70%;
+@valOfHeight: 15%;
+@rel: relative;
+
+.main-table-list {
+  font-size: 18px;
+  width: 60rem;
+  position: relative;
+  top: 10rem;
+  left: 5%;
+
+  .hint_head {
+    text-align: center;
+  }
+
+  .table_class {
+    font-size: @value_fontsize;
+    width: @val_of_width;
+    left: @valOfHeight;
+    position: @rel;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+
+  li {
+    list-style: none;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

@@ -30,6 +30,19 @@ class LoginOut extends Component {
     this.listeningInstruct()
   }
 
+  state = {
+    msg: '',
+    whetherExhibit: true,
+    //
+    confirmData: {
+      comment: '',
+      instruct: null,
+      method: '',
+    },
+  }
+
+  static propTypes = {}
+
   /**
    *
    * @param {*} data
@@ -68,19 +81,6 @@ class LoginOut extends Component {
       this.state.confirmData
     )
   }
-
-  state = {
-    msg: '',
-    whetherExhibit: true,
-    //
-    confirmData: {
-      comment: '',
-      instruct: null,
-      method: '',
-    },
-  }
-
-  static propTypes = {}
 
   render() {
     return (

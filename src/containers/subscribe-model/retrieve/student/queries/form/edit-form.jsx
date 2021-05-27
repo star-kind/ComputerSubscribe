@@ -3,8 +3,10 @@ import './edit-form.less'
 import PropTypes from 'prop-types'
 import { getValueFromLocal } from '@/api/common'
 import Portals2 from '@/components/popup-window/portals2/portals2'
+import ConfirmIndex from '@/components/popup-window/confirm/confirm-index/confirm-index'
 import { commonUtil } from '@/api/common2.js'
 
+//学生决定是否撤回自己的预约申请
 class EditForm extends Component {
   constructor(props) {
     super(props)
@@ -39,16 +41,19 @@ class EditForm extends Component {
     subscribeStatus: '',
     useInterval: '',
     //
-    radioItemArr: [
-      { name: '审核中', value: 0 },
-      { name: '批准预约', value: 1 },
-      { name: '驳回预约', value: 2 },
-    ],
-    //
     radioId: 'radioId-',
     //
     whetherExhibit: true,
     message: '',
+    //
+    confirmMsg: '',
+    confirmExhibit: true,
+    //
+    confirmData: {
+      comment: '',
+      instruct: null,
+      method: '',
+    },
   }
 
   static propTypes = {
@@ -86,6 +91,10 @@ class EditForm extends Component {
       this.setState({
         id: tagetSubscibe.id,
       })
+    } else if (tagetSubscibe.subscribeStatus !== this.state.subscribeStatus) {
+      this.setState({
+        subscribeStatus: tagetSubscibe.subscribeStatus,
+      })
     }
   }
 
@@ -105,13 +114,6 @@ class EditForm extends Component {
     //
     this.setState({
       [event.target.name]: event.target.value,
-    })
-  }
-
-  handleChangeRadioValue = (e) => {
-    // console.log('%c handleChangeRadioValue.event', this.getColor(), e)
-    this.setState({
-      subscribeStatus: e.target.value,
     })
   }
 
@@ -168,38 +170,65 @@ class EditForm extends Component {
     })
   }
 
-  handleSubmit = (event) => {
-    let ts = this
+  cancelSubscribe = (event) => {
     //阻止默认事件
     event.preventDefault()
     // console.log('event-target\n', event.target)
-    let params = {
-      subscribeID: ts.state.id,
-      status: ts.state.subscribeStatus,
+    this.setState({
+      confirmMsg: '一旦撤销就不可恢复,确定撤销吗?',
+      confirmExhibit: !this.state.confirmExhibit,
+    })
+    let { confirmData } = this.state
+    console.log('%c confirmData', this.getColor(), confirmData)
+  }
+
+  /**
+   *
+   * @param {*} status
+   * @returns
+   */
+  getStatus = (status) => {
+    let tip = ''
+    switch (status) {
+      case 0:
+        tip = '待审核'
+        break
+
+      case 1:
+        tip = '已批准'
+        break
+
+      case 2:
+        tip = '已驳回'
+        break
+
+      case 3:
+        tip = '已自行撤回'
+        break
+      default:
+        break
     }
-    //
-    if (params.status === '') {
+    return tip
+  }
+
+  handleSubmit = () => {
+    let ts = this
+    let { id, subscribeStatus } = ts.state
+    if (subscribeStatus) {
       ts.setState({
-        message: '请选择如何处理这份预约申请',
         whetherExhibit: !ts.state.whetherExhibit,
+        message: '此预约业已被您撤销,不可恢复',
       })
       return
     }
     //
     let tokenObject = ts.validatedToken()
-    console.log(
-      '%c params\n',
-      ts.getColor(),
-      params,
-      'tokenObject',
-      tokenObject
-    )
-    //handleSubscribeStatus
+    //studentCancelSubscribe
     ts.gets(
-      ts.interfaces.handleSubscribeStatus,
+      ts.interfaces.studentCancelSubscribe,
       {
-        subscribeID: params.subscribeID,
-        status: params.status,
+        subscribeID: id,
+        status: 3,
       },
       { token: tokenObject.text }
     ).then((res) => {
@@ -207,6 +236,7 @@ class EditForm extends Component {
       if (res.data.code === 200) {
         //更新父组件的数据
         ts.updatedTblRowData(res.data.data)
+        //
         ts.hideFormExhibitTbl()
       } else {
         ts.setState({
@@ -217,12 +247,32 @@ class EditForm extends Component {
     })
   }
 
+  /**
+   * 接收来自confirm组件返回的数据
+   * @param {*} data
+   * @returns
+   */
+  receiveConfirmData = (data) => {
+    console.log('%creceiveData.data', this.color(), data)
+    // this.setState({
+    //   confirmData: data,
+    // })
+    if (data.instruct === 1) {
+      this.handleSubmit()
+    } else {
+      console.log('data.instruct==' + data.instruct)
+    }
+  }
+
   render() {
     return (
       <div className='main-edit-form'>
         <div className='pack_wrapper'>
           <div className='form_pack'>
-            <form className='mine_form' onSubmit={this.handleSubmit.bind(this)}>
+            <form
+              className='mine_form'
+              onSubmit={this.cancelSubscribe.bind(this)}
+            >
               <div className='input_wrap_div'>
                 <div className='input_item_div'>
                   <div className='input_element'>
@@ -345,32 +395,23 @@ class EditForm extends Component {
                 </div>
                 <div className='input_item_div'>
                   <div className='input_element'>
-                    <label className='labels_for_tag'>处理决定:</label>
+                    <label
+                      className='labels_for_tag'
+                      htmlFor='id_subscribeStatus'
+                    >
+                      预约状态:
+                    </label>
                   </div>
                   <div className='input_element inputs_side'>
-                    <div className='radios_div' id='id_subscribeStatus'>
-                      {this.state.radioItemArr.map((element, index) => {
-                        return (
-                          <div key={index} className='radio_item_div'>
-                            <input
-                              id={this.state.radioId + index}
-                              onChange={(e) => this.handleChangeRadioValue(e)}
-                              type='radio'
-                              name='subscribeStatus'
-                              defaultValue={element.value}
-                            />
-                            <span>
-                              <label
-                                className='label_radio'
-                                htmlFor={this.state.radioId + index}
-                              >
-                                {element.name}
-                              </label>
-                            </span>
-                          </div>
-                        )
-                      })}
-                    </div>
+                    <input
+                      readOnly={true}
+                      id='id_subscribeStatus'
+                      className='input_tag'
+                      onChange={this.handleChange.bind(this)}
+                      name='subscribeStatus'
+                      type='text'
+                      defaultValue={this.getStatus(this.state.subscribeStatus)}
+                    />
                   </div>
                 </div>
               </div>
@@ -384,19 +425,11 @@ class EditForm extends Component {
                     id='cancel_revamp_id'
                   />
                 </div>
-                <div className='btn_input' id='reset_item'>
-                  <input
-                    className='input_btn_ele'
-                    type='reset'
-                    value='复位'
-                    id='reset_id'
-                  />
-                </div>
                 <div className='btn_input' id='submit_item'>
                   <input
                     className='input_btn_ele'
                     type='submit'
-                    value='提交'
+                    value='撤回预约'
                     id='submit_id'
                   />
                 </div>
@@ -412,10 +445,19 @@ class EditForm extends Component {
           <br />
           <br />
         </div>
-        <Portals2
-          isExhibit={this.state.whetherExhibit}
-          msg={this.state.message}
-        ></Portals2>
+        <div className='ConfirmIndexDiv'>
+          <ConfirmIndex
+            whetherExhibit={this.state.confirmExhibit}
+            msg={this.state.confirmMsg}
+            receiveData={this.receiveConfirmData}
+          ></ConfirmIndex>
+        </div>
+        <div className='Portals2Div'>
+          <Portals2
+            isExhibit={this.state.whetherExhibit}
+            msg={this.state.message}
+          ></Portals2>
+        </div>
       </div>
     )
   }

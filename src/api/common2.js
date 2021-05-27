@@ -109,7 +109,6 @@ export const commonUtil = {
           objArr.push(item[0])
         }
       }
-
       return objArr
     })
     console.log('hint', hint, 'objArr', objArr)
@@ -148,5 +147,39 @@ export const commonUtil = {
     timeYearMonthDay += time.getDate()
     console.log('timeYearMonthDay=' + timeYearMonthDay)
     return timeYearMonthDay
+  },
+
+  /**
+   * 检验数据对象数组中哪一项为空
+   * @param  {[type]} arr [description]
+   * @return {[type]}     [只返回提示字符串,不返回处理过的数据]
+   */
+  verifyArrObj: function (arr) {
+    let res = { hint: '', isVerify: true }
+
+    arr.map(function (item) {
+      if (typeof item.val === 'string') {
+        if (
+          (item.val.trim() === '') |
+          (item.val === null) |
+          (item.val === undefined)
+        ) {
+          res.hint += item.name + ','
+        }
+      } else {
+        if ((item.val === null) | (item.val === undefined)) {
+          res.hint += item.name + ','
+        }
+      }
+      return null
+    })
+    //
+    if (res.hint.toString().length > 0) {
+      res.isVerify = false
+      res.hint = res.hint.substring(0, res.hint.length - 1) + ' 为空,请补全完毕'
+    }
+    //
+    console.info('verifyArrObj.res', res)
+    return res
   },
 }

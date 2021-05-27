@@ -15,5 +15,7 @@ export const user_urls = {
   profile_ordinary: '/profileUserOrdinary',
   profile_administrator: '/profileAdministrator',
   add_new_apply: '/addNewApply',
-  query_by_room_major: '/queryByRoomMajor',
+  query_week_teacher: '/queryWeekByTeacher',
+  query_myself_student: '/queryMyselfStudent',
+  add_new_room: '/addNewComputerRoom',
 }

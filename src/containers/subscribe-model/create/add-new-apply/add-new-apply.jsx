@@ -16,6 +16,10 @@ class AddNewApply extends Component {
     this.handleGetRoomList()
   }
 
+  componentDidUpdate(previousProps, previousState) {
+    console.log('%cAddNewApply componentDidUpdate\n', 'color:red', this)
+  }
+
   state = {
     useIntervalArr: [
       { name: '--请选择时间段--', num: '' },
@@ -70,10 +74,9 @@ class AddNewApply extends Component {
 
   // 绑定 on select 事件
   handleSelect = (e) => {
-    console.log(e.target)
     //触发onChange事件时,得到的值
     let optValue = e.target.value
-    console.log('%c optValue', this.getColor(), optValue)
+    console.log('%c optValue', this.color(), optValue)
     this.setState({
       [e.target.name]: optValue,
     })
@@ -89,53 +92,52 @@ class AddNewApply extends Component {
     })
   }
 
-  validateParams = (params) => {
-    console.info('%c validateParams.params', this.getColor(), params)
-    let { applyUseDate, useInterval, roomNum } = params
-    let result = { warnTip: '', whether: false }
-    //
-    if (useInterval === null) {
-      result.warnTip = '请选择时间段'
-    } else if (applyUseDate === null) {
-      result.warnTip = '请选择日期'
-    } else if (roomNum === null || roomNum === '--请选择机房房号--') {
-      result.warnTip = '请选择机房'
-    } else {
-      result.whether = true
-    }
-    //
-    console.info('%c validateParams.result', this.getColor(), result)
-    return result
-  }
+  // validateParams = (params) => {
+  //   console.info('%c validateParams.params', this.getColor(), params)
+  //   let { applyUseDate, useInterval, roomNum } = params
+  //   let result = { warnTip: '', whether: false }
+  //   //
+  //   if (useInterval === null) {
+  //     result.warnTip = '请选择时间段'
+  //   } else if (applyUseDate === null) {
+  //     result.warnTip = '请选择日期'
+  //   } else if (roomNum === null || roomNum === '--请选择机房房号--') {
+  //     result.warnTip = '请选择机房'
+  //   } else {
+  //     result.whether = true
+  //   }
+  //   //
+  //   console.info('%c validateParams.result', this.getColor(), result)
+  //   return result
+  // }
 
   handleSubmit = (event) => {
     let ts = this
     let token = ts.getToken()
+    let { applyUseDate, roomNum, useInterval } = ts.state
     //阻止默认事件
     event.preventDefault()
     //
-    let params = {
-      applyUseDate: ts.state.applyUseDate,
-      roomNum: ts.state.roomNum,
-      useInterval: ts.state.useInterval,
-    }
-    //
-    let result = this.validateParams(params)
-    if (!result.whether) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        message: result.warnTip,
+    let parameters = [
+      { name: '申请预约使用机房的日期', val: applyUseDate },
+      { name: '申请预约使用机房的房间号', val: roomNum },
+      { name: '申请预约使用机房的某个时段', val: useInterval },
+    ]
+    let res = commonUtil.verifyArrObj(parameters)
+    if (!res.isVerify) {
+      ts.setState({
+        message: res.hint,
+        whetherExhibit: !ts.state.whetherExhibit,
       })
       return
     }
-    console.info('%c params', this.getColor(), params)
     //
     ts.gets(
       ts.interfaces.addNewApply,
       {
-        useInterval: params.useInterval,
-        roomNum: params.roomNum,
-        applyUseDate: params.applyUseDate,
+        useInterval: useInterval,
+        roomNum: roomNum,
+        applyUseDate: applyUseDate,
       },
       { token: token }
     ).then((res) => {
@@ -144,9 +146,6 @@ class AddNewApply extends Component {
         ts.setState({
           whetherExhibit: !ts.state.whetherExhibit,
           message: '已提交预约申请',
-          applyUseDate: null,
-          roomNum: null,
-          useInterval: null,
         })
       } else {
         console.info('handlesubmit res.data.message', res.data.message)
@@ -186,9 +185,9 @@ class AddNewApply extends Component {
                         className='selects-tag'
                         onChange={this.handleSelect}
                       >
-                        {this.state.useIntervalArr.map((item) => {
+                        {this.state.useIntervalArr.map((item, index) => {
                           return (
-                            <option key={item.name} value={item.num}>
+                            <option key={index} value={item.num}>
                               {item.name}
                             </option>
                           )
@@ -229,7 +228,7 @@ class AddNewApply extends Component {
                         id='id_roomNum'
                         className='selects-tag'
                       >
-                        <option>--请选择机房房号--</option>
+                        <option value={''}>--请选择机房房号--</option>
                         {this.state.roomNumArr.map((item, index) => {
                           return (
                             <option key={index} value={item}>

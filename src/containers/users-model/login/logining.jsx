@@ -149,7 +149,6 @@ export default class Logining extends Component {
                       onChange={this.handleChangeSelect}
                     >
                       {this.state.roleTypeArray.map((item) => {
-                        console.log(item)
                         return (
                           <option value={item.code} key={item.name}>
                             {item.name}

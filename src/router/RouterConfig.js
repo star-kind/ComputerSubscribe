@@ -84,11 +84,26 @@ const routesArr = [
     ),
   },
   {
-    path: user_urls.query_by_room_major,
+    path: user_urls.query_week_teacher,
     component: lazy(() =>
       import(
         '@/containers/subscribe-model/retrieve/teacher/queries/major/major'
       )
+    ),
+  },
+  {
+    path: user_urls.query_myself_student,
+    component: lazy(() =>
+      import(
+        '@/containers/subscribe-model/retrieve/student/queries/major/major'
+      )
+    ),
+  },
+  //computer room
+  {
+    path: user_urls.add_new_room,
+    component: lazy(() =>
+      import('@/containers/room-model/add-new-room/add-new-room')
     ),
   },
 ]

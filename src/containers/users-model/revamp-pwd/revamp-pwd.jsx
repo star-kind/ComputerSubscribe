@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PublicHeader from '@/components/header/header-index'
 import axios from 'axios'
 import Portals2 from '@/components/popup-window/portals2/portals2'
-import { verifyDataNull, getValueFromLocal } from '@/api/common'
+import { getValueFromLocal, verifyDataItemNull } from '@/api/common'
 import './revamp-pwd.less'
 
 export default class RevampPwd extends Component {
@@ -39,61 +39,88 @@ export default class RevampPwd extends Component {
     })
   }
 
+  /**
+   *
+   * @returns
+   */
+  validatedNull = () => {
+    let { oldPasswd, preNewPasswd, newPasswd } = this.state
+    var dateArr = [
+      { name: '原密码', val: oldPasswd },
+      { name: '新密码', val: preNewPasswd },
+      { name: '再确认的新密码', val: newPasswd },
+    ]
+    return verifyDataItemNull(dateArr)
+  }
+
+  /**
+   *
+   * @returns
+   */
+  checkPwdIsRight = () => {
+    let { preNewPasswd, newPasswd, oldPasswd } = this.state
+    let result = { isRight: true, hint: '' }
+    //
+    if (preNewPasswd !== newPasswd) {
+      result.isRight = false
+      result.hint = '两次输入的新密码不一致'
+    } else if (oldPasswd === newPasswd) {
+      result.isRight = false
+      result.hint = '旧密码不能与新密码相同'
+    }
+    console.log('checkPwdIsRight.result\n', result)
+    return result
+  }
+
   handleSubmit = (event) => {
+    let ts = this
     //阻止默认事件
     event.preventDefault()
-    var data = {
-      oldPasswd: this.state.oldPasswd,
-      preNewPasswd: this.state.preNewPasswd,
-      newPasswd: this.state.newPasswd,
-    }
     //
-    var res = verifyDataNull(data)
-    console.log('res\n', res)
+    let res = ts.validatedNull()
     if (!res.isValidate) {
       this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
+        whetherExhibit: !ts.state.whetherExhibit,
         message: res.alertText,
       })
       return
     }
     //
-    if (data.preNewPasswd !== data.newPasswd) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        message: '两次输入的新密码不一致',
-      })
-      return
-    } else if (data.oldPasswd === data.newPasswd) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        message: '旧密码不能与新密码相同',
+    let right = ts.checkPwdIsRight()
+    if (!right.isRight) {
+      ts.setState({
+        whetherExhibit: !ts.state.whetherExhibit,
+        message: right.hint,
       })
       return
     }
     //
-    var tokenObj = getValueFromLocal(this.store_key.token_key)
+    let data = {
+      oldPasswd: ts.state.oldPasswd,
+      preNewPasswd: ts.state.preNewPasswd,
+      newPasswd: ts.state.newPasswd,
+    }
+    //
+    var tokenObj = getValueFromLocal(ts.store_key.token_key)
     console.log('tokenObj\n', tokenObj)
     if (tokenObj.code === -1) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
+      ts.setState({
+        whetherExhibit: !ts.state.whetherExhibit,
         message: tokenObj.text,
       })
       return
     }
     //
     axios
-      .get(this.interfaces.revisePassword, {
+      .get(ts.interfaces.revisePassword, {
         params: { newPasswd: data.newPasswd, oldPasswd: data.oldPasswd },
         headers: { token: tokenObj.text },
       })
       .then((resp) => {
         console.info('resp\n', resp)
         if (resp.data.code === 200) {
-          console.info('resp.data.data\n', resp.data.data)
-          //
-          this.setState({
-            whetherExhibit: !this.state.whetherExhibit,
+          ts.setState({
+            whetherExhibit: !ts.state.whetherExhibit,
             message: '密码修改成功,即将前往登录页重新登录',
           })
           //
@@ -101,9 +128,8 @@ export default class RevampPwd extends Component {
             this.props.history.push(this.user_urls.login_url)
           }, 5 * 1000)
         } else {
-          console.info('resp.data.message\n', resp.data.message)
-          this.setState({
-            whetherExhibit: !this.state.whetherExhibit,
+          ts.setState({
+            whetherExhibit: !ts.state.whetherExhibit,
             message: resp.data.message,
           })
         }
@@ -128,7 +154,7 @@ export default class RevampPwd extends Component {
                 <div className='inputs_item param_major_item'>
                   <input
                     onChange={this.handleChange.bind(this)}
-                    value={this.state.oldPasswd}
+                    defaultValue={this.state.oldPasswd}
                     name='oldPasswd'
                     type='password'
                     id='old_password'
@@ -139,7 +165,7 @@ export default class RevampPwd extends Component {
                 <div className='inputs_item param_major_item'>
                   <input
                     onChange={this.handleChange.bind(this)}
-                    value={this.state.preNewPasswd}
+                    defaultValue={this.state.preNewPasswd}
                     name='preNewPasswd'
                     type='password'
                     id='pre_new_password'
@@ -150,7 +176,7 @@ export default class RevampPwd extends Component {
                 <div className='inputs_item param_major_item'>
                   <input
                     onChange={this.handleChange.bind(this)}
-                    value={this.state.newPasswd}
+                    defaultValue={this.state.newPasswd}
                     name='newPasswd'
                     type='password'
                     id='new_password'

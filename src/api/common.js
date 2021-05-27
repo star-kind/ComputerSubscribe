@@ -119,3 +119,42 @@ export function verifyDataNull(data) {
   //
   return result
 }
+
+/**
+ * 校验参数数组中是否有空值项
+ * @param {*} dataArray
+ * @returns 仅仅返回提示字符串+布尔量,不返回处理过的数据
+ */
+export function verifyDataItemNull(dataArray) {
+  let result = {
+    isValidate: true,
+    alertText: '',
+  }
+  //校验各参数是否为空
+  dataArray.map((item) => {
+    if (typeof item.val === 'string') {
+      if (
+        (item.val.trim() === '') |
+        (item.val === null) |
+        (item.val === undefined)
+      ) {
+        result.alertText += item.name + ','
+      }
+    } else {
+      if ((item.val === null) | (item.val === undefined)) {
+        result.alertText += item.name + ','
+      }
+    }
+    return null
+  })
+  //
+  if (result.alertText.toString().length > 0) {
+    result.isValidate = false
+    result.alertText =
+      result.alertText.substring(0, result.alertText.length - 1) +
+      '未输入,请填写完毕'
+  }
+  //
+  console.info('verifyDataItemNull.result', result)
+  return result
+}

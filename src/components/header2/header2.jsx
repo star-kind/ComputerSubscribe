@@ -48,6 +48,8 @@ class PublicHeader2 extends Component {
           { name: '管理员页面', url: '#administrator' },
           { name: '用户列表', url: this.user_urls.retrieve_list_url },
           this.state.revampPassword,
+          { name: '个人资料', url: this.user_urls.profile_administrator },
+          { name: '新增机房', url: this.user_urls.add_new_room },
         ]
         break
 
@@ -57,9 +59,10 @@ class PublicHeader2 extends Component {
           { name: '教师页面', url: '#teacher' },
           this.state.revampPassword,
           {
-            name: '查看预约申请单列表',
-            url: this.user_urls.query_by_room_major,
+            name: '本周预约申请列表',
+            url: this.user_urls.query_week_teacher,
           },
+          { name: '个人资料', url: this.user_urls.profile_ordinary },
         ]
         break
 
@@ -69,14 +72,15 @@ class PublicHeader2 extends Component {
           { name: '学生页面', url: '#student' },
           this.state.revampPassword,
           { name: '申请机房预约', url: this.user_urls.add_new_apply },
+          { name: '个人资料', url: this.user_urls.profile_ordinary },
+          {
+            name: '本周预约申请',
+            url: this.user_urls.query_myself_student,
+          },
         ]
         break
 
       default:
-        urlArrObj = [
-          { name: '--请选择地址--', url: '' },
-          { name: 'Null页面', url: '/Void' },
-        ]
         break
     }
     //

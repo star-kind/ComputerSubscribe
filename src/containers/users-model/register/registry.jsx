@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import './registry-index.less'
-import { verifyDataRegex, verifyDataNull } from '@/api/common'
+import { verifyDataRegex, verifyDataItemNull } from '@/api/common'
 
 export default class Registry extends Component {
   componentDidMount() {
@@ -26,7 +26,7 @@ export default class Registry extends Component {
     mailbox: '',
     password: '',
     previousPassword: '',
-    role: -1,
+    role: undefined,
     //是否展示
     whetherExhibit: true,
     message: '',
@@ -52,11 +52,38 @@ export default class Registry extends Component {
     })
   }
 
-  //提交注册资料
-  handleSubmit = (event) => {
-    //阻止默认事件
-    event.preventDefault()
-    //封装对象
+  /**
+   *
+   * @returns
+   */
+  verifyNull = () => {
+    let {
+      userName,
+      userNum,
+      phone,
+      mailbox,
+      previousPassword,
+      password,
+      role,
+    } = this.state
+    //
+    let dataArr = [
+      { name: '用户名称', val: userName },
+      { name: '工号或者学号', val: userNum },
+      { name: '电话号码', val: phone },
+      { name: '邮箱地址', val: mailbox },
+      { name: '密码', val: previousPassword },
+      { name: '确认密码', val: password },
+      { name: '用户角色', val: role },
+    ]
+    return verifyDataItemNull(dataArr)
+  }
+
+  /**
+   *
+   * @returns
+   */
+  checkRegex = () => {
     let data = {
       userName: this.state.userName,
       userNum: this.state.userNum,
@@ -64,10 +91,18 @@ export default class Registry extends Component {
       mailbox: this.state.mailbox,
       previousPassword: this.state.previousPassword,
       password: this.state.password,
+      role: this.state.role,
     }
+    return verifyDataRegex(data)
+  }
+
+  //提交注册资料
+  handleSubmit = (event) => {
+    //阻止默认事件
+    event.preventDefault()
     //
-    let res = verifyDataNull(data)
-    console.log('res\n', res)
+    let ts = this
+    let res = ts.verifyNull()
     if (!res.isValidate) {
       this.setState({
         whetherExhibit: !this.state.whetherExhibit,
@@ -76,21 +111,25 @@ export default class Registry extends Component {
       return
     }
     //
-    data.role = this.state.role
-    let res2 = verifyDataRegex(data)
-    console.log('res2\n', res2)
-    if (!res2.isValidate) {
+    let regex = ts.checkRegex()
+    if (!regex.isValidate) {
       this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        message: res2.alertText,
+        whetherExhibit: !ts.state.whetherExhibit,
+        message: regex.alertText,
       })
       return
     }
-
-    //移除previousPassword
-    delete data.previousPassword
-    console.log('data\n', data)
-
+    //封装对象
+    let data = {
+      userName: ts.state.userName,
+      userNum: ts.state.userNum,
+      phone: ts.state.phone,
+      mailbox: ts.state.mailbox,
+      password: ts.state.password,
+      role: ts.state.role,
+    }
+    console.log('%cdata>>>>>', ts.color(), data)
+    //
     axios
       .get(this.interfaces.registry, {
         params: {
@@ -105,9 +144,8 @@ export default class Registry extends Component {
       .then((resp) => {
         console.info('resp\n', resp)
         if (resp.data.code === 200) {
-          console.log('resp.data.data\n', resp.data.data)
-          this.setState({
-            whetherExhibit: !this.state.whetherExhibit,
+          ts.setState({
+            whetherExhibit: !ts.state.whetherExhibit,
             message: '注册成功,即将前往登录页',
           })
           //
@@ -117,7 +155,7 @@ export default class Registry extends Component {
         } else {
           console.log('resp.data.message\n', resp.data.message)
           this.setState({
-            whetherExhibit: !this.state.whetherExhibit,
+            whetherExhibit: !ts.state.whetherExhibit,
             message: resp.data.message,
           })
         }
@@ -131,7 +169,6 @@ export default class Registry extends Component {
     let substance = (
       <div className='main_container'>
         <PublicHeader></PublicHeader>
-        {/*  */}
         <br />
         <br />
         <div className='regist_container'>
@@ -197,7 +234,6 @@ export default class Registry extends Component {
                     onChange={this.getRoleByChangeSel}
                   >
                     {this.state.roleTypeArray.map((item) => {
-                      console.log(item)
                       return (
                         <option value={item.code} key={item.name}>
                           {item.name}

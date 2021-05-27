@@ -27,6 +27,14 @@ let interfaces = {
 
   handleSubscribeStatus:
     '/api/subscribe/SubscribeController/handleSubscribeStatusAction',
+
+  studentCancelSubscribe:
+    '/api/subscribe/SubscribeController/studentCancelSubscribeAction',
+
+  queryWeekListByStudent:
+    '/api/subscribe/SubscribeController/queryWeekListByStudentAction',
+
+  saveNewRoom: '/api/subscribe/ComputerRoomController/saveNewAction?',
 }
 
 export default interfaces
