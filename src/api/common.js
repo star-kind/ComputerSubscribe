@@ -75,52 +75,6 @@ export function verifyDataRegex(data) {
 }
 
 /**
- * 校验表单参数集合对象是否有空值
- * @param {*} data
- * @returns
- */
-export function verifyDataNull(data) {
-  let result = {
-    isValidate: true,
-    alertText: '',
-  }
-
-  let entriesArr = Object.entries(data)
-  console.log('entriesArr\n', entriesArr)
-
-  let hint = ''
-  let objArr = []
-  //校验各参数是否为空
-  objArr = entriesArr.map((item) => {
-    if (typeof item[1] === 'string') {
-      if (
-        (item[1].trim() === '') |
-        (item[1] === null) |
-        (item[1] === undefined)
-      ) {
-        hint += item[0] + ','
-        objArr.push(item[0])
-      }
-    } else {
-      if ((item[1] === null) | (item[1] === undefined)) {
-        hint += item[0] + ','
-        objArr.push(item[0])
-      }
-    }
-
-    return objArr
-  })
-  console.log('hint==', hint)
-  console.log('objArr==', objArr)
-  if (hint.toString().length > 0) {
-    result.isValidate = false
-    result.alertText = hint.substring(0, hint.length - 1) + '未输入,请填写完毕'
-  }
-  //
-  return result
-}
-
-/**
  * 校验参数数组中是否有空值项
  * @param {*} dataArray
  * @returns 仅仅返回提示字符串+布尔量,不返回处理过的数据
@@ -152,7 +106,7 @@ export function verifyDataItemNull(dataArray) {
     result.isValidate = false
     result.alertText =
       result.alertText.substring(0, result.alertText.length - 1) +
-      '未输入,请填写完毕'
+      ' 未输入,请填写完毕'
   }
   //
   console.info('verifyDataItemNull.result', result)

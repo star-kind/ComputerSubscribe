@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { user_urls } from '@/api/constant-list'
+import { user_urls } from '../api/constant-list'
 
 //路由地址集合数组
 const routesArr = [
@@ -104,6 +104,12 @@ const routesArr = [
     path: user_urls.add_new_room,
     component: lazy(() =>
       import('@/containers/room-model/add-new-room/add-new-room')
+    ),
+  },
+  {
+    path: user_urls.query_room_list,
+    component: lazy(() =>
+      import('@/containers/room-model/queries/major/major')
     ),
   },
 ]

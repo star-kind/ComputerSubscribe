@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import './major.less'
 import PublicHeader2 from '@/components/header2/header2'
-import TableList from '@/containers/subscribe-model/retrieve/student/queries/table/table-list'
-import EditForm from '@/containers/subscribe-model/retrieve/student/queries/form/edit-form'
+import TableList from '@/containers/room-model/queries/table/table-list'
+import EditForm from '@/containers/room-model/queries/form/edit-form'
 import PageInfo from '@/components/tables/page-info/page-info'
 import { getValueFromLocal } from '@/api/common'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 
 /*
-学生分页获取本周内自己全部的预约申请单
+分页列表,获取全部机房信息,不限制帐号类型
 */
 class Major extends Component {
   constructor(props) {
@@ -39,7 +39,6 @@ class Major extends Component {
   }
 
   state = {
-    //
     pagination: {
       data: [],
       hasPrevious: false,
@@ -50,27 +49,26 @@ class Major extends Component {
     },
     //表头
     thArr: [
-      '学号',
-      '审核者',
-      '审核状态',
       '机房房号',
-      '预约发起时间',
-      '申请使用时段',
-      '审核处理时间',
-      '申请使用日期',
-      '操作',
+      '座位总数',
+      '是否开放使用',
+      '最近编辑者的工号[管理员]',
+      '上一次编辑机房的时间',
+      '机房的地址位置',
+      '可用座位数',
+      '操作壹',
+      '操作贰',
     ],
-    //传给表单审核组件的预约单数据(单份)
-    tagetSubscibe: {
-      applicant: '',
-      applicationStartTime: '',
-      applyUseDate: '',
-      handleTime: '',
+    //传给表单审核的机房数据(单份)
+    tagetedSelectd: {
       id: '',
-      reviewer: '',
       roomNum: '',
-      subscribeStatus: '',
-      useInterval: '',
+      totalSets: '',
+      availableStatus: '',
+      adminNumOperated: '',
+      operatedTime: '',
+      location: '',
+      actAvailableQuantity: '',
     },
     //页码
     targetPage: 0,
@@ -81,7 +79,7 @@ class Major extends Component {
     //是否展示
     whetherExhibit: true,
     message: '',
-    //被审核预约当前的数组下标
+    //被选中编辑的数组中当前元素下标
     arrIndex: '',
   }
 
@@ -99,7 +97,6 @@ class Major extends Component {
    * @returns
    */
   handleGetList = () => {
-    //先存一下this,以防使用箭头函数this会指向我们不希望它所指向的对象
     const ts = this
     let tokenObj = getValueFromLocal(ts.store_key.token_key)
     console.log('%c tokenObj\n', ts.getColor(), tokenObj)
@@ -121,15 +118,15 @@ class Major extends Component {
     }
     //
     ts.gets(
-      ts.interfaces.queryWeekListByStudent,
+      ts.interfaces.getRoomListByPagin,
       {
         pageOrder: ts.state.targetPage,
         rows: ts.state.limitRow,
       },
       { token: tokenObj.text }
     ).then((res) => {
+      console.info('response\n', res)
       if (res.data.code === 200) {
-        console.info('res.data.data\n', res.data.data)
         ts.setState({
           pagination: res.data.data,
         })
@@ -166,15 +163,15 @@ class Major extends Component {
     )
     //
     ts.gets(
-      ts.interfaces.queryWeekListByStudent,
+      ts.interfaces.getRoomListByPagin,
       {
         pageOrder: pageNum,
         rows: rows,
       },
       { token: tokenObj.text }
     ).then((res) => {
+      console.info('response\n', res)
       if (res.data.code === 200) {
-        console.info('res.data.data\n', res.data.data)
         ts.setState({
           pagination: res.data.data,
         })
@@ -216,9 +213,26 @@ class Major extends Component {
         this.updatedPaginByIndex(childData.data)
         break
 
+      case 'deleteRoomById':
+        this.deleteRoomById(childData)
+        break
+
       default:
         break
     }
+  }
+
+  /**
+   *
+   * @param {*} params
+   */
+  deleteRoomById = (params) => {
+    let { pagination } = this.state
+    //deleteIndex
+    pagination.data.splice(params.deleteIndex, 1)
+    this.setState({
+      pagination: pagination,
+    })
   }
 
   //审批完预约后,根据索引更新pagination中的数据
@@ -246,7 +260,7 @@ class Major extends Component {
   showFormHideTable = (data) => {
     this.setState({
       arrIndex: data.index,
-      tagetSubscibe: data.value,
+      tagetedSelectd: data.value,
       tblAndPageInfoDisplay: 'none',
       formDisplay: 'block',
     })
@@ -272,7 +286,7 @@ class Major extends Component {
             style={{ display: this.state.formDisplay }}
           >
             <EditForm
-              tagetSubscibe={this.state.tagetSubscibe}
+              tagetedSelectd={this.state.tagetedSelectd}
               receivedChildData={this.receivedChildData}
             ></EditForm>
           </div>

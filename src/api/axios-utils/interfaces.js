@@ -35,6 +35,14 @@ let interfaces = {
     '/api/subscribe/SubscribeController/queryWeekListByStudentAction',
 
   saveNewRoom: '/api/subscribe/ComputerRoomController/saveNewAction?',
+
+  getRoomListByPagin:
+    '/api/subscribe/ComputerRoomController/getRoomListByPaginAction',
+
+  reviseRoomInfo: '/api/subscribe/ComputerRoomController/reviseRoomInfoAction',
+
+  deleteRoomByRoomId:
+    '/api/subscribe/ComputerRoomController/deleteRoomByRoomId',
 }
 
 export default interfaces

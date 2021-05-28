@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import './edit-form.less'
 import PropTypes from 'prop-types'
 import { getValueFromLocal } from '@/api/common'
-import Portals2 from '@/components/popup-window/portals2/portals2'
-import ConfirmIndex from '@/components/popup-window/confirm/confirm-index/confirm-index'
 import { commonUtil } from '@/api/common2.js'
 
-//学生决定是否撤回自己的预约申请
+//管理员编辑机房数据
 class EditForm extends Component {
   constructor(props) {
     super(props)
@@ -15,6 +13,31 @@ class EditForm extends Component {
 
   componentDidMount() {
     console.log('%cEditForm componentDidMount\n', 'color:red', this)
+  }
+
+  /**
+   * 若欲利用 props 初始化 state , 最好在此处
+   * @param {*} props
+   * @param {*} state
+   * @returns
+   */
+  static getDerivedStateFromProps(props, state) {
+    console.log('getDerivedStateFromProps.props', props, 'state', state)
+    let { tagetedSelectd } = props
+    if (tagetedSelectd.id !== state.id) {
+      return {
+        id: tagetedSelectd.id,
+        roomNum: tagetedSelectd.roomNum,
+        totalSets: tagetedSelectd.totalSets,
+        availableStatus: tagetedSelectd.availableStatus,
+        adminNumOperated: tagetedSelectd.adminNumOperated,
+        operatedTime: tagetedSelectd.operatedTime,
+        location: tagetedSelectd.location,
+        actAvailableQuantity: tagetedSelectd.actAvailableQuantity,
+      }
+    }
+    //如果返回 null 则不更新任何内容.但注意在没有内容更新的情况下也一定要返回一个null值.不然会报错.
+    return null
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -26,25 +49,23 @@ class EditForm extends Component {
       prevState
     )
     console.log('%c EditForm-this', 'color:green', this)
-    //
-    this.setRowDataToForm()
   }
 
   state = {
-    applicant: '',
-    applicationStartTime: '',
-    applyUseDate: '',
-    handleTime: '',
     id: '',
-    reviewer: '',
     roomNum: '',
-    subscribeStatus: '',
-    useInterval: '',
+    totalSets: '',
+    availableStatus: '',
+    adminNumOperated: '',
+    operatedTime: '',
+    location: '',
+    actAvailableQuantity: '',
     //
+    radioItemArr: [
+      { name: '不可用', value: 0 },
+      { name: '可使用', value: 1 },
+    ],
     radioId: 'radioId-',
-    //
-    whetherExhibit: true,
-    message: '',
     //
     confirmMsg: '',
     confirmExhibit: true,
@@ -57,45 +78,9 @@ class EditForm extends Component {
   }
 
   static propTypes = {
-    //即将被审核处理的预约单
-    tagetSubscibe: PropTypes.object,
+    //被选中编辑的单份数据
+    tagetedSelectd: PropTypes.object,
     receivedChildData: PropTypes.func,
-  }
-
-  //将表格中某一行数据赋予表单
-  setRowDataToForm = () => {
-    let { tagetSubscibe } = this.props
-    if (tagetSubscibe.applicant !== this.state.applicant) {
-      this.setState({
-        applicant: tagetSubscibe.applicant,
-      })
-    } else if (
-      tagetSubscibe.applicationStartTime !== this.state.applicationStartTime
-    ) {
-      this.setState({
-        applicationStartTime: tagetSubscibe.applicationStartTime,
-      })
-    } else if (tagetSubscibe.roomNum !== this.state.roomNum) {
-      this.setState({
-        roomNum: tagetSubscibe.roomNum,
-      })
-    } else if (tagetSubscibe.useInterval !== this.state.useInterval) {
-      this.setState({
-        useInterval: tagetSubscibe.useInterval,
-      })
-    } else if (tagetSubscibe.applyUseDate !== this.state.applyUseDate) {
-      this.setState({
-        applyUseDate: tagetSubscibe.applyUseDate,
-      })
-    } else if (tagetSubscibe.id !== this.state.id) {
-      this.setState({
-        id: tagetSubscibe.id,
-      })
-    } else if (tagetSubscibe.subscribeStatus !== this.state.subscribeStatus) {
-      this.setState({
-        subscribeStatus: tagetSubscibe.subscribeStatus,
-      })
-    }
   }
 
   //取消编辑,隐匿表单,显示表格
@@ -110,37 +95,18 @@ class EditForm extends Component {
 
   //绑定on change事件,使input输入框能动态取值和赋值
   handleChange = (event) => {
-    console.log('event.target\n', event.target)
-    //
+    let { value, name } = event.target
+    console.log('eventTargetValue', value, 'name', name)
     this.setState({
-      [event.target.name]: event.target.value,
+      [event.target.name]: value,
     })
   }
 
-  /**
-   *
-   * @param {*} interval
-   * @returns
-   */
-  getInterval = (interval) => {
-    let tip = ''
-    switch (interval) {
-      case 0:
-        tip = '上午'
-        break
-
-      case 1:
-        tip = '下午'
-        break
-
-      case 2:
-        tip = '晚上'
-        break
-
-      default:
-        break
-    }
-    return tip
+  handleChangeRadio = (e) => {
+    console.log('%c event.target.name', this.getColor(), e.target.name)
+    this.setState({
+      [e.target.name]: e.target.value,
+    })
   }
 
   /**
@@ -152,10 +118,7 @@ class EditForm extends Component {
     console.log('%c tokenObj\n', this.getColor(), tokenObj)
     //token
     if (tokenObj.code === -1) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        message: tokenObj.text,
-      })
+      alert(tokenObj.text)
       return
     } else {
       return tokenObj
@@ -170,65 +133,54 @@ class EditForm extends Component {
     })
   }
 
-  cancelSubscribe = (event) => {
-    //阻止默认事件
-    event.preventDefault()
-    // console.log('event-target\n', event.target)
-    this.setState({
-      confirmMsg: '一旦撤销就不可恢复,确定撤销吗?',
-      confirmExhibit: !this.state.confirmExhibit,
-    })
-    let { confirmData } = this.state
-    console.log('%c confirmData', this.getColor(), confirmData)
+  validateSubmit = () => {
+    let {
+      roomNum,
+      totalSets,
+      availableStatus,
+      location,
+      actAvailableQuantity,
+    } = this.state
+    //
+    let params = [
+      { name: '机房房间号码', val: roomNum },
+      { name: '机房中座位总数量', val: totalSets },
+      { name: '机房可用状态', val: availableStatus },
+      { name: '机房地址', val: location },
+      { name: '机房中实际可用电脑数量', val: actAvailableQuantity },
+    ]
+    return commonUtil.verifyArrObj(params)
   }
 
-  /**
-   *
-   * @param {*} status
-   * @returns
-   */
-  getStatus = (status) => {
-    let tip = ''
-    switch (status) {
-      case 0:
-        tip = '待审核'
-        break
-
-      case 1:
-        tip = '已批准'
-        break
-
-      case 2:
-        tip = '已驳回'
-        break
-
-      case 3:
-        tip = '已自行撤回'
-        break
-      default:
-        break
-    }
-    return tip
-  }
-
-  handleSubmit = () => {
+  handleSubmit = (e) => {
+    e.preventDefault()
     let ts = this
-    let { id, subscribeStatus } = ts.state
-    if (subscribeStatus) {
-      ts.setState({
-        whetherExhibit: !ts.state.whetherExhibit,
-        message: '此预约业已被您撤销,不可恢复',
-      })
+    //
+    let res = ts.validateSubmit()
+    if (!res.isVerify) {
+      alert(res.hint)
       return
     }
     //
     let tokenObject = ts.validatedToken()
-    //studentCancelSubscribe
+    let {
+      id,
+      roomNum,
+      totalSets,
+      availableStatus,
+      location,
+      actAvailableQuantity,
+    } = ts.state
+    //
     ts.gets(
-      ts.interfaces.studentCancelSubscribe,
+      ts.interfaces.reviseRoomInfo,
       {
-        subscribeID: id,
-        status: 3,
+        roomNum: roomNum,
+        totalSets: totalSets,
+        availableStatus: availableStatus,
+        location: location,
+        actAvailableQuantity: actAvailableQuantity,
+        id: id,
       },
       { token: tokenObject.text }
     ).then((res) => {
@@ -239,29 +191,9 @@ class EditForm extends Component {
         //
         ts.hideFormExhibitTbl()
       } else {
-        ts.setState({
-          message: res.data.message,
-          whetherExhibit: !ts.state.whetherExhibit,
-        })
+        alert(res.data.message)
       }
     })
-  }
-
-  /**
-   * 接收来自confirm组件返回的数据
-   * @param {*} data
-   * @returns
-   */
-  receiveConfirmData = (data) => {
-    console.log('%creceiveData.data', this.color(), data)
-    // this.setState({
-    //   confirmData: data,
-    // })
-    if (data.instruct === 1) {
-      this.handleSubmit()
-    } else {
-      console.log('data.instruct==' + data.instruct)
-    }
   }
 
   render() {
@@ -269,21 +201,18 @@ class EditForm extends Component {
       <div className='main-edit-form'>
         <div className='pack_wrapper'>
           <div className='form_pack'>
-            <form
-              className='mine_form'
-              onSubmit={this.cancelSubscribe.bind(this)}
-            >
+            <form className='mine_form' onSubmit={this.handleSubmit.bind(this)}>
               <div className='input_wrap_div'>
                 <div className='input_item_div'>
                   <div className='input_element'>
-                    <label htmlFor='id_subscribe' className='labels_for_tag'>
-                      预约单ID:
+                    <label htmlFor='id_room' className='labels_for_tag'>
+                      机房ID:
                     </label>
                   </div>
                   <div className='input_element inputs_side'>
                     <input
                       readOnly={true}
-                      id='id_subscribe'
+                      id='id_room'
                       className='input_tag'
                       onChange={this.handleChange.bind(this)}
                       name='id'
@@ -294,124 +223,145 @@ class EditForm extends Component {
                 </div>
                 <div className='input_item_div'>
                   <div className='input_element'>
-                    <label htmlFor='id_applicant' className='labels_for_tag'>
-                      申请人学号:
-                    </label>
-                  </div>
-                  <div className='input_element inputs_side'>
-                    <input
-                      readOnly={true}
-                      id='id_applicant'
-                      className='input_tag'
-                      onChange={this.handleChange.bind(this)}
-                      name='applicant'
-                      type='text'
-                      defaultValue={this.state.applicant}
-                    />
-                  </div>
-                </div>
-                <div className='input_item_div'>
-                  <div className='input_element'>
-                    <label
-                      htmlFor='id_applicationStartTime'
-                      className='labels_for_tag'
-                    >
-                      预约发起时间:
-                    </label>
-                  </div>
-                  <div className='input_element inputs_side'>
-                    <p className='time_stamp_txt' id='id_applicationStartTime'>
-                      {commonUtil.dateTimeFormat(
-                        this.state.applicationStartTime
-                      )}
-                    </p>
-                    <input
-                      style={{ display: 'none' }}
-                      readOnly={true}
-                      className='input_tag'
-                      onChange={this.handleChange.bind(this)}
-                      name='applicationStartTime'
-                      type='text'
-                      defaultValue={this.state.applicationStartTime}
-                    />
-                  </div>
-                </div>
-                <div className='input_item_div'>
-                  <div className='input_element'>
                     <label htmlFor='id_roomNum' className='labels_for_tag'>
-                      申请机房房号:
+                      机房编号:
                     </label>
                   </div>
                   <div className='input_element inputs_side'>
                     <input
-                      readOnly={true}
                       id='id_roomNum'
                       className='input_tag'
                       onChange={this.handleChange.bind(this)}
                       name='roomNum'
-                      type='text'
+                      type='number'
                       defaultValue={this.state.roomNum}
                     />
                   </div>
                 </div>
                 <div className='input_item_div'>
                   <div className='input_element'>
-                    <label htmlFor='id_useInterval' className='labels_for_tag'>
-                      申请使用时段:
+                    <label htmlFor='id_totalSets' className='labels_for_tag'>
+                      座位总数:
                     </label>
                   </div>
                   <div className='input_element inputs_side'>
                     <input
-                      readOnly={true}
-                      id='id_useInterval'
+                      id='id_totalSets'
                       className='input_tag'
                       onChange={this.handleChange.bind(this)}
-                      name='useInterval'
+                      name='totalSets'
                       type='text'
-                      defaultValue={this.getInterval(this.state.useInterval)}
-                    />
-                  </div>
-                </div>
-                <div className='input_item_div'>
-                  <div className='input_element'>
-                    <label htmlFor='id_applyUseDate' className='labels_for_tag'>
-                      申请使用日期:
-                    </label>
-                  </div>
-                  <div className='input_element inputs_side'>
-                    <p className='time_stamp_txt' id='id_applyUseDate'>
-                      {commonUtil.getTimeYearMonthDay(this.state.applyUseDate)}
-                    </p>
-                    <input
-                      style={{ display: 'none' }}
-                      readOnly={true}
-                      className='input_tag'
-                      onChange={this.handleChange.bind(this)}
-                      name='applyUseDate'
-                      type='text'
-                      defaultValue={this.state.applyUseDate}
+                      defaultValue={this.state.totalSets}
                     />
                   </div>
                 </div>
                 <div className='input_item_div'>
                   <div className='input_element'>
                     <label
+                      htmlFor='id_actAvailableQuantity'
                       className='labels_for_tag'
-                      htmlFor='id_subscribeStatus'
                     >
-                      预约状态:
+                      实际可用座位数:
+                    </label>
+                  </div>
+                  <div className='input_element inputs_side'>
+                    <input
+                      id='id_actAvailableQuantity'
+                      className='input_tag'
+                      onChange={this.handleChange.bind(this)}
+                      name='actAvailableQuantity'
+                      type='text'
+                      defaultValue={this.state.actAvailableQuantity}
+                    />
+                  </div>
+                </div>
+                <div className='input_item_div'>
+                  <div className='input_element'>
+                    <label
+                      htmlFor='id_adminNumOperated'
+                      className='labels_for_tag'
+                    >
+                      最近编辑者:
                     </label>
                   </div>
                   <div className='input_element inputs_side'>
                     <input
                       readOnly={true}
-                      id='id_subscribeStatus'
+                      id='id_adminNumOperated'
                       className='input_tag'
                       onChange={this.handleChange.bind(this)}
-                      name='subscribeStatus'
+                      name='adminNumOperated'
                       type='text'
-                      defaultValue={this.getStatus(this.state.subscribeStatus)}
+                      defaultValue={this.state.adminNumOperated}
                     />
+                  </div>
+                </div>
+                <div className='input_item_div'>
+                  <div className='input_element'>
+                    <label htmlFor='id_operatedTime' className='labels_for_tag'>
+                      最近修改时间:
+                    </label>
+                  </div>
+                  <div className='input_element inputs_side'>
+                    <p className='time_stamp_txt' id='id_operatedTime'>
+                      {commonUtil.dateTimeFormat(this.state.operatedTime)}
+                    </p>
+                    <input
+                      style={{ display: 'none' }}
+                      readOnly={true}
+                      className='input_tag'
+                      type='text'
+                      defaultValue={commonUtil.dateTimeFormat(
+                        this.state.operatedTime
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className='input_item_div'>
+                  <div className='input_element'>
+                    <label htmlFor='id_location' className='labels_for_tag'>
+                      机房地址:
+                    </label>
+                  </div>
+                  <div className='input_element inputs_side'>
+                    <input
+                      id='id_location'
+                      className='input_tag'
+                      onChange={this.handleChange.bind(this)}
+                      name='location'
+                      type='text'
+                      defaultValue={this.state.location}
+                    />
+                  </div>
+                </div>
+                <div className='input_item_div' id='mine-radio-area'>
+                  <div className='input_element'>
+                    <label className='labels_for_tag'>机房可用状态:</label>
+                  </div>
+                  <div className='input_element inputs_side'>
+                    <div className='radios_div' id='id_subscribeStatus'>
+                      {this.state.radioItemArr.map((element, index) => {
+                        return (
+                          <div key={index} className='radio_item_div'>
+                            <span>
+                              <label
+                                className='label_radio'
+                                htmlFor={this.state.radioId + index}
+                              >
+                                {element.name}
+                              </label>
+                            </span>
+                            <input
+                              id={this.state.radioId + index}
+                              onChange={(e) => this.handleChangeRadio(e)}
+                              type='radio'
+                              name='availableStatus'
+                              defaultValue={element.value}
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -429,7 +379,7 @@ class EditForm extends Component {
                   <input
                     className='input_btn_ele'
                     type='submit'
-                    value='撤回预约'
+                    value='提交'
                     id='submit_id'
                   />
                 </div>
@@ -445,21 +395,9 @@ class EditForm extends Component {
           <br />
           <br />
         </div>
-        <div className='ConfirmIndexDiv'>
-          <ConfirmIndex
-            whetherExhibit={this.state.confirmExhibit}
-            msg={this.state.confirmMsg}
-            receiveData={this.receiveConfirmData}
-          ></ConfirmIndex>
-        </div>
-        <div className='Portals2Div'>
-          <Portals2
-            isExhibit={this.state.whetherExhibit}
-            msg={this.state.message}
-          ></Portals2>
-        </div>
       </div>
     )
   }
 }
+
 export default EditForm

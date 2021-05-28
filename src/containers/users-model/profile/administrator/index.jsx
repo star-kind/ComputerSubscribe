@@ -3,7 +3,7 @@ import './index.less'
 import PublicHeader2 from '@/components/header2/header2'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import {
-  verifyDataNull,
+  verifyDataItemNull,
   getValueFromLocal,
   depositLocalStorage,
 } from '@/api/common'
@@ -32,7 +32,6 @@ export default class ProfileAdministrator extends Component {
       inputReadOnly: true,
       //
       roleTypeArray: [
-        { name: '--请选择帐号类型--', code: -1 },
         { name: '管理员', code: 0 },
         { name: '教师', code: 1 },
       ],
@@ -40,10 +39,20 @@ export default class ProfileAdministrator extends Component {
   }
 
   componentDidMount() {
-    console.log('ProfileUserOrdinary component did mount')
-    console.log(this)
+    console.log('%cProfileUserOrdinary.component.did.mount', this.color(), this)
     //
     this.updateProfile()
+  }
+
+  componentDidUpdate(prevProps, PrevStates) {
+    console.log(
+      '%cProfileUserOrdinary.componentDidUpdate',
+      this.color(),
+      prevProps,
+      'PrevStates',
+      PrevStates
+    )
+    console.log('%cProfileUserOrdinary.componentDidUpdate', this.color(), this)
   }
 
   //更新资料
@@ -58,8 +67,7 @@ export default class ProfileAdministrator extends Component {
         userNum: storeObj.text.userNum,
         phone: storeObj.text.phone,
         mailbox: storeObj.text.mailbox,
-        role: storeObj.text.role === 0 ? '管理员' : '黑客',
-        roleNum: storeObj.text.role,
+        role: storeObj.text.role,
         token: tokenObj.text,
       })
     } else {
@@ -70,21 +78,8 @@ export default class ProfileAdministrator extends Component {
   //绑定on change事件,使input输入框能动态取值和赋值
   handleChange = (event) => {
     console.log('event.target\n', event.target)
-    // e.target.name代表当前输入Input框对应的Name,如email,realName
-    // e.target.value代表当前输入的值
     this.setState({
       [event.target.name]: event.target.value,
-    })
-  }
-
-  // 绑定 on select 事件
-  handleChangeSelect = (e) => {
-    console.log(e.target)
-    //触发onChange事件时,得到的值
-    let roleOptVal = e.target.value
-    console.log('RoleOptVal(code)', roleOptVal)
-    this.setState({
-      roleNum: roleOptVal,
     })
   }
 
@@ -111,66 +106,59 @@ export default class ProfileAdministrator extends Component {
     //阻止默认事件
     event.preventDefault()
     //
-    let data = {
-      userName: this.state.userName,
-      mailbox: this.state.mailbox,
-      phone: this.state.phone,
-    }
-    let resObj = verifyDataNull(data)
-    console.log('resObj\n', resObj)
+    let ts = this
+    let { userName, mailbox, phone, role } = ts.state
+    let dataArr = [
+      { name: '用户名称', val: userName },
+      { name: '电子邮箱', val: mailbox },
+      { name: '电话号码', val: phone },
+      { name: '帐户角色', val: role },
+    ]
+    //
+    let resObj = verifyDataItemNull(dataArr)
     if (!resObj.isValidate) {
       this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
+        whetherExhibit: !ts.state.whetherExhibit,
         message: resObj.alertText,
-      })
-      return
-    }
-    console.log('data\n', data)
-    //
-    if (this.state.roleNum < 0) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
-        message: '请选择帐号类型',
       })
       return
     }
     //
     axios
-      .get(this.interfaces.modifyByAdminMySelf, {
+      .get(ts.interfaces.modifyByAdminMySelf, {
         params: {
-          userName: data.userName,
-          phone: data.phone,
-          mailbox: data.mailbox,
-          role: this.state.roleNum,
+          userName: userName,
+          phone: phone,
+          mailbox: mailbox,
+          role: role,
         },
-        headers: { token: this.state.token },
+        headers: { token: ts.state.token },
       })
       .then((resp) => {
         console.info('resp\n', resp)
         if (resp.data.code === 200) {
-          console.info('resp.data.data\n', resp.data.data)
-          depositLocalStorage(this.store_key.myself_key, resp.data.data)
+          depositLocalStorage(ts.store_key.myself_key, resp.data.data)
           //如果是卸任管理员的话就前往普通用户中心
           if (resp.data.data.role !== 0) {
-            this.setState({
-              whetherExhibit: !this.state.whetherExhibit,
+            ts.setState({
+              whetherExhibit: !ts.state.whetherExhibit,
               message: '资料修改成功,您已卸任管理员权限',
             })
             //
             setTimeout(() => {
-              this.props.history.push(this.user_urls.profile_administrator)
+              ts.props.history.push(ts.user_urls.profile_administrator)
             }, 5 * 1000)
           } else {
-            this.setState({
-              whetherExhibit: !this.state.whetherExhibit,
+            ts.setState({
+              whetherExhibit: !ts.state.whetherExhibit,
               message: '资料修改成功',
             })
-            this.cancelRevamp()
+            ts.cancelRevamp()
           }
         } else {
           console.info('resp.data.message\n', resp.data.message)
-          this.setState({
-            whetherExhibit: !this.state.whetherExhibit,
+          ts.setState({
+            whetherExhibit: !ts.state.whetherExhibit,
             message: resp.data.message,
           })
         }
@@ -278,7 +266,7 @@ export default class ProfileAdministrator extends Component {
                     id='role_id'
                     className='input_tag'
                     type='text'
-                    defaultValue={this.state.role}
+                    defaultValue={this.state.role === 0 ? '管理员' : '师生'}
                   />
                 </div>
               </div>
@@ -294,14 +282,13 @@ export default class ProfileAdministrator extends Component {
                 </div>
                 <div className='input_element inputs_side'>
                   <select
-                    defaultValue={this.state.roleNum}
                     id='select_role_id'
                     name='role'
-                    onChange={this.handleChangeSelect}
+                    onChange={this.handleChange.bind(this)}
                     className='input_tag'
                   >
+                    <option value={''}>--请选择帐号类型--</option>
                     {this.state.roleTypeArray.map((item) => {
-                      console.log(item)
                       return (
                         <option key={item.name} value={item.code}>
                           {item.name}

@@ -50,6 +50,7 @@ class PublicHeader2 extends Component {
           this.state.revampPassword,
           { name: '个人资料', url: this.user_urls.profile_administrator },
           { name: '新增机房', url: this.user_urls.add_new_room },
+          { name: '机房列表', url: this.user_urls.query_room_list },
         ]
         break
 

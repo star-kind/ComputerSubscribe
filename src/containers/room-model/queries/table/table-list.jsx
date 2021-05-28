@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import './table-list.less'
 import PropTypes from 'prop-types'
 import { commonUtil } from '@/api/common2.js'
+import ConfirmIndex from '@/components/popup-window/confirm/confirm-index/confirm-index'
+import Portals2 from '@/components/popup-window/portals2/portals2'
 
 class TableList extends Component {
   constructor(props) {
@@ -38,6 +40,22 @@ class TableList extends Component {
     rowCheckItems: [],
     //被编辑的目标用户数据行
     editTargetRow: {},
+    //
+    confirmMsg: '',
+    confirmExhibit: true,
+    //
+    confirmData: {
+      comment: '',
+      instruct: null,
+      method: '',
+    },
+    //可能会被删除的元素的下标
+    deleteIndex: '',
+    // 缓存将被删除机房的数据项
+    deleteItem: {},
+    //
+    isExhibit: true,
+    msg: '',
   }
 
   static propTypes = {
@@ -55,8 +73,7 @@ class TableList extends Component {
     var statusArr = []
     var entireUsers = []
     var data = this.props.pagination.data
-    console.log('event.target\n', event.target)
-    //
+    // console.log('event.target\n', event.target)
     if (event.target.checked) {
       //若全选,获取状态数组和数据行数组
       for (let index = 0; index < data.length; index++) {
@@ -90,7 +107,7 @@ class TableList extends Component {
     let { rowCheck, rowCheckItems } = this.state
     console.log('aloneChecked-item\n', item)
     console.log('aloneChecked-index\n', index)
-    console.log('aloneChecked-event\n', event)
+    // console.log('aloneChecked-event\n', event)
     //
     if (event.target.checked) {
       //被勾选栏状态
@@ -137,59 +154,93 @@ class TableList extends Component {
     this.props.receivedChildData(data)
   }
 
-  /**
-   *
-   * @param {*} status
-   * @returns
-   */
-  getStatus = (status) => {
-    let tip = ''
-    switch (status) {
-      case 0:
-        tip = '待审核'
-        break
-
-      case 1:
-        tip = '已批准'
-        break
-
-      case 2:
-        tip = '已驳回'
-        break
-
-      case 3:
-        tip = '已自行撤回'
-        break
-      default:
-        break
-    }
-    return tip
+  //据机房id删除机房
+  deleteRoomById = (index, item, e) => {
+    this.setState({
+      confirmMsg: '确定删除此间机房吗?',
+      confirmExhibit: !this.state.confirmExhibit,
+      // 缓存将被删除机房的数组下标
+      deleteIndex: index,
+      // 缓存将被删除机房的数据项
+      deleteItem: item,
+    })
+    console.log(
+      'deleteRoomById-index',
+      this.color(),
+      index,
+      '\nitem>>>>>',
+      item
+    )
   }
 
   /**
    *
-   * @param {*} interval
    * @returns
    */
-  getInterval = (interval) => {
-    let tip = ''
-    switch (interval) {
-      case 0:
-        tip = '上午'
-        break
-
-      case 1:
-        tip = '下午'
-        break
-
-      case 2:
-        tip = '晚上'
-        break
-
-      default:
-        break
+  validatedToken = () => {
+    let tokenObj = commonUtil.getValueFromLocal(this.store_key.token_key)
+    console.log('%c tokenObj\n', this.getColor(), tokenObj)
+    //token
+    if (tokenObj.code === -1) {
+      this.setState({
+        isExhibit: !this.state.isExhibit,
+        msg: tokenObj.text,
+      })
+      return
+    } else {
+      return tokenObj
     }
-    return tip
+  }
+
+  handleDeleteRoom = () => {
+    let ts = this
+    let { deleteItem, deleteIndex } = ts.state
+    console.info('%cdeleteItem', ts.color(), deleteItem)
+    //
+    let tokenObj = ts.validatedToken()
+    ts.gets(
+      ts.interfaces.deleteRoomByRoomId,
+      {
+        roomID: deleteItem.id,
+      },
+      { token: tokenObj.text }
+    )
+      .then((result) => {
+        console.info('%c result', ts.color(), result)
+        if (result.data.code === 200) {
+          //从父组件的数据数组中删除此行
+          let data = {
+            comment: '从分页数据数组中删除此项',
+            method: 'deleteRoomById',
+            deleteIndex: deleteIndex,
+          }
+          this.props.receivedChildData(data)
+        } else {
+          console.infp(result.data.message)
+          ts.setState({
+            isExhibit: !ts.state.isExhibit,
+            msg: result.data.message,
+          })
+        }
+      })
+      .catch((err) => {
+        console.error('%c err', ts.color(), err)
+      })
+  }
+
+  /**
+   * 接收来自confirm组件返回的数据
+   * @param {*} data
+   * @returns
+   */
+  receiveConfirmData = (data) => {
+    console.log('%c receiveConfirmData.data', this.color(), data)
+    if (data.instruct === 1) {
+      //删除机房
+      this.handleDeleteRoom()
+    } else {
+      console.log('data.instruct==' + data.instruct)
+    }
   }
 
   render() {
@@ -197,7 +248,7 @@ class TableList extends Component {
       <div className='main-table-list'>
         <div>
           <div className='hint_head'>
-            <h3>查看本周内自己全部的预约申请单</h3>
+            <h3>查看全部的机房信息</h3>
           </div>
           <div className='data_map_tbl'>
             <table className='tbl_class'>
@@ -239,22 +290,13 @@ class TableList extends Component {
                           />
                         </span>
                       </td>
-                      <td>{row.applicant}</td>
-                      <td>{row.reviewer}</td>
-                      <td>{this.getStatus(row.subscribeStatus)}</td>
                       <td>{row.roomNum}</td>
-                      <td>
-                        {commonUtil.dateTimeFormat(row.applicationStartTime)}
-                      </td>
-                      <td>{this.getInterval(row.useInterval)}</td>
-                      <td>
-                        {row.handleTime === null
-                          ? ''
-                          : commonUtil.dateTimeFormat(row.handleTime)}
-                      </td>
-                      <td>
-                        {commonUtil.getTimeYearMonthDay(row.applyUseDate)}
-                      </td>
+                      <td>{row.totalSets}</td>
+                      <td>{row.availableStatus === 0 ? '关闭中' : '开放中'}</td>
+                      <td>{row.adminNumOperated}</td>
+                      <td>{commonUtil.dateTimeFormat(row.operatedTime)}</td>
+                      <td>{row.location}</td>
+                      <td>{row.actAvailableQuantity}</td>
                       <td>
                         <span className='sp_a'>
                           <li
@@ -264,7 +306,16 @@ class TableList extends Component {
                               row
                             )}
                           >
-                            撤销
+                            编辑
+                          </li>
+                        </span>
+                      </td>
+                      <td>
+                        <span className='sp_a'>
+                          <li
+                            onClick={this.deleteRoomById.bind(this, index, row)}
+                          >
+                            删除
                           </li>
                         </span>
                       </td>
@@ -274,6 +325,19 @@ class TableList extends Component {
               </tbody>
             </table>
           </div>
+        </div>
+        <div className='ConfirmIndexDiv'>
+          <ConfirmIndex
+            whetherExhibit={this.state.confirmExhibit}
+            msg={this.state.confirmMsg}
+            receiveData={this.receiveConfirmData}
+          ></ConfirmIndex>
+        </div>
+        <div className='Portals2Div'>
+          <Portals2
+            isExhibit={this.state.isExhibit}
+            msg={this.state.msg}
+          ></Portals2>
         </div>
       </div>
     )

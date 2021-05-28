@@ -18,4 +18,5 @@ export const user_urls = {
   query_week_teacher: '/queryWeekByTeacher',
   query_myself_student: '/queryMyselfStudent',
   add_new_room: '/addNewComputerRoom',
+  query_room_list: '/queryRoomList',
 }

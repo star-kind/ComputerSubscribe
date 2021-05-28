@@ -211,10 +211,11 @@ class EditForm extends Component {
     return tip
   }
 
-  handleSubmit = () => {
+  handleSubmit = (e) => {
+    e.preventDefault()
     let ts = this
     let { id, subscribeStatus } = ts.state
-    if (subscribeStatus) {
+    if (subscribeStatus === 3) {
       ts.setState({
         whetherExhibit: !ts.state.whetherExhibit,
         message: '此预约业已被您撤销,不可恢复',
@@ -254,9 +255,6 @@ class EditForm extends Component {
    */
   receiveConfirmData = (data) => {
     console.log('%creceiveData.data', this.color(), data)
-    // this.setState({
-    //   confirmData: data,
-    // })
     if (data.instruct === 1) {
       this.handleSubmit()
     } else {

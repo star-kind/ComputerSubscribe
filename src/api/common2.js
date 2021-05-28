@@ -77,51 +77,6 @@ export const commonUtil = {
   },
 
   /**
-   * 校验表单参数集合对象是否有空值
-   * @param {*} data
-   * @returns
-   */
-  verifyDataNull: function (data) {
-    let result = {
-      isValidate: true,
-      alertText: '',
-    }
-
-    let entriesArr = Object.entries(data)
-    console.log('entriesArr\n', entriesArr)
-
-    let hint = ''
-    let objArr = []
-    //校验各参数是否为空
-    objArr = entriesArr.map((item) => {
-      if (typeof item[1] === 'string') {
-        if (
-          (item[1].trim() === '') |
-          (item[1] === null) |
-          (item[1] === undefined)
-        ) {
-          hint += item[0] + ','
-          objArr.push(item[0])
-        }
-      } else {
-        if ((item[1] === null) | (item[1] === undefined)) {
-          hint += item[0] + ','
-          objArr.push(item[0])
-        }
-      }
-      return objArr
-    })
-    console.log('hint', hint, 'objArr', objArr)
-    //
-    if (hint.toString().length > 0) {
-      result.isValidate = false
-      result.alertText =
-        hint.substring(0, hint.length - 1) + '未输入,请填写完毕'
-    }
-    return result
-  },
-
-  /**
    * 将时间戳毫秒转化为本地格式时间,包括年月日时分秒
    * @param {*} time
    * @returns

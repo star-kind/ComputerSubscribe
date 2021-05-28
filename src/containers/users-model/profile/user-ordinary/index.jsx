@@ -3,7 +3,7 @@ import './index.less'
 import PublicHeader2 from '@/components/header2/header2'
 import Portals2 from '@/components/popup-window/portals2/portals2'
 import {
-  verifyDataNull,
+  verifyDataItemNull,
   getValueFromLocal,
   depositLocalStorage,
 } from '@/api/common'
@@ -93,46 +93,47 @@ export default class ProfileUserOrdinary extends Component {
     //阻止默认事件
     event.preventDefault()
     //
-    let data = {
-      userName: this.state.userName,
-      mailbox: this.state.mailbox,
-      phone: this.state.phone,
-    }
-    let resObj = verifyDataNull(data)
+    let ts = this
+    let { userName, mailbox, phone } = ts.state
+    let dataArr = [
+      { name: '用户名称', val: userName },
+      { name: '电子邮箱', val: mailbox },
+      { name: '电话号码', val: phone },
+    ]
+    //
+    let resObj = verifyDataItemNull(dataArr)
     console.log('resObj\n', resObj)
     if (!resObj.isValidate) {
-      this.setState({
-        whetherExhibit: !this.state.whetherExhibit,
+      ts.setState({
+        whetherExhibit: !ts.state.whetherExhibit,
         message: resObj.alertText,
       })
       return
     }
-    console.log('data\n', data)
     //
     axios
-      .get(this.interfaces.modifyInfoByUser, {
+      .get(ts.interfaces.modifyInfoByUser, {
         params: {
-          userName: data.userName,
-          phone: data.phone,
-          mailbox: data.mailbox,
+          userName: userName,
+          phone: phone,
+          mailbox: mailbox,
         },
-        headers: { token: this.state.token },
+        headers: { token: ts.state.token },
       })
       .then((resp) => {
         console.info('resp\n', resp)
         if (resp.data.code === 200) {
-          console.info('resp.data.data\n', resp.data.data)
-          depositLocalStorage(this.store_key.myself_key, resp.data.data)
+          depositLocalStorage(ts.store_key.myself_key, resp.data.data)
           //
-          this.setState({
-            whetherExhibit: !this.state.whetherExhibit,
+          ts.setState({
+            whetherExhibit: !ts.state.whetherExhibit,
             message: '资料修改成功',
           })
-          this.cancelRevamp()
+          ts.cancelRevamp()
         } else {
           console.info('resp.data.message\n', resp.data.message)
-          this.setState({
-            whetherExhibit: !this.state.whetherExhibit,
+          ts.setState({
+            whetherExhibit: !ts.state.whetherExhibit,
             message: resp.data.message,
           })
         }
