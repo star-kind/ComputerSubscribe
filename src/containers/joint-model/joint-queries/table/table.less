@@ -1,0 +1,46 @@
+@value_fontsize: 15px;
+@val_of_width: 80rem;
+@valOfHeight: 30rem;
+@valOfLeft: 5.5%;
+@rel: relative;
+
+.main-table {
+  font-size: 18px;
+  width: auto;
+  position: relative;
+  top: 10rem;
+  left: 0%;
+
+  .data_map_tbl {
+    font-size: 14px;
+  }
+
+  .hint_head {
+    text-align: center;
+  }
+
+  .tbl_class {
+    font-size: @value_fontsize;
+    width: @val_of_width;
+    height: @valOfHeight;
+    left: @valOfLeft;
+    position: @rel;
+    font-family: monospace;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+
+  li {
+    list-style: none;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

@@ -165,7 +165,7 @@ class RetrieveList extends Component {
    * @returns
    */
   handleGetUsersList2 = (targetPage, tblRow) => {
-    //先存一下this,以防使用箭头函数this会指向我们不希望它所指向的对象
+    //防止使用箭头函数this会指向我们不希望它所指向的对象
     const ts = this
     let tokenObj = getValueFromLocal(ts.store_key.token_key)
     console.log('tokenObj\n', tokenObj)
@@ -185,7 +185,6 @@ class RetrieveList extends Component {
     ).then((res) => {
       console.log('RESPONSE\n', res)
       if (res.data.code === 200) {
-        console.info('res.data.data\n', res.data.data)
         ts.setState({
           pagination: res.data.data,
         })

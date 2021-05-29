@@ -6,25 +6,28 @@ import ConfirmModal from '@/components/popup-window/confirm/confirm-modal/confir
 class ConfirmIndex extends Component {
   constructor(props) {
     super(props)
-    console.info('%cConfirmIndex Constructor\n', 'color:brown', this)
+    // console.info('%cConfirmIndex Constructor\n', 'color:brown', this)
+    console.info('ConfirmIndex Constructor\n')
   }
 
   componentDidMount() {
-    console.log('%cConfirmIndex componentDidMount\n', 'color:red', this)
+    // console.log('%cConfirmIndex componentDidMount\n', 'color:red', this)
+    console.log('ConfirmIndex componentDidMount\n')
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(
-      '%c ConfirmIndex componentDidUpdate.prevProps',
-      'color:blue',
-      prevProps
-    )
-    console.log(
-      '%c ConfirmIndex componentDidUpdate.prevState',
-      'color:green',
-      prevState
-    )
-    console.log('%c ConfirmIndex componentDidUpdate.this', 'color:red', this)
+    // console.log(
+    //   '%c ConfirmIndex componentDidUpdate.prevProps',
+    //   'color:blue',
+    //   prevProps
+    // )
+    // console.log(
+    //   '%c ConfirmIndex componentDidUpdate.prevState',
+    //   'color:green',
+    //   prevState
+    // )
+    // console.log('%c ConfirmIndex componentDidUpdate.this', 'color:red', this)
+    console.log('ConfirmIndex componentDidUpdate')
   }
 
   state = {
@@ -37,7 +40,6 @@ class ConfirmIndex extends Component {
   static propTypes = {
     whetherExhibit: PropTypes.bool.isRequired,
     msg: PropTypes.string.isRequired,
-    //
     receiveData: PropTypes.func,
   }
 

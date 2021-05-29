@@ -1,30 +1,30 @@
 import React, { Component } from 'react'
-import './table-list.less'
-import PropTypes from 'prop-types'
-import { commonUtil } from '@/api/common2.js'
+import './table.less'
+// import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-class TableList extends Component {
+class Table extends Component {
   constructor(props) {
     super(props)
-    console.info('%cTableList--Constructor\n', 'color:brown', this)
+    console.info('%cTable Constructor\n', 'color:brown', this)
   }
 
   componentDidMount() {
-    console.log('%cTableList component did mount\n', 'color:red', this)
+    console.log('%cTable componentDidMount\n', 'color:red', this)
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(
-      '%c TableList.componentDidUpdate prevProps',
-      this.getColor(),
-      prevProps
-    )
-    console.log(
-      '%c TableList.componentDidUpdate prevState',
-      this.getColor(),
-      prevState
-    )
-    console.log('%c TableList.componentDidUpdate.this', this.getColor(), this)
+    // console.log(
+    //   '%c Table componentDidUpdate.prevProps',
+    //   'color:blue',
+    //   prevProps
+    // )
+    // console.log(
+    //   '%c Table componentDidUpdate.prevState',
+    //   'color:green',
+    //   prevState
+    // )
+    console.log('%c Table componentDidUpdate.this', 'color:red', this)
   }
 
   state = {
@@ -40,11 +40,7 @@ class TableList extends Component {
     editTargetRow: {},
   }
 
-  static propTypes = {
-    pagination: PropTypes.object,
-    thArray: PropTypes.array,
-    receivedChildData: PropTypes.func,
-  }
+  static propTypes = {}
 
   /**
    * 全选
@@ -125,77 +121,12 @@ class TableList extends Component {
     return status
   }
 
-  //在父组件使表单展示,使表格隐匿,并在表单上展示待编辑之数据
-  showFormHideTable = (index, item, e) => {
-    console.log('showFormHideTbl.index', index)
-    console.log('showFormHideTbl.item', item)
-    // console.log('showFormHideTbl.event', e)
-    let data = { method: 'showFormHideTable', value: item, index: index }
-    //调用(上层组件)函数,传送数据
-    this.props.receivedChildData(data)
-  }
-
-  /**
-   *
-   * @param {*} status
-   * @returns
-   */
-  getStatus = (status) => {
-    let tip = ''
-    switch (status) {
-      case 0:
-        tip = '待审核'
-        break
-
-      case 1:
-        tip = '已批准'
-        break
-
-      case 2:
-        tip = '已驳回'
-        break
-
-      case 3:
-        tip = '已自行撤回'
-        break
-      default:
-        break
-    }
-    return tip
-  }
-
-  /**
-   *
-   * @param {*} interval
-   * @returns
-   */
-  getInterval = (interval) => {
-    let tip = ''
-    switch (interval) {
-      case 0:
-        tip = '上午'
-        break
-
-      case 1:
-        tip = '下午'
-        break
-
-      case 2:
-        tip = '晚上'
-        break
-
-      default:
-        break
-    }
-    return tip
-  }
-
   render() {
     return (
-      <div className='main-table-list'>
-        <div>
+      <div className='main-table'>
+        <div className='include_content'>
           <div className='hint_head'>
-            <h3>查看本周收到的全部机房预约申请</h3>
+            <h3>某间机房本周内,所收到的预约申请列表</h3>
           </div>
           <div className='data_map_tbl'>
             <table className='tbl_class'>
@@ -211,7 +142,7 @@ class TableList extends Component {
                       />
                     </span>
                   </th>
-                  {this.props.thArray.map((value, i) => {
+                  {this.props.tblHeadArr.map((value, i) => {
                     return (
                       <th key={i} className='th_ar'>
                         {value}
@@ -223,7 +154,7 @@ class TableList extends Component {
               <tbody>
                 {this.props.pagination.data.map((row, index) => {
                   return (
-                    <tr key={row.id} className='trs'>
+                    <tr key={index} className='trs'>
                       <td>
                         <span>{index + 1}</span>
                         <span>
@@ -237,33 +168,22 @@ class TableList extends Component {
                           />
                         </span>
                       </td>
+                      <td>{row.sid}</td>
+                      <td>{row.userName}</td>
+                      <td>{row.userNum}</td>
                       <td>{row.applicant}</td>
+                      <td>{row.applicationStartTime}</td>
+                      <td>{row.applyUseDate}</td>
+                      <td>{row.handleTime}</td>
+                      <td>{row.mailbox}</td>
                       <td>{row.reviewer}</td>
-                      <td>{this.getStatus(row.subscribeStatus)}</td>
+                      <td>{row.role}</td>
                       <td>{row.roomNum}</td>
-                      <td>
-                        {commonUtil.dateTimeFormat(row.applicationStartTime)}
-                      </td>
-                      <td>{this.getInterval(row.useInterval)}</td>
-                      <td>
-                        {row.handleTime === null
-                          ? ''
-                          : commonUtil.dateTimeFormat(row.handleTime)}
-                      </td>
-                      <td>
-                        {commonUtil.getTimeYearMonthDay(row.applyUseDate)}
-                      </td>
+                      <td>{row.useInterval}</td>
+                      <td>{row.subscribeStatus}</td>
                       <td>
                         <span className='sp_a'>
-                          <li
-                            onClick={this.showFormHideTable.bind(
-                              this,
-                              index,
-                              row
-                            )}
-                          >
-                            审批
-                          </li>
+                          <li>审查</li>
                         </span>
                       </td>
                     </tr>
@@ -273,8 +193,25 @@ class TableList extends Component {
             </table>
           </div>
         </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     )
   }
 }
-export default TableList
+
+/*mapStateToProps是取值方法，mapDispatchToProps是赋值方法*/
+const mapStateToProps = (state) => {
+  console.log('Table.mapStateToProps.state', state)
+  return {
+    pagination: state.deliverDataReducer.pagination,
+    tblHeadArr: state.deliverDataReducer.tblHeadArr,
+  }
+}
+
+export default connect(mapStateToProps)(Table)

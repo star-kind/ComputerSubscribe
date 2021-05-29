@@ -9,11 +9,17 @@ import { user_urls } from '@/api/constant-list'
 class MineRouter extends Component {
   constructor(props) {
     super(props)
-    console.info('%cMineRouter--Constructor\n', 'color:brown', this)
+    // console.info('%cMineRouter--Constructor\n', 'color:brown', this)
+    console.info('MineRouter--Constructor')
   }
 
   componentDidMount() {
-    console.log('%cMineRouter component did mount\n', 'color:red', this)
+    // console.log('%cMineRouter component did mount\n', 'color:red', this)
+    console.log('MineRouter component did mount')
+  }
+
+  componentWillUnmount() {
+    console.log('MineRouter component Will Unmount')
   }
 
   state = {

@@ -43,6 +43,9 @@ let interfaces = {
 
   deleteRoomByRoomId:
     '/api/subscribe/ComputerRoomController/deleteRoomByRoomId',
+
+  retrieveSubscribes:
+    '/api/subscribe/JointQueryController/retrieveSubscribesOnlyTeacher',
 }
 
 export default interfaces

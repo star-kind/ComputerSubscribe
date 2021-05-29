@@ -112,6 +112,12 @@ const routesArr = [
       import('@/containers/room-model/queries/major/major')
     ),
   },
+  {
+    path: user_urls.joint_query_major,
+    component: lazy(() =>
+      import('@/containers/joint-model/joint-queries/major/major')
+    ),
+  },
 ]
 
 export default routesArr

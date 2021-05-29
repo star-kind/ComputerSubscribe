@@ -7,25 +7,27 @@ import ConfirmIndex from '@/components/popup-window/confirm/confirm-index/confir
 class LoginOut extends Component {
   constructor(props) {
     super(props)
-    console.info('%cLoginOut Constructor\n', 'color:brown', this)
+    // console.info('%cLoginOut Constructor\n', 'color:brown', this)
+    console.info('LoginOut Constructor\n')
   }
 
   componentDidMount() {
-    console.log('%cLoginOut componentDidMount\n', 'color:red', this)
+    // console.log('%cLoginOut componentDidMount\n', 'color:red', this)
+    console.log('LoginOut componentDidMount')
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(
-      '%c LoginOut componentDidUpdate.prevProps',
-      'color:blue',
-      prevProps
-    )
-    console.log(
-      '%c LoginOut componentDidUpdate.prevState',
-      'color:green',
-      prevState
-    )
-    console.log('%c LoginOut componentDidUpdate.this', 'color:red', this)
+    // console.log(
+    //   '%c LoginOut componentDidUpdate.prevProps',
+    //   'color:blue',
+    //   prevProps
+    // )
+    // console.log(
+    //   '%c LoginOut componentDidUpdate.prevState',
+    //   'color:green',
+    //   prevState
+    // )
+    // console.log('%c LoginOut componentDidUpdate.this', 'color:red', this)
     //
     this.listeningInstruct()
   }

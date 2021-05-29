@@ -8,8 +8,7 @@ import './portals2.less'
  */
 class Portals2 extends Component {
   componentDidMount() {
-    console.log('Portals2 ComponentDidMount')
-    console.log(this)
+    console.log('%c Portals2 ComponentDidMount', this.color(), this)
   }
 
   state = {
@@ -32,16 +31,6 @@ class Portals2 extends Component {
     return (
       <div className='portal_view_lead'>
         <div id='app_root'>
-          {console.log(
-            '%c Portals2.props.isExhibit',
-            this.getColor(),
-            this.props.isExhibit
-          )}
-          {console.log(
-            '%c Portals2.state.isShowCont',
-            this.getColor(),
-            this.state.isShowCont
-          )}
           {this.state.isShowCont === this.props.isExhibit ? (
             <Modal
               isShow={this.state.isShowCont}

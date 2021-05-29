@@ -13,7 +13,7 @@ export function gets(url, param, header) {
       .get(url, { params: param, headers: header })
       .then(
         (response) => {
-          console.info('response\n', response)
+          // console.info('response\n', response)
           resolve(response)
         },
         (err) => {

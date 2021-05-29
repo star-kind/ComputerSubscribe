@@ -9,24 +9,26 @@ import './portals.less'
 class Portals extends Component {
   constructor(props) {
     super(props)
-    console.log('%cPortals.constructor', this.getColor(), this)
+    // console.log('%cPortals.constructor', this.getColor(), this)
+    console.log('Portals constructor')
   }
 
   componentDidMount() {
-    console.log('%cPortalsComponentDidMount', this.getColor(), this)
+    // console.log('%cPortalsComponentDidMount', this.getColor(), this)
+    console.log('Portals Component Did Mount')
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(
-      '%c Portals.componentDidUpdate.prevProps',
-      this.getColor(),
-      prevProps
-    )
-    console.log(
-      '%c Portals.componentDidUpdate.prevState',
-      this.getColor(),
-      prevState
-    )
+    // console.log(
+    //   '%c Portals.componentDidUpdate.prevProps',
+    //   this.getColor(),
+    //   prevProps
+    // )
+    // console.log(
+    //   '%c Portals.componentDidUpdate.prevState',
+    //   this.getColor(),
+    //   prevState
+    // )
     console.log('%c Portals.componentDidUpdate.this', this.getColor(), this)
   }
 
@@ -50,11 +52,6 @@ class Portals extends Component {
     return (
       <div className='portal_view_lead'>
         <div id='app_root'>
-          {console.log(
-            '%c props.isExhibit=',
-            this.getColor(),
-            this.props.isExhibit
-          )}
           {this.state.whetherExhibit === this.props.isExhibit ? (
             <Modal
               isShow={this.state.whetherExhibit}

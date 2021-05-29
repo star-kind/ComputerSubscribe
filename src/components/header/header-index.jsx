@@ -8,21 +8,22 @@ import LoginOut from '@/components/login-out/login-out'
 class PublicHeader extends Component {
   componentDidMount() {
     console.log('PublicHeader component did mount')
-    console.log(this)
+    // console.log(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(
-      '%c PublicHeader componentDidUpdate.prevProps',
-      'color:blue',
-      prevProps
-    )
-    console.log(
-      '%c PublicHeader componentDidUpdate.prevState',
-      'color:green',
-      prevState
-    )
-    console.log('%c PublicHeader componentDidUpdate.this', 'color:red', this)
+    console.log('PublicHeader componentDidUpdate.this')
+    // console.log(
+    //   '%c PublicHeader componentDidUpdate.prevProps',
+    //   'color:blue',
+    //   prevProps
+    // )
+    // console.log(
+    //   '%c PublicHeader componentDidUpdate.prevState',
+    //   'color:green',
+    //   prevState
+    // )
+    // console.log('%c PublicHeader componentDidUpdate.this', 'color:red', this)
   }
 
   state = {
@@ -38,10 +39,10 @@ class PublicHeader extends Component {
 
   //事件触发
   changeSel = (e) => {
-    console.log(e.target)
+    // console.log(e.target)
     //触发onChange事件时,得到的值
     let optVal = e.target.value
-    console.log('optVal(url)', optVal)
+    // console.log('optVal(url)', optVal)
     this.jumpByUrl(optVal)
   }
 
@@ -105,7 +106,6 @@ class PublicHeader extends Component {
         </div>
       </div>
     )
-    //
     return content
   }
 }

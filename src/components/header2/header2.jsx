@@ -10,21 +10,21 @@ import LoginOut from '@/components/login-out/login-out'
 class PublicHeader2 extends Component {
   componentDidMount() {
     console.log('PublicHeader-2 component did mount')
-    console.log(this)
-    //
+    // console.log(this)
     this.initSelectUrl()
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(
-      '%cPublicHeader2 component did mount\n',
-      this.color(),
-      prevProps,
-      'prevState\n',
-      prevState,
-      'This\n',
-      this
-    )
+    console.log('PublicHeader2 component did mount')
+    // console.log(
+    //   '%cPublicHeader2 component did mount\n',
+    //   this.color(),
+    //   prevProps,
+    //   'prevState\n',
+    //   prevState,
+    //   'This\n',
+    //   this
+    // )
   }
 
   state = {
@@ -64,6 +64,7 @@ class PublicHeader2 extends Component {
             url: this.user_urls.query_week_teacher,
           },
           { name: '个人资料', url: this.user_urls.profile_ordinary },
+          { name: '综合列表', url: this.user_urls.joint_query_major },
         ]
         break
 
@@ -90,14 +91,12 @@ class PublicHeader2 extends Component {
     })
   }
 
-  // loginingOut = () => {}
-
   //事件触发
   changeSel = (e) => {
-    console.log(e.target)
-    //触发onChange事件时,得到的值
+    // console.log(e.target)
+    // 触发onChange事件时,得到的值
     let optVal = e.target.value
-    console.log('optVal(url)', optVal)
+    // console.log('optVal(url)', optVal)
     this.jumpByUrl(optVal)
   }
 
@@ -161,7 +160,6 @@ class PublicHeader2 extends Component {
         </div>
       </div>
     )
-    /** */
     return content
   }
 }

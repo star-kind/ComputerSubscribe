@@ -1,7 +1,6 @@
 export const store_key = {
-  myself_key: 'USERINFORMATION',
-  token_key: 'USERTOKEN',
-  curr_page_key: 'Major_storeCurrentPage_currentPage',
+  myself_key: 'USER.INFORMATION',
+  token_key: 'USER.TOKEN',
 }
 
 /**
@@ -19,4 +18,5 @@ export const user_urls = {
   query_myself_student: '/queryMyselfStudent',
   add_new_room: '/addNewComputerRoom',
   query_room_list: '/queryRoomList',
+  joint_query_major: '/jointQueryMajor',
 }
