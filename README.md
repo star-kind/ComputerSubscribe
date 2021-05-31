@@ -135,3 +135,16 @@
 + 本次修改的管理员编号
 + 本次修改时间
 + 机房房间编号
+
+<hr/>
+
+
+## 图片
+
+![image](./images/img_01.png)
+![image](./images/img_00.png)
+![image](./images/img_02.png)
+![image](./images/img_03.png)
+![image](./images/img_04.png)
+![image](./images/img_06.png)
+![image](./images/img_08.png)
