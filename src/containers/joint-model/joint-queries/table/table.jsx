@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './table.less'
 // import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { conveyIndexItem, actionsCollect } from '@/redux/redux-drill/actions'
 
 class Table extends Component {
   constructor(props) {
@@ -14,16 +15,6 @@ class Table extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // console.log(
-    //   '%c Table componentDidUpdate.prevProps',
-    //   'color:blue',
-    //   prevProps
-    // )
-    // console.log(
-    //   '%c Table componentDidUpdate.prevState',
-    //   'color:green',
-    //   prevState
-    // )
     console.log('%c Table componentDidUpdate.this', 'color:red', this)
   }
 
@@ -40,7 +31,32 @@ class Table extends Component {
     editTargetRow: {},
   }
 
-  static propTypes = {}
+  static propTypes = {
+    // receivedChildData: PropTypes.func,
+  }
+
+  /**
+   * 把某一行信息发往表单中展示,其数组索引亦发往major组件
+   * @param {*} index
+   * @param {*} item
+   * @param {*} e
+   */
+  exhibitInDetailForm = (index, item, e) => {
+    console.info('%c index\n', this.color(), index)
+    console.info('%c item\n', this.color(), item)
+    console.info('%c event', this.color(), e)
+    let data = {
+      item,
+      index,
+    }
+    let displayVal = {
+      formDisPlay: 'block',
+      tblAndPageDisPlay: 'none',
+    }
+    //
+    this.props.setIndexItem(data)
+    this.props.checkDisPlay(displayVal)
+  }
 
   /**
    * 全选
@@ -183,7 +199,15 @@ class Table extends Component {
                       <td>{row.subscribeStatus}</td>
                       <td>
                         <span className='sp_a'>
-                          <li>审查</li>
+                          <li
+                            onClick={this.exhibitInDetailForm.bind(
+                              this,
+                              index,
+                              row
+                            )}
+                          >
+                            审查
+                          </li>
                         </span>
                       </td>
                     </tr>
@@ -205,7 +229,7 @@ class Table extends Component {
   }
 }
 
-/*mapStateToProps是取值方法，mapDispatchToProps是赋值方法*/
+/*mapStateToProps:取值方法,mapDispatchToProps:赋值方法*/
 const mapStateToProps = (state) => {
   console.log('Table.mapStateToProps.state', state)
   return {
@@ -214,4 +238,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Table)
+const mapDispatchToProps = {
+  setIndexItem: conveyIndexItem,
+  checkDisPlay: actionsCollect.checkOutTblOrFormDisplay,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Table)

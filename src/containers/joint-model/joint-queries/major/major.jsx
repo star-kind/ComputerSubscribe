@@ -12,6 +12,7 @@ import {
 import PublicHeader2 from '@/components/header2/header2'
 import Portals from '@/components/popup-window/portals/portals'
 import PageArea from '@/containers/joint-model/joint-queries/page-area/PageArea'
+import DetailForm from '@/containers/joint-model/joint-queries/detail-form/DetailForm'
 
 /*
 联合查询,一间机房本周内,所收到的预约申请列表集合
@@ -26,22 +27,30 @@ class Major extends Component {
 
   componentDidMount() {
     console.log('%cMajor componentDidMount\n', 'color:red', this)
-    this.handleGetPagination()
     this.handleGetRoomList()
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // console.log(
-    //   '%c Major componentDidUpdate.prevProps',
-    //   'color:blue',
-    //   prevProps
-    // )
-    // console.log(
-    //   '%c Major componentDidUpdate.prevState',
-    //   'color:green',
-    //   prevState
-    // )
-    console.log('%c Major componentDidUpdate.this', 'color:red', this)
+    console.log(
+      '%c Major_componentDidUpdate_this',
+      'color:red',
+      this,
+      'prevState',
+      prevState,
+      'prevProps',
+      prevProps
+    )
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log(
+      '%c Major shouldComponentUpdate.nextProps',
+      'color:green',
+      nextProps,
+      'nextState',
+      nextState
+    )
+    return true
   }
 
   state = {
@@ -50,7 +59,7 @@ class Major extends Component {
     //
     page: 1,
     limit: 6,
-    roomNum: 161,
+    roomNum: '',
     //
     pagination: {
       data: [],
@@ -81,6 +90,69 @@ class Major extends Component {
 
   static propTypes = {}
 
+  //根据子组件的变化,父组件作出对应变化
+  receivedChildData = (childData) => {
+    console.log('%c receivedChildData_childData', this.color(), childData)
+    switch (childData.classMethod) {
+      case 'PageArea_JumpSpecifyPage':
+        this.retrievePageByParam(childData)
+        break
+
+      case 'PageArea_jumpPreviousPage':
+        this.handleGetPaginationByPage(childData.pageData.pagePrevious)
+        break
+
+      case 'PageArea_jumpNextPage':
+        this.handleGetPaginationByPage(childData.pageData.pageNext)
+        break
+
+      case 'PageArea_jumpFirstPage':
+        this.handleGetPaginationByPage(childData.pageData.pageFirst)
+        break
+
+      case 'PageArea_jumpLastPage':
+        this.handleGetPaginationByPage(childData.pageData.pageLast)
+        break
+
+      case 'DetailForm_handleSubmits':
+        this.modifiedSubscribe(childData.parameter)
+        break
+
+      default:
+        break
+    }
+  }
+
+  //即将被修改的预约--ending engineering
+  modifiedSubscribe = (parameter) => {
+    let { dataArrIndex } = this.props
+    console.log(
+      '%c modifiedSubscribe_parameter',
+      this.color(),
+      parameter,
+      'dataArrIndex',
+      dataArrIndex
+    )
+  }
+
+  retrievePageByParam = (data) => {
+    let { pageData } = data
+    let { limit, page, roomNum } = this.state
+    //
+    if (
+      pageData.limit === limit &&
+      pageData.page === page &&
+      pageData.roomNum === roomNum
+    ) {
+      this.setState({
+        message: '当前页面已是想要查询的结果',
+        whetherExhibit: !this.state.whetherExhibit,
+      })
+      return
+    }
+    this.handleGetPagination(pageData)
+  }
+
   /**
    *
    * @returns
@@ -110,9 +182,16 @@ class Major extends Component {
       .then((result) => {
         console.log('%c result', _this.getColor(), result)
         if (result.data.code === 200) {
-          // _this.setState({
-          //   roomNumArr: result.data.data,
-          // })
+          _this.setState(
+            {
+              roomNum: result.data.data[0],
+            },
+            () => {
+              let { roomNum } = _this.state
+              console.log('this_state_roomNum', roomNum)
+              _this.handleGetPaginationInit(roomNum)
+            }
+          )
           _this.props.setRoomList(result.data.data)
         } else {
           _this.setState({
@@ -126,11 +205,15 @@ class Major extends Component {
       })
   }
 
-  handleGetPagination = () => {
-    const ts = this
+  /**
+   * 上页,下页,首页,尾页
+   * @param {*} page
+   */
+  handleGetPaginationByPage = (page) => {
+    let ts = this
     let tokenObj = ts.verifyToken()
-    //
-    let { page, limit, roomNum } = ts.state
+    let { limit, roomNum } = ts.state
+    console.log('page=>', page, 'limit=>', limit, 'roomNum=>', roomNum)
     //
     ts.gets(
       ts.interfaces.retrieveSubscribes,
@@ -147,7 +230,63 @@ class Major extends Component {
         ts.props.setTblHeadArr(ts.state.tblHeadArr)
       } else {
         console.log('res.data.message', res.data.message)
-        // alert(res.data.message)
+        ts.setState({
+          message: res.data.message,
+          whetherExhibit: !this.state.whetherExhibit,
+        })
+      }
+    })
+  }
+
+  handleGetPagination = (pageData) => {
+    let ts = this
+    let tokenObj = ts.verifyToken()
+    let { page, limit, roomNum } = pageData
+    console.log('page=>', page, 'limit=>', limit, 'roomNum=>', roomNum)
+    //
+    ts.gets(
+      ts.interfaces.retrieveSubscribes,
+      {
+        page: page,
+        limit: limit,
+        roomNum: roomNum,
+      },
+      { token: tokenObj.text }
+    ).then((res) => {
+      console.log('RESPONSE\n', res)
+      if (res.data.code === 200) {
+        ts.props.queryTbl(res.data.data)
+        ts.props.setTblHeadArr(ts.state.tblHeadArr)
+      } else {
+        console.log('res.data.message', res.data.message)
+        ts.setState({
+          message: res.data.message,
+          whetherExhibit: !this.state.whetherExhibit,
+        })
+      }
+    })
+  }
+
+  handleGetPaginationInit = (room) => {
+    let ts = this
+    let tokenObj = ts.verifyToken()
+    let { page, limit } = ts.state
+    console.log('%c handleGetPaginationInit_room', ts.color(), room)
+    ts.gets(
+      ts.interfaces.retrieveSubscribes,
+      {
+        page: page,
+        limit: limit,
+        roomNum: room,
+      },
+      { token: tokenObj.text }
+    ).then((res) => {
+      console.log('RESPONSE\n', res)
+      if (res.data.code === 200) {
+        ts.props.queryTbl(res.data.data)
+        ts.props.setTblHeadArr(ts.state.tblHeadArr)
+      } else {
+        console.log('res.data.message', res.data.message)
         ts.setState({
           message: res.data.message,
           whetherExhibit: !this.state.whetherExhibit,
@@ -162,11 +301,23 @@ class Major extends Component {
         <div className='PublicHeader2Div'>
           <PublicHeader2></PublicHeader2>
         </div>
-        <div className='TableDiv'>
+        <div
+          className='TableDiv'
+          style={{ display: this.props.displays.tblAndPageDisPlay }}
+        >
           <Table></Table>
         </div>
-        <div className='PageAreaDiv'>
-          <PageArea></PageArea>
+        <div
+          className='DetailFormDiv'
+          style={{ display: this.props.displays.formDisPlay }}
+        >
+          <DetailForm receivedChildData={this.receivedChildData}></DetailForm>
+        </div>
+        <div
+          className='PageAreaDiv'
+          style={{ display: this.props.displays.tblAndPageDisPlay }}
+        >
+          <PageArea receivedChildData={this.receivedChildData}></PageArea>
         </div>
         <div className='PortalsDiv'>
           <Portals
@@ -174,23 +325,32 @@ class Major extends Component {
             msg={this.state.message}
           ></Portals>
         </div>
+        <div>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </div>
       </div>
     )
   }
 }
 
-/*
-mapStateToProps：将需要的state的节点注入到与此视图数据相关的组件(props)上.也即用于建立 State 到 Props 的映射关系. 这个函数中要注入全部的models，你需要返回一个新的对象，挑选该组件所需要的models
-*/
+/*mapStateToProps:取值方法,mapDispatchToProps:赋值方法*/
 const mapStateToProps = (state) => {
   console.log('Major.mapStateToProps.state', state)
   return {
     pagination: state.deliverDataReducer.pagination,
     tblHeadArr: state.deliverDataReducer.tblHeadArr,
+    displays: state.deliverDataReducer.displays,
+    pageRoom: state.deliverDataReducer.pageRoom,
+    roomList: state.deliverDataReducer.roomList,
+    dataArrIndex: state.deliverDataReducer.indexItem.index,
   }
 }
 
-/* 将需要绑定的响应事件或数据注入到组件上(props上) */
 const mapDispatchToProps = {
   queryTbl: jointQueryTbl,
   setTblHeadArr: getTblHeadArr,

@@ -111,17 +111,6 @@ export default class Logining extends Component {
     })
   }
 
-  // 绑定 on select 事件
-  handleChangeSelect = (e) => {
-    // console.log(e.target)
-    //触发onChange事件时,得到的值
-    let roleOptVal = e.target.value
-    console.log('RoleOptVal(code)', roleOptVal)
-    this.setState({
-      role: roleOptVal,
-    })
-  }
-
   render() {
     let content = (
       <div className='main_container'>
@@ -146,7 +135,7 @@ export default class Logining extends Component {
                     <select
                       id='mine_select_role'
                       name='role'
-                      onChange={this.handleChangeSelect}
+                      onChange={this.handleChange.bind(this)}
                     >
                       <option value={''}>--请选择帐号类型--</option>
                       {/*  */}

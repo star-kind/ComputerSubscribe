@@ -10,6 +10,9 @@ import {
   DELIVERY_DATA,
   JOINT_QUERY_TBL,
   GET_ROOM_LIST,
+  CONVEY_INDEX_ITEM,
+  CHECKOUT_TBL_FORM_DISPLAY,
+  CONVEY_PAGE_ROOM_PARAM,
 } from './actionTypes'
 
 let defaultDeliverData = {
@@ -28,6 +31,15 @@ let defaultDeliverData = {
   },
   tblHeadArr: [],
   roomList: [],
+  indexItem: {
+    item: {},
+    index: '',
+  },
+  displays: {
+    formDisPlay: 'none',
+    tblAndPageDisPlay: 'inherit',
+  },
+  pageRoom: { page: '', limit: '', roomNum: '' },
 }
 
 /**
@@ -37,9 +49,13 @@ let defaultDeliverData = {
  * @returns
  */
 const deliverDataReducer = (state = defaultDeliverData, actions = {}) => {
-  // console.log('Reducer.deliverDataReducer.state', state)
-  // console.log('Reducer.deliverDataReducer.actions', actions)
   switch (actions.type) {
+    case CONVEY_PAGE_ROOM_PARAM:
+      return { ...state, pageRoom: actions.pageRoom }
+
+    case CHECKOUT_TBL_FORM_DISPLAY:
+      return { ...state, displays: actions.displays }
+
     case DELIVERY_DATA:
       return {
         ...state,
@@ -62,6 +78,12 @@ const deliverDataReducer = (state = defaultDeliverData, actions = {}) => {
       return {
         ...state,
         roomList: actions.roomList,
+      }
+
+    case CONVEY_INDEX_ITEM:
+      return {
+        ...state,
+        indexItem: actions.indexItem,
       }
 
     default:

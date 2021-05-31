@@ -4,6 +4,7 @@ import { getValueFromLocal } from '@/api/common'
 import './index.less'
 import UserTable from '@/components/tables/users/user-table/table-index'
 import PageInfo from '@/components/tables/users/page-info/page-info'
+// import Portals2 from '@/components/popup-window/portals2/portals2'
 
 //管理员查看用户成员列表
 class RetrieveList extends Component {
@@ -196,7 +197,6 @@ class RetrieveList extends Component {
   }
 
   handleGetUsersList = () => {
-    //先存一下this,以防使用箭头函数this会指向我们不希望它所指向的对象
     const ts = this
     let tokenObj = getValueFromLocal(ts.store_key.token_key)
     console.log('tokenObj\n', tokenObj)

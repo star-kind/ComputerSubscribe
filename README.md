@@ -1,8 +1,8 @@
 # 机房预约系统前端部
 
-## 架构
+## 架构(structure)
 
-见**PACKAGE**
+**structure details in the Package.Dependencies(Including Dev)**
 
 ---
 
@@ -60,6 +60,8 @@ babel-loader 7.x 对应 babel-core 6.x
 
 ---
 
-**小结**
+#### Redux
 
-- 用户表格相关组件合计 4 个,可复用性/可读性较差,嵌套凌乱,属于难以再复制的手工制品,不建议后续借鉴
+- mapStateToProps & mapDispatchToProps
+  - mapStateToProps 是组件从 redux 池中取值的方法
+  - mapDispatchToProps 是组件向 redux 池内赋值的方法

@@ -117,17 +117,6 @@ class PageInfo extends Component {
     this.props.receiveData(data)
   }
 
-  // 绑定 on select 事件
-  handleChangeSelect = (e) => {
-    console.log(e.target)
-    //触发onChange事件时,得到的值
-    let rowValue = e.target.value
-    console.log('%cRowValue=', 'color:green', rowValue)
-    this.setState({
-      defineRowNum: rowValue,
-    })
-  }
-
   //初始化 state.当前页,currentPage from props
   initializePresent = (currentPage) => {
     let present = 1
@@ -151,8 +140,9 @@ class PageInfo extends Component {
       <div className='main_co_page'>
         <div className='con_div'>
           <select
-            onChange={this.handleChangeSelect}
+            onChange={this.handleChange.bind(this)}
             className='sele_page_order'
+            name='defineRowNum'
           >
             {this.state.rowsDefineArr.map((element, index) => {
               return (

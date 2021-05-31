@@ -1,29 +1,22 @@
 import React, { Component } from 'react'
 import './PageArea.less'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import Portals from '@/components/popup-window/portals/portals'
 import { commonUtil } from '@/api/common2'
 import { connect } from 'react-redux'
+import { actionsCollect } from '@/redux/redux-drill/actions'
 
 class PageArea extends Component {
   constructor(props) {
     super(props)
     console.info('%cPageArea Constructor\n', 'color:brown', this)
   }
+
   componentDidMount() {
     console.log('%cPageArea componentDidMount\n', 'color:red', this)
   }
+
   componentDidUpdate(prevProps, prevState) {
-    // console.log(
-    //   '%c PageArea componentDidUpdate.prevProps',
-    //   'color:blue',
-    //   prevProps
-    // )
-    // console.log(
-    //   '%c PageArea componentDidUpdate.prevState',
-    //   'color:green',
-    //   prevState
-    // )
     console.log('%c PageArea componentDidUpdate.this', 'color:red', this)
   }
 
@@ -36,7 +29,7 @@ class PageArea extends Component {
       { name: '每页10行', value: 10 },
     ],
     //
-    page: 1,
+    page: '',
     limit: '',
     roomNum: '',
     //
@@ -44,10 +37,12 @@ class PageArea extends Component {
     msg: '',
   }
 
-  static propTypes = {}
+  static propTypes = {
+    receivedChildData: PropTypes.func,
+  }
 
   handleChanging = (e) => {
-    console.log('%c handleChanging.event', this.color(), e.target)
+    // console.log('%c handleChanging.event', this.color(), e.target)
     this.setState({
       [e.target.name]: e.target.value,
     })
@@ -68,18 +63,94 @@ class PageArea extends Component {
   }
 
   jumpSpecifyPage = () => {
-    let ts = this
-    let { page, limit, roomNum } = ts.state
-    let resObj = ts.validateParams()
+    let { page, limit, roomNum } = this.state
+    let { pagination } = this.props
+    //
+    let resObj = this.validateParams()
     if (!resObj.isVerify) {
-      ts.setState({
-        message: resObj.hint,
-        whetherExhibit: !ts.state.whetherExhibit,
+      this.setState({
+        msg: resObj.hint,
+        whetherExhibit: !this.state.whetherExhibit,
       })
       return
     }
     //
+    if (page > pagination.totalPages) {
+      this.setState({
+        msg: '跳转页码不得大于总页数',
+        whetherExhibit: !this.state.whetherExhibit,
+      })
+      return
+    }
+    if (page < 1) {
+      this.setState({
+        msg: '跳转页码不得小于第一页',
+        whetherExhibit: !this.state.whetherExhibit,
+      })
+      return
+    }
+    //
+    let pageData = { page, limit, roomNum }
     console.log('page=', page, 'limit=', limit, 'roomNum=', roomNum)
+    this.props.conveyPageParam(pageData)
+    //
+    let pageParam = {
+      classMethod: 'PageArea_JumpSpecifyPage',
+      pageData,
+    }
+    this.props.receivedChildData(pageParam)
+  }
+
+  jumpPreviousPage = () => {
+    // let { page } = this.state
+    let { currentPage, hasPrevious } = this.props.pagination
+    if (!hasPrevious) {
+      this.setState({
+        msg: '无上一页了',
+        whetherExhibit: !this.state.whetherExhibit,
+      })
+      return
+    }
+    //
+    let pageParam = {
+      classMethod: 'PageArea_jumpPreviousPage',
+      pageData: { pagePrevious: currentPage - 1 },
+    }
+    this.props.receivedChildData(pageParam)
+  }
+
+  jumpNextPage = () => {
+    let { currentPage, hasNext } = this.props.pagination
+    if (!hasNext) {
+      this.setState({
+        msg: '无下一页了',
+        whetherExhibit: !this.state.whetherExhibit,
+      })
+      return
+    }
+    //
+    let pageParam = {
+      classMethod: 'PageArea_jumpNextPage',
+      pageData: { pageNext: currentPage + 1 },
+    }
+    this.props.receivedChildData(pageParam)
+  }
+
+  jumpFirstPage = () => {
+    let pageParam = {
+      classMethod: 'PageArea_jumpFirstPage',
+      pageData: { pageFirst: 1 },
+    }
+    this.props.receivedChildData(pageParam)
+  }
+
+  jumpLastPage = () => {
+    let { pagination } = this.props
+    let pageParam = {
+      classMethod: 'PageArea_jumpLastPage',
+      pageData: { pageLast: pagination.totalPages },
+    }
+    this.props.receivedChildData(pageParam)
   }
 
   render() {
@@ -94,10 +165,10 @@ class PageArea extends Component {
               <li>
                 第<b>{this.props.pagination.currentPage}</b>页
               </li>
-              <li>上一页</li>
-              <li>下一页</li>
-              <li>第一页</li>
-              <li>最后页</li>
+              <li onClick={this.jumpPreviousPage}>上一页</li>
+              <li onClick={this.jumpNextPage}>下一页</li>
+              <li onClick={this.jumpFirstPage}>第一页</li>
+              <li onClick={this.jumpLastPage}>最后页</li>
             </ul>
           </div>
           <div className='second_wrapper'>
@@ -125,7 +196,7 @@ class PageArea extends Component {
               >
                 {this.state.optionArray.map((item, index) => {
                   return (
-                    <option key={index} defaultValue={item.value}>
+                    <option key={index} value={item.value}>
                       {item.name}
                     </option>
                   )
@@ -172,4 +243,8 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(PageArea)
+const mapDispatchToProps = {
+  conveyPageParam: actionsCollect.conveyPageRoomParam,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PageArea)

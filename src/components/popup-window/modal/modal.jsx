@@ -12,7 +12,7 @@ class Modal extends Component {
     //
     this.el = document.createElement('div')
     this.modalRoot = document.getElementById('modal_root')
-    console.log('%c ModalRoot', this.getColor(), this.modalRoot)
+    // console.log('%c ModalRoot', this.getColor(), this.modalRoot)
   }
 
   componentDidMount() {

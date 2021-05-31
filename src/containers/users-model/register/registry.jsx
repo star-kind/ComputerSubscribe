@@ -32,16 +32,6 @@ export default class Registry extends Component {
     message: '',
   }
 
-  getRoleByChangeSel = (e) => {
-    console.log(e.target)
-    //触发onChange事件时,得到的值
-    let roleOptVal = e.target.value
-    console.log('RoleOptVal(code)', roleOptVal)
-    this.setState({
-      role: roleOptVal,
-    })
-  }
-
   //绑定on change事件,使input输入框能动态取值和赋值
   handleChange = (event) => {
     console.log('event.target\n', event.target)
@@ -231,7 +221,7 @@ export default class Registry extends Component {
                   <select
                     name='role'
                     id='mine_select_role'
-                    onChange={this.getRoleByChangeSel}
+                    onChange={this.handleChange.bind(this)}
                   >
                     {this.state.roleTypeArray.map((item) => {
                       return (

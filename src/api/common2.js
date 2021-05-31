@@ -111,7 +111,8 @@ export const commonUtil = {
    */
   verifyArrObj: function (arr) {
     let res = { hint: '', isVerify: true }
-
+    console.info('verifyArrObj.arr', arr)
+    //
     arr.map(function (item) {
       if (typeof item.val === 'string') {
         if (

@@ -72,16 +72,6 @@ class AddNewApply extends Component {
     return null
   }
 
-  // 绑定 on select 事件
-  handleSelect = (e) => {
-    //触发onChange事件时,得到的值
-    let optValue = e.target.value
-    console.log('%c optValue', this.color(), optValue)
-    this.setState({
-      [e.target.name]: optValue,
-    })
-  }
-
   //绑定on change事件,使input输入框能动态取值和赋值
   handleChange = (event) => {
     console.log('event.target', event.target)
@@ -91,25 +81,6 @@ class AddNewApply extends Component {
       [event.target.name]: event.target.value,
     })
   }
-
-  // validateParams = (params) => {
-  //   console.info('%c validateParams.params', this.getColor(), params)
-  //   let { applyUseDate, useInterval, roomNum } = params
-  //   let result = { warnTip: '', whether: false }
-  //   //
-  //   if (useInterval === null) {
-  //     result.warnTip = '请选择时间段'
-  //   } else if (applyUseDate === null) {
-  //     result.warnTip = '请选择日期'
-  //   } else if (roomNum === null || roomNum === '--请选择机房房号--') {
-  //     result.warnTip = '请选择机房'
-  //   } else {
-  //     result.whether = true
-  //   }
-  //   //
-  //   console.info('%c validateParams.result', this.getColor(), result)
-  //   return result
-  // }
 
   handleSubmit = (event) => {
     let ts = this
@@ -183,7 +154,7 @@ class AddNewApply extends Component {
                         name='useInterval'
                         id='id_useInterval'
                         className='selects-tag'
-                        onChange={this.handleSelect}
+                        onChange={this.handleChange.bind(this)}
                       >
                         {this.state.useIntervalArr.map((item, index) => {
                           return (
@@ -223,7 +194,7 @@ class AddNewApply extends Component {
                     </div>
                     <div className='input_element inputs_side'>
                       <select
-                        onChange={this.handleSelect}
+                        onChange={this.handleChange.bind(this)}
                         name='roomNum'
                         id='id_roomNum'
                         className='selects-tag'

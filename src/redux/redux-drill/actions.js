@@ -7,8 +7,44 @@ import {
   DELIVERY_DATA,
   JOINT_QUERY_TBL,
   GET_ROOM_LIST,
+  CONVEY_INDEX_ITEM,
+  CHECKOUT_TBL_FORM_DISPLAY,
+  CONVEY_PAGE_ROOM_PARAM,
 } from './actionTypes'
 
+export const actionsCollect = {
+  checkOutTblOrFormDisplay: (displays) => {
+    return {
+      type: CHECKOUT_TBL_FORM_DISPLAY,
+      displays,
+    }
+  },
+  conveyPageRoomParam: (pageRoom) => {
+    return {
+      type: CONVEY_PAGE_ROOM_PARAM,
+      pageRoom,
+    }
+  },
+}
+
+/**
+ *
+ * @param {*} indexItem
+ * @returns
+ */
+export const conveyIndexItem = (indexItem) => {
+  console.log('Actions.ConveyIndexItem', indexItem)
+  return {
+    type: CONVEY_INDEX_ITEM,
+    indexItem,
+  }
+}
+
+/**
+ *
+ * @param {*} roomList
+ * @returns
+ */
 export const getRoomList = (roomList) => {
   console.log('Actions.getRoomList', roomList)
   return {
@@ -17,6 +53,11 @@ export const getRoomList = (roomList) => {
   }
 }
 
+/**
+ *
+ * @param {*} tblHeadArr
+ * @returns
+ */
 export const getTblHeadArr = (tblHeadArr) => {
   console.log('Actions.tblHeadArr', tblHeadArr)
   return {
