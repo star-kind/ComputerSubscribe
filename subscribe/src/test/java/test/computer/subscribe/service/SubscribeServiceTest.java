@@ -145,13 +145,13 @@ public class SubscribeServiceTest {
 		try {
 			TSubscribe sub = new TSubscribe();
 
-			String timeApply = "2021-4-20";
+			String timeApply = "2021-6-7";
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date dateApply = format.parse(timeApply);
 
 			sub.setApplicant(1889970l);
 			sub.setApplyUseDate(dateApply);
-			sub.setRoomNum(1);
+			sub.setRoomNum(6);
 			sub.setUseInterval(2);
 
 			subscribeService.addNewScuSubscribe(sub);

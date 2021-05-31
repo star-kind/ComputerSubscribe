@@ -23,7 +23,7 @@ public class JointQueryServiceTest {
 	@Test
 	public void retrieveSubscribesListTest() {
 		try {
-			ijqs.getSubscribesOnlyTeacher(13541944130L, 1, 1, 6);
+			ijqs.getSubscribesOnlyTeacher(13541944130L, 161, 1, 6);
 		} catch (RuntimeException e) {
 			System.err.println(e.getLocalizedMessage());
 		}

@@ -23,7 +23,7 @@ import lombok.NonNull;
  */
 public interface ISubscribeService {
 	/**
-	 * 教师分页获取本周全部预约单,不限申请者,不限状态和机房
+	 * 教师分页获取本周收到的全部预约单,不限申请者,不限状态和机房
 	 * 
 	 * @param pageOrder  限教师
 	 * @param limit      行数

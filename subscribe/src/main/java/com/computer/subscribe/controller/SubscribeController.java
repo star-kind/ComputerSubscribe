@@ -31,7 +31,7 @@ public class SubscribeController extends BasicController {
 	private ISubscribeService iss;
 
 	/**
-	 * 教师分页获取本周全部预约单,不限申请者,不限状态和机房
+	 * 教师分页获取本周收到的全部预约单,不限申请者,不限状态和机房
 	 * http://localhost:8080/subscribe/SubscribeController/retrieveAllSubscirbeOnWeek?pageOrder=1&rows=10
 	 * 
 	 * @param req
