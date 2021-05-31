@@ -1,4 +1,4 @@
-# 机房预约系统(后端基本完成,前端进行中)
+# 机房预约系统(Finish)
 
 ## 0.架构
 
@@ -12,8 +12,11 @@
 - DataBase: MySQL
 
 ### 0.3 前台
-- react hooks
+- react-redux
+- react-hook
+- react-router
 - axios
+- ...
 
 ## 1.机房预约系统需求
 
